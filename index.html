@@ -124,9 +124,12 @@
     Telegram.WebApp.ready();
     Telegram.WebApp.expand();
 
+
     function openApp(appName) {
-      const botUsername = 'sisbnight_bot'; // Замінити на ваше ім'я бота
-      window.open(`https://t.me/${botUsername}/${appName}`, '_blank');
+        const botUsername = 'sisbnight_bot';
+        const url = `https://t.me/${botUsername}/${appName}`;
+        console.log("Спроба відкрити:", url); // Перевірте в консолі
+        window.open(url, '_blank');
     }
   </script>
 </body>
