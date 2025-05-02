@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Системи безпеки: Калькулятори</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <style>
+    body { 
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f5f5f5;
+    }
+    
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 1em;
+    }
+
+    .header {
+      text-align: center;
+      padding: 1em;
+      background: #2a9d8f;
+      color: white;
+      border-radius: 10px 10px 0 0;
+    }
+
+    .category {
+      margin: 1.5em 0;
+      background: white;
+      border-radius: 10px;
+      padding: 1em;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    .category-title {
+      font-weight: bold;
+      margin-bottom: 0.8em;
+      color: #264653;
+      border-bottom: 1px solid #e0e0e0;
+      padding-bottom: 0.5em;
+    }
+
+    .button-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 1em;
+    }
+
+    .app-button {
+      background: #e9c46a;
+      border: none;
+      border-radius: 8px;
+      padding: 1em;
+      text-align: center;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+      font-weight: 500;
+      color: #264653;
+    }
+
+    .app-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    }
+
+    .footer {
+      text-align: center;
+      padding: 1em;
+      color: #666;
+      font-size: 0.9em;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>🛠️ Системи безпеки</h1>
+      <p>Калькулятори та помічники</p>
+    </div>
+
+    <div class="category">
+      <div class="category-title">💾 Сховище</div>
+      <div class="button-grid">
+        <button class="app-button" onclick="openApp('calchdd')">Об'єм HDD</button>
+        <button class="app-button" onclick="openApp('calcdays')">Тривалість архіву</button>
+      </div>
+    </div>
+
+    <div class="category">
+      <div class="category-title">⚡ Живлення</div>
+      <div class="button-grid">
+        <button class="app-button" onclick="openApp('calcups')">Розрахунок АКБ</button>
+        <button class="app-button" onclick="openApp('battime')">Час роботи від АКБ</button>
+        <button class="app-button" onclick="openApp('poewizard')">POE-розрахунок</button>
+      </div>
+    </div>
+
+    <div class="category">
+      <div class="category-title">☀️ Сонячні системи</div>
+      <div class="button-grid">
+        <button class="app-button" onclick="openApp('solarwizard')">Автономна система</button>
+        <button class="app-button" onclick="openApp('solargenwizard')">Економічний розрахунок</button>
+      </div>
+    </div>
+
+    <div class="category">
+      <div class="category-title">🔍 Відеоспостереження</div>
+      <div class="button-grid">
+        <button class="app-button" onclick="openApp('pixelwizard')">Якість зображення</button>
+        <button class="app-button" onclick="openApp('visionrange')">Довідник камер</button>
+      </div>
+    </div>
+
+    <div class="footer">
+      Розроблено для спільноти систем безпеки 🌐<br>
+      <a href="https://t.me/your_bot" target="_blank">Підтримка</a>
+    </div>
+  </div>
+
+  <script>
+    // Ініціалізація Telegram WebApp
+    Telegram.WebApp.ready();
+    Telegram.WebApp.expand();
+
+    function openApp(appName) {
+      const botUsername = 'your_bot'; // Замінити на ваше ім'я бота
+      window.open(`https://t.me/${botUsername}/${appName}`, '_blank');
+    }
+  </script>
+</body>
+</html>
