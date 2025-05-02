@@ -1,135 +1,233 @@
 <!DOCTYPE html>
-<html>
+<html lang="uk">
 <head>
   <meta charset="UTF-8">
-  <title>Системи безпеки: Калькулятори</title>
-  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🔐 Системи безпеки - Головна</title>
+  <script src="https://telegram.org/js/telegram-web-app.js?2"></script>
   <style>
-    body { 
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-      background: #f5f5f5;
-    }
-    
-    .container {
-      max-width: 600px;
-      margin: 0 auto;
-      padding: 1em;
+    :root {
+      --primary: #2a9d8f;
+      --secondary: #e9c46a;
+      --dark: #264653;
+      --light: #f5f5f5;
+      --white: #ffffff;
     }
 
-    .header {
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      background: var(--light);
+      color: var(--dark);
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 100%;
+      padding: 16px;
+      margin: 0 auto;
+    }
+
+    header {
+      background: var(--primary);
+      color: var(--white);
+      padding: 20px 0;
       text-align: center;
-      padding: 1em;
-      background: #2a9d8f;
-      color: white;
-      border-radius: 10px 10px 0 0;
+      border-radius: 0 0 16px 16px;
+      margin-bottom: 24px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+      font-size: 1.8rem;
+      margin-bottom: 8px;
+    }
+
+    .subtitle {
+      font-size: 1rem;
+      opacity: 0.9;
     }
 
     .category {
-      margin: 1.5em 0;
-      background: white;
-      border-radius: 10px;
-      padding: 1em;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      background: var(--white);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
     }
 
     .category-title {
-      font-weight: bold;
-      margin-bottom: 0.8em;
-      color: #264653;
-      border-bottom: 1px solid #e0e0e0;
-      padding-bottom: 0.5em;
+      font-weight: 600;
+      color: var(--primary);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
 
-    .button-grid {
+    .buttons-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-      gap: 1em;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 12px;
     }
 
     .app-button {
-      background: #e9c46a;
+      background: var(--secondary);
+      color: var(--dark);
       border: none;
       border-radius: 8px;
-      padding: 1em;
+      padding: 14px;
+      font-weight: 500;
       text-align: center;
       cursor: pointer;
-      transition: transform 0.2s, box-shadow 0.2s;
-      font-weight: 500;
-      color: #264653;
+      transition: all 0.2s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
     }
 
     .app-button:hover {
       transform: translateY(-2px);
-      box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
 
-    .footer {
+    .app-button:active {
+      transform: translateY(0);
+    }
+
+    .app-icon {
+      font-size: 1.5rem;
+    }
+
+    footer {
       text-align: center;
-      padding: 1em;
+      padding: 20px 0;
       color: #666;
-      font-size: 0.9em;
+      font-size: 0.9rem;
+    }
+
+    .support-link {
+      color: var(--primary);
+      text-decoration: none;
+    }
+
+    @media (max-width: 480px) {
+      .buttons-grid {
+        grid-template-columns: 1fr;
+      }
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <div class="header">
-      <h1>🛠️ Системи безпеки</h1>
-      <p>Калькулятори та помічники</p>
-    </div>
+    <header>
+      <h1>🔐 Системи безпеки</h1>
+      <p class="subtitle">Калькулятори та інструменти</p>
+    </header>
 
     <div class="category">
-      <div class="category-title">💾 Сховище</div>
-      <div class="button-grid">
-        <button class="app-button" onclick="openApp('calchdd')">Об'єм HDD</button>
-        <button class="app-button" onclick="openApp('calcdays')">Тривалість архіву</button>
+      <div class="category-title">
+        <span>💾</span> Сховище даних
+      </div>
+      <div class="buttons-grid">
+        <button class="app-button" onclick="openApp('calchdd')">
+          <span class="app-icon">🖴</span>
+          Об'єм HDD
+        </button>
+        <button class="app-button" onclick="openApp('calcdays')">
+          <span class="app-icon">📅</span>
+          Тривалість архіву
+        </button>
       </div>
     </div>
 
     <div class="category">
-      <div class="category-title">⚡ Живлення</div>
-      <div class="button-grid">
-        <button class="app-button" onclick="openApp('calcups')">Розрахунок АКБ</button>
-        <button class="app-button" onclick="openApp('battime')">Час роботи від АКБ</button>
-        <button class="app-button" onclick="openApp('poewizard')">POE-розрахунок</button>
+      <div class="category-title">
+        <span>⚡</span> Живлення
+      </div>
+      <div class="buttons-grid">
+        <button class="app-button" onclick="openApp('calcups')">
+          <span class="app-icon">🔋</span>
+          Розрахунок АКБ
+        </button>
+        <button class="app-button" onclick="openApp('battime')">
+          <span class="app-icon">⏱️</span>
+          Час роботи від АКБ
+        </button>
+        <button class="app-button" onclick="openApp('poewizard')">
+          <span class="app-icon">🔌</span>
+          POE-розрахунок
+        </button>
       </div>
     </div>
 
     <div class="category">
-      <div class="category-title">☀️ Сонячні системи</div>
-      <div class="button-grid">
-        <button class="app-button" onclick="openApp('solarwizard')">Автономна система</button>
-        <button class="app-button" onclick="openApp('solargenwizard')">Економічний розрахунок</button>
+      <div class="category-title">
+        <span>☀️</span> Сонячні системи
+      </div>
+      <div class="buttons-grid">
+        <button class="app-button" onclick="openApp('solarwizard')">
+          <span class="app-icon">🌞</span>
+          Автономна система
+        </button>
+        <button class="app-button" onclick="openApp('solargenwizard')">
+          <span class="app-icon">💰</span>
+          Економічний розрахунок
+        </button>
       </div>
     </div>
 
     <div class="category">
-      <div class="category-title">🔍 Відеоспостереження</div>
-      <div class="button-grid">
-        <button class="app-button" onclick="openApp('pixelwizard')">Якість зображення</button>
-        <button class="app-button" onclick="openApp('visionrange')">Довідник камер</button>
+      <div class="category-title">
+        <span>🔍</span> Відеоспостереження
+      </div>
+      <div class="buttons-grid">
+        <button class="app-button" onclick="openApp('pixelwizard')">
+          <span class="app-icon">🖼️</span>
+          Якість зображення
+        </button>
+        <button class="app-button" onclick="openApp('visionrange')">
+          <span class="app-icon">👁️</span>
+          Довідник камер
+        </button>
       </div>
     </div>
 
-    <div class="footer">
-      Розроблено для спільноти систем безпеки 🌐<br>
-      <a href="https://t.me/your_bot" target="_blank">Підтримка</a>
-    </div>
+    <footer>
+      Розроблено для фахівців з безпеки<br>
+      <a href="https://t.me/sisbnight_bot" class="support-link" target="_blank">Зв'язатися з підтримкою</a>
+    </footer>
   </div>
 
   <script>
     // Ініціалізація Telegram WebApp
     Telegram.WebApp.ready();
     Telegram.WebApp.expand();
-
-
+    
+    // Функція для відкриття додатків
     function openApp(appName) {
-        const baseUrl = 'https://sergprymak.github.io/MiniApps/';
-        const fullUrl = `${baseUrl}${appName}.html`; // Наприклад: https://.../calcups.html
-        Telegram.WebApp.openLink(fullUrl); // Використовуйте Telegram API замість window.open
+      const baseUrl = 'https://sergprymak.github.io/MiniApps/';
+      const fullUrl = `${baseUrl}${appName}.html`;
+      
+      // Відкриття через Telegram WebApp API
+      try {
+        Telegram.WebApp.openLink(fullUrl);
+      } catch (e) {
+        console.error('Помилка відкриття:', e);
+        // Резервний варіант для звичайних браузерів
+        window.open(fullUrl, '_blank');
+      }
     }
+    
+    // Додаткові налаштування інтерфейсу
+    Telegram.WebApp.setHeaderColor('#2a9d8f');
+    Telegram.WebApp.setBackgroundColor('#f5f5f5');
   </script>
 </body>
 </html>
