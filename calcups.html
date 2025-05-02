@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Розрахунок ємності акумулятора</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 1em; background: #f0f0f0; }
+    .container { max-width: 500px; margin: auto; background: white; padding: 1em; border-radius: 10px; }
+    input, button, select { width: 100%; margin: 0.5em 0; padding: 0.5em; font-size: 1em; }
+    .device-group { display: flex; gap: 0.5em; }
+    .device-group input { flex: 1; }
+    .result { margin-top: 1em; padding: 1em; background: #e0ffe0; border-radius: 5px; }
+    .error { color: red; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>🔋 Розрахунок ємності акумулятора</h2>
+    
+    <!-- Години роботи -->
+    <label>Час роботи (години):</label>
+    <input type="number" id="hours" placeholder="24" min="0.1" step="0.1">
+
+    <!-- Поля для пристроїв -->
+    <div id="devices">
+      <div class="device-group">
+        <input type="number" placeholder="Кількість" min="1" step="1">
+        <input type="number" placeholder="Споживання (Вт)" min="0.1" step="0.1">
+      </div>
+    </div>
+
+    <!-- Кнопки -->
+    <button onclick="addDevice()">+ Додати пристрій</button>
+    <button onclick="calculate()">Розрахувати</button>
+
+    <!-- Вивід результату -->
+    <div id="output" class="result" style="display:none;"></div>
+    <div id="error" class="error" style="display:none;"></div>
+  </div>
+
+  <script>
+    // Ініціалізація Telegram WebApp
+    Telegram.WebApp.ready();
+    Telegram.WebApp.expand();
+
+    // Додавання нового пристрою
+    function addDevice() {
+      const div = document.createElement('div');
+      div.className = 'device-group';
+      div.innerHTML = `
+        <input type="number" placeholder="Кількість" min="1" step="1">
+        <input type="number" placeholder="Споживання (Вт)" min="0.1" step="0.1">
+      `;
+      document.getElementById('devices').appendChild(div);
+    }
+
+    // Обробка розрахунку
+    function calculate() {
+      try {
+        const hours = parseFloat(document.getElementById('hours').value);
+        const devices = Array.from(document.querySelectorAll('.device-group'));
+        let totalPower = 0;
+        const devicesInfo = [];
+
+        if (hours <= 0) throw new Error("Час роботи має бути більше 0");
+
+        devices.forEach((group, index) => {
+          const [qtyInput, powerInput] = group.querySelectorAll('input');
+          const qty = parseFloat(qtyInput.value);
+          const power = parseFloat(powerInput.value);
+
+          if (isNaN(qty) || isNaN(power) || qty <= 0 || power <= 0) {
+            throw new Error(`Невірні дані для пристрою #${index + 1}`);
+          }
+
+          totalPower += qty * power;
+          devicesInfo.push(`${qty} × ${power} Вт`);
+        });
+
+        if (devices.length === 0) throw new Error("Додайте хоча б один пристрій");
+
+        // Розрахунки
+        const totalWh = totalPower * hours;
+        const ah12v = totalWh / 12;
+        const mah37v = (totalWh / 3.7) * 1000;
+
+        // Вивід результату
+        document.getElementById('output').innerHTML = `
+          <strong>📊 Результат:</strong><br>
+          • Час роботи: ${hours} год<br>
+          • Загальне споживання: ${totalPower.toFixed(2)} Вт<br>
+          • Загальна потреба в енергії: ${totalWh.toFixed(2)} Вт·год<br><br>
+          <strong>🔢 Ємність акумулятора:</strong><br>
+          - Для 12V системи: ${ah12v.toFixed(2)} А·год<br>
+          - Для 3.7V системи: ${mah37v.toFixed(0)} мА·год
+        `;
+        document.getElementById('output').style.display = 'block';
+        document.getElementById('error').style.display = 'none';
+
+      } catch (e) {
+        document.getElementById('error').textContent = "❌ Помилка: " + e.message;
+        document.getElementById('error').style.display = 'block';
+        document.getElementById('output').style.display = 'none';
+      }
+    }
+  </script>
+</body>
+</html>
