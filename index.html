@@ -126,10 +126,9 @@
 
 
     function openApp(appName) {
-        const botUsername = 'sisbnight_bot';
-        const url = `https://t.me/${botUsername}/${appName}`;
-        console.log("Спроба відкрити:", url); // Перевірте в консолі
-        window.open(url, '_blank');
+        const baseUrl = 'https://sergprymak.github.io/MiniApps/';
+        const fullUrl = `${baseUrl}${appName}.html`; // Наприклад: https://.../calcups.html
+        Telegram.WebApp.openLink(fullUrl); // Використовуйте Telegram API замість window.open
     }
   </script>
 </body>
