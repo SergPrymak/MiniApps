@@ -3,176 +3,69 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Помічник з систем безпеки</title>
+    <title>Технічні калькулятори</title>
+    <link rel="stylesheet" href="style.css">
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <style>
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            background-color: var(--tg-theme-bg-color, #f5f5f5);
-            color: var(--tg-theme-text-color, #222);
-            margin: 0;
-            padding: 16px;
-            max-width: 500px;
-            margin: 0 auto;
-        }
-        header {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        h1 {
-            font-size: 1.5rem;
-            margin-bottom: 10px;
-        }
-        .description {
-            font-size: 0.9rem;
-            margin-bottom: 24px;
-            color: var(--tg-theme-hint-color, #999);
-            text-align: center;
-        }
-        .tools-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-        }
-        .tool-button {
-            background-color: var(--tg-theme-button-color, #2AABEE);
-            color: var(--tg-theme-button-text-color, white);
-            border: none;
-            border-radius: 8px;
-            padding: 12px;
-            font-size: 0.9rem;
-            text-align: center;
-            cursor: pointer;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            transition: background-color 0.2s;
-            min-height: 90px;
-            justify-content: center;
-        }
-        .tool-button:hover {
-            opacity: 0.9;
-        }
-        .tool-button i {
-            font-size: 1.5rem;
-            margin-bottom: 8px;
-        }
-        .tool-button span {
-            font-weight: bold;
-        }
-        .tool-button p {
-            margin: 5px 0 0;
-            font-size: 0.8rem;
-            opacity: 0.9;
-        }
-        footer {
-            margin-top: 24px;
-            text-align: center;
-            font-size: 0.8rem;
-            color: var(--tg-theme-hint-color, #999);
-        }
-    </style>
 </head>
 <body>
-    <header>
-        <h1>🛠️ Помічник з систем безпеки</h1>
-        <div class="description">
-            Ваш надійний помічник у світі систем безпеки. Оберіть потрібний інструмент нижче.
+    <div class="container">
+        <header>
+            <h1>Технічні калькулятори</h1>
+            <p>Виберіть потрібний калькулятор:</p>
+        </header>
+        
+        <h2 class="section-title">Електроживлення</h2>
+        <div class="calculator-grid">
+            <div class="calculator-card" onclick="openCalculator('ups')">
+                <div class="icon">🔋</div>
+                <h2>Розрахунок ємності АКБ</h2>
+                <p>Визначення необхідної ємності акумуляторів для заданого часу роботи</p>
+            </div>
+            
+            <div class="calculator-card" onclick="openCalculator('battime')">
+                <div class="icon">⏱️</div>
+                <h2>Тривалість роботи від АКБ</h2>
+                <p>Розрахунок часу роботи від акумулятора заданої ємності</p>
+            </div>
+            
+            <div class="calculator-card" onclick="openCalculator('poewizard')">
+                <div class="icon">🔌</div>
+                <h2>PoE калькулятор</h2>
+                <p>Розрахунок параметрів PoE з/без Extender'ів, падіння напруги</p>
+            </div>
         </div>
-    </header>
-
-    <div class="tools-grid">
-        <button class="tool-button" onclick="openTool('links')">
-            <i>🔗</i>
-            <span>Корисні ресурси</span>
-            <p>Джерела інформації</p>
-        </button>
         
-        <button class="tool-button" onclick="openTool('rules')">
-            <i>📋</i>
-            <span>Правила</span>
-            <p>Ознайомитись з правилами</p>
-        </button>
+        <h2 class="section-title">Відеоспостереження</h2>
+        <div class="calculator-grid">
+            <div class="calculator-card" onclick="openCalculator('lens')">
+                <div class="icon">👁️</div>
+                <h2>Розрахунок оптики</h2>
+                <p>Розрахунок кута огляду, фокусної відстані та вибір об'єктиву</p>
+            </div>
+            
+            <div class="calculator-card" onclick="openCalculator('hdd')">
+                <div class="icon">💾</div>
+                <h2>Розрахунок об'єму HDD</h2>
+                <p>Розрахунок необхідного дискового простору для відеоархіву</p>
+            </div>
+        </div>
         
-        <button class="tool-button" onclick="openTool('calchdd')">
-            <i>💾</i>
-            <span>Розрахунок HDD</span>
-            <p>Об'єм для відеоархіву</p>
-        </button>
-        
-        <button class="tool-button" onclick="openTool('calcdays')">
-            <i>📅</i>
-            <span>Розрахунок днів</span>
-            <p>Глибина архіву по HDD</p>
-        </button>
-        
-        <button class="tool-button" onclick="openTool('poewizard')">
-            <i>⚡</i>
-            <span>PoE калькулятор</span>
-            <p>Для обладнання</p>
-        </button>
-        
-        <button class="tool-button" onclick="openTool('calcups')">
-            <i>🔋</i>
-            <span>Розрахунок АКБ</span>
-            <p>Підбір під систему</p>
-        </button>
-        
-        <button class="tool-button" onclick="openTool('battime')">
-            <i>⏱️</i>
-            <span>Час роботи</span>
-            <p>Від акумулятора</p>
-        </button>
-        
-        <button class="tool-button" onclick="openTool('pixelwizard')">
-            <i>🔍</i>
-            <span>Якість зображення</span>
-            <p>Визначення параметрів</p>
-        </button>
-        
-        <button class="tool-button" onclick="openTool('visionrange')">
-            <i>👁️</i>
-            <span>Можливості камери</span>
-            <p>Довідник характеристик</p>
-        </button>
-        
-        <button class="tool-button" onclick="openTool('solarwizard')">
-            <i>☀️</i>
-            <span>Сонячна система</span>
-            <p>Розрахунок автономності</p>
-        </button>
-        
-        <button class="tool-button" onclick="openTool('solargenwizard')">
-            <i>💰</i>
-            <span>Прогноз генерації</span>
-            <p>Економічна вигода</p>
-        </button>
+        <h2 class="section-title">Сонячна енергія</h2>
+        <div class="calculator-grid">
+            <div class="calculator-card" onclick="openCalculator('solar')">
+                <div class="icon">☀️</div>
+                <h2>Сонячні панелі</h2>
+                <p>Розрахунок необхідної потужності сонячних панелей і окупності</p>
+            </div>
+            
+            <div class="calculator-card" onclick="openCalculator('battery')">
+                <div class="icon">🔌</div>
+                <h2>Ємність акумуляторів</h2>
+                <p>Розрахунок ємності АКБ для сонячної системи</p>
+            </div>
+        </div>
     </div>
-
-    <footer>
-        Разом ми робимо світ безпечнішим 🌐🔒
-    </footer>
-
-    <script>
-        // Initialize Telegram WebApp
-        let tg = window.Telegram.WebApp;
-        tg.expand();
-        tg.enableClosingConfirmation();
-        
-        // Function to open different tools
-        function openTool(command) 
-          {
-          // Перехід на сторінку калькулятора
-            window.location.href = `${command}.html`;
-     
-        }
-        // Function to handle back button
-        
-        // Apply theme
-        document.addEventListener('DOMContentLoaded', function() {
-            document.body.style.backgroundColor = tg.themeParams.bg_color || '#f5f5f5';
-            document.body.style.color = tg.themeParams.text_color || '#222';
-        });
-    </script>
+    
+    <script src="main.js"></script>
 </body>
 </html>
