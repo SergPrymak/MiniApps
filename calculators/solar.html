@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Сонячні панелі</title>
+    <link rel="stylesheet" href="../style.css">
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+</head>
+<body>
+    <div class="container">
+        <a href="../index.html" class="back-button">Повернутися до меню</a>
+        
+        <header>
+            <h1>☀️ Сонячні панелі</h1>
+            <p>Розрахунок необхідної потужності сонячних панелей</p>
+        </header>
+        
+        <form id="solar-calculator-form">
+            <div class="form-group">
+                <label for="region">Регіон України:</label>
+                <select id="region" class="form-control">
+                    <option value="vinn">Вінниця</option>
+                    <option value="dnip">Дніпро</option>
+                    <option value="done">Донецьк</option>
+                    <option value="zhyto">Житомир</option>
+                    <option value="zapor">Запоріжжя</option>
+                    <option value="ifra">Івано-Франківськ</option>
+                    <option value="kyiv" selected>Київ</option>
+                    <option value="krop">Кропивницький</option>
+                    <option value="lutsk">Луцьк</option>
+                    <option value="luhan">Луганськ</option>
+                    <option value="lviv">Львів</option>
+                    <option value="myko">Миколаїв</option>
+                    <option value="odes">Одеса</option>
+                    <option value="polt">Полтава</option>
+                    <option value="rivn">Рівне</option>
+                    <option value="sumy">Суми</option>
+                    <option value="symf">Сімферополь</option>
+                    <option value="tern">Тернопіль</option>
+                    <option value="uzho">Ужгород</option>
+                    <option value="khark">Харків</option>
+                    <option value="kher">Херсон</option>
+                    <option value="kmel">Хмельницький</option>
+                    <option value="cher">Черкаси</option>
+                    <option value="chrn">Чернігів</option>
+                    <option value="chrv">Чернівці</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="consumption">Добове споживання (кВт·год):</label>
+                <input type="number" id="consumption" min="0.1" step="0.1" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="tariff-type">Тип тарифу:</label>
+                <select id="tariff-type" class="form-control">
+                    <option value="domestic">Домашній (без продажу)</option>
+                    <option value="green">Зелений тариф (з продажем)</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="months">Місяці для розрахунку:</label>
+                <div id="months-selector" class="checkbox-group">
+                    <label><input type="checkbox" name="month" value="0" checked> Січень</label>
+                    <label><input type="checkbox" name="month" value="1" checked> Лютий</label>
+                    <label><input type="checkbox" name="month" value="2" checked> Березень</label>
+                    <label><input type="checkbox" name="month" value="3" checked> Квітень</label>
+                    <label><input type="checkbox" name="month" value="4" checked> Травень</label>
+                    <label><input type="checkbox" name="month" value="5" checked> Червень</label>
+                    <label><input type="checkbox" name="month" value="6" checked> Липень</label>
+                    <label><input type="checkbox" name="month" value="7" checked> Серпень</label>
+                    <label><input type="checkbox" name="month" value="8" checked> Вересень</label>
+                    <label><input type="checkbox" name="month" value="9" checked> Жовтень</label>
+                    <label><input type="checkbox" name="month" value="10" checked> Листопад</label>
+                    <label><input type="checkbox" name="month" value="11" checked> Грудень</label>
+                </div>
+            </div>
+            
+            <button type="submit">Розрахувати</button>
+        </form>
+        
+        <div id="result" class="result-container" style="display: none;"></div>
+    </div>
+    
+    <script src="solar.js"></script>
+</body>
+</html>
