@@ -160,13 +160,13 @@
         tg.enableClosingConfirmation();
         
         // Function to open different tools
-        function openTool(command) {
-            // In a real app, you would navigate to different pages or open modals
-            // For this demo, we'll just send the command back to the bot
-            tg.sendData(`/${command}`);
-            // Alternatively, you could navigate to specific pages:
-            // window.location.href = `${command}.html`;
+        function openTool(command) 
+          {
+          // Перехід на сторінку калькулятора
+            window.location.href = `${command}.html`;
+     
         }
+        // Function to handle back button
         
         // Apply theme
         document.addEventListener('DOMContentLoaded', function() {
