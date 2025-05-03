@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Тривалість роботи від АКБ</title>
+    <link rel="stylesheet" href="../style.css">
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+</head>
+<body>
+    <div class="container">
+        <a href="../index.html" class="back-button">Повернутися до меню</a>
+        
+        <header>
+            <h1>⏱️ Тривалість роботи від АКБ</h1>
+            <p>Розрахунок часу роботи від акумулятора</p>
+        </header>
+        
+        <form id="battime-calculator-form">
+            <div class="form-group">
+                <label for="capacity">Ємність акумулятора:</label>
+                <input type="number" id="capacity" min="1" step="0.1" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="voltage">Напруга акумулятора (В):</label>
+                <input type="number" id="voltage" min="0.1" step="0.1" required>
+            </div>
+            
+            <div id="devices-container">
+                <div class="form-group device-group">
+                    <label>Пристрій 1:</label>
+                    <div style="display: flex; gap: 8px;">
+                        <input type="number" min="1" class="device-count" placeholder="Кількість" required>
+                        <input type="number" min="0.1" step="0.1" class="device-power" placeholder="Споживання (Вт)" required>
+                    </div>
+                </div>
+            </div>
+            
+            <button type="button" id="add-device">+ Додати пристрій</button>
+            <button type="submit">Розрахувати</button>
+        </form>
+        
+        <div id="result" class="result-container" style="display: none;"></div>
+        
+        <div style="margin-top: 20px;">
+            <h3>Середнє споживання пристроїв:</h3>
+            <ul>
+                <li>Світч: 2W</li>
+                <li>Камера Dahua: 4W</li>
+                <li>Камера Hikvision: 6W</li>
+                <li>NVR з 1 HDD: 10W</li>
+                <li>ONU: 4W</li>
+                <li>Роутер 2.4G: 2W</li>
+                <li>Роутер 2.4G+5G: 7W</li>
+            </ul>
+        </div>
+    </div>
+    
+    <script src="battime.js"></script>
+</body>
+</html>
