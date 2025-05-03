@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PoE калькулятор</title>
+    <link rel="stylesheet" href="../style.css">
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+</head>
+<body>
+    <div class="container">
+        <a href="../index.html" class="back-button">Повернутися до меню</a>
+        
+        <header>
+            <h1>🔌 PoE калькулятор</h1>
+            <p>Розрахунок параметрів PoE з/без Extender'ів</p>
+        </header>
+        
+        <form id="poewizard-form">
+            <div class="form-group">
+                <label for="power">Споживання пристрою (Вт):</label>
+                <input type="number" id="power" min="0.1" step="0.1" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="distance">Загальна відстань (м):</label>
+                <input type="number" id="distance" min="1" required>
+            </div>
+            
+            <div class="form-group" id="extenders-container">
+                <label>Позиції Extender'ів (метрів від початку):</label>
+                <div id="extender-positions"></div>
+                <button type="button" id="add-extender" style="margin-top: 8px;">+ Додати Extender</button>
+            </div>
+            
+            <button type="submit">Розрахувати</button>
+        </form>
+        
+        <div id="result" class="result-container" style="display: none;"></div>
+        
+        <div style="margin-top: 20px;">
+            <h3>Обмеження:</h3>
+            <ul>
+                <li>Mode B (af/at): макс. 250м, 10Мбіт/с</li>
+                <li>Еталон: Finmark мідь 0,51</li>
+                <li>З Extender'ами: макс. 3, загальна ≤400м</li>
+                <li>При ручному розташуванні розширювачів враховуйте, що сегменти >100м мають високий ризик втрати пакетних даних</li>
+            </ul>
+        </div>
+    </div>
+    
+    <script src="poewizard.js"></script>
+</body>
+</html>
