@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Розрахунок об'єму HDD</title>
+    <link rel="stylesheet" href="../style.css">
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+</head>
+<body>
+    <div class="container">
+        <a href="../index.html" class="back-button">Повернутися до меню</a>
+        
+        <header>
+            <h1>💾 Розрахунок об'єму HDD</h1>
+            <p>Розрахунок необхідного дискового простору для відеоархіву</p>
+        </header>
+        
+        <form id="hdd-calculator-form">
+            <div id="cameras-container">
+                <div class="camera-group">
+                    <h3>Камера 1</h3>
+                    <div class="form-group">
+                        <label for="resolution-0">Роздільна здатність:</label>
+                        <select id="resolution-0" class="resolution-select">
+                            <option value="1.0">1 MP (720p)</option>
+                            <option value="2.0" selected>2 MP (1080p)</option>
+                            <option value="3.0">3 MP (1536p)</option>
+                            <option value="4.0">4 MP (1440p)</option>
+                            <option value="6.0">6 MP (2736p)</option>
+                            <option value="8.0">8 MP (4K)</option>
+                            <option value="12.0">12 MP (4000p)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="fps-0">Частота кадрів (FPS):</label>
+                        <select id="fps-0" class="fps-select">
+                            <option value="6">6 FPS</option>
+                            <option value="12">12 FPS</option>
+                            <option value="15" selected>15 FPS</option>
+                            <option value="20">20 FPS</option>
+                            <option value="25">25 FPS</option>
+                            <option value="30">30 FPS</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="codec-0">Кодек:</label>
+                        <select id="codec-0" class="codec-select">
+                            <option value="0.1">H.265</option>
+                            <option value="0.2" selected>H.264</option>
+                            <option value="0.4">MJPEG</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="count-0">Кількість камер:</label>
+                        <input type="number" id="count-0" class="camera-count" min="1" value="1" required>
+                    </div>
+                </div>
+            </div>
+            
+            <button type="button" id="add-camera">+ Додати ще тип камер</button>
+            
+            <div class="form-group">
+                <label for="days">Термін зберігання (днів):</label>
+                <input type="number" id="days" min="1" value="30" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="recording-mode">Режим запису:</label>
+                <select id="recording-mode">
+                    <option value="1">24/7 (постійний)</option>
+                    <option value="0.5">За рухом (12 год/добу)</option>
+                    <option value="0.25">За рухом (6 год/добу)</option>
+                </select>
+            </div>
+            
+            <button type="submit">Розрахувати</button>
+        </form>
+        
+        <div id="result" class="result-container" style="display: none;"></div>
+    </div>
+    
+    <script src="hdd.js"></script>
+</body>
+</html>
