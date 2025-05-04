@@ -13,9 +13,26 @@ document.addEventListener('DOMContentLoaded', function() {
     const resultContainer = document.getElementById('result');
     const modeBtns = document.querySelectorAll('.mode-btn');
     const calculationModes = document.querySelectorAll('.calculation-mode');
+    const batteryTypeSelector = document.getElementById('battery-type');
     
     // Активний режим (за замовчуванням - розрахунок ємності)
     let activeMode = 'capacity-mode';
+    
+    // Перемикання між типами батарей
+    if (batteryTypeSelector) {
+        batteryTypeSelector.addEventListener('change', function() {
+            const upsInputs = document.querySelectorAll('.battery-input-ups');
+            const mobileInputs = document.querySelectorAll('.battery-input-mobile');
+            
+            if (this.value === 'ups') {
+                upsInputs.forEach(el => el.style.display = 'block');
+                mobileInputs.forEach(el => el.style.display = 'none');
+            } else {
+                upsInputs.forEach(el => el.style.display = 'none');
+                mobileInputs.forEach(el => el.style.display = 'block');
+            }
+        });
+    }
     
     // Перемикання між режимами
     modeBtns.forEach(btn => {
@@ -110,37 +127,57 @@ document.addEventListener('DOMContentLoaded', function() {
             const capacityWh = (totalPower * hours) / 0.85;
             const capacity12V = capacityWh / 12;
             const capacity24V = capacityWh / 24;
+            const capacity3_7V = (capacityWh / 3.7) * 1000; // Конвертація в mAh для 3.7V
             
             resultHTML = `
                 <h3>Результати розрахунку:</h3>
                 <p>Загальна потужність: <strong>${totalPower.toFixed(1)} Вт</strong></p>
                 <p>Необхідна ємність акумуляторів для роботи протягом ${hours} год:</p>
                 <ul>
-                    <li>При напрузі 12V: <strong>${capacity12V.toFixed(1)} Ah</strong></li>
-                    <li>При напрузі 24V: <strong>${capacity24V.toFixed(1)} Ah</strong></li>
+                    <li>UPS батарея 12V: <strong>${capacity12V.toFixed(1)} Ah</strong></li>
+                    <li>UPS батарея 24V: <strong>${capacity24V.toFixed(1)} Ah</strong></li>
+                    <li>Мобільна батарея 3.7V: <strong>${Math.round(capacity3_7V)} mAh</strong></li>
                     <li>Загальна ємність: <strong>${capacityWh.toFixed(1)} Wh</strong></li>
                 </ul>
             `;
             
         } else {
             // Режим розрахунку часу роботи
-            const capacity = parseFloat(document.getElementById('battery-capacity').value);
-            const voltage = parseFloat(document.getElementById('battery-voltage').value);
+            const batteryType = document.getElementById('battery-type').value;
+            let capacityWh = 0;
+            let capacityInfo = '';
             
-            if (isNaN(capacity) || isNaN(voltage)) {
-                alert('Введіть коректні значення ємності та напруги АКБ');
-                return;
+            if (batteryType === 'ups') {
+                const capacity = parseFloat(document.getElementById('battery-capacity').value);
+                const voltage = parseFloat(document.getElementById('battery-voltage').value);
+                
+                if (isNaN(capacity) || isNaN(voltage)) {
+                    alert('Введіть коректні значення ємності та напруги АКБ');
+                    return;
+                }
+                
+                capacityWh = capacity * voltage;
+                capacityInfo = `<p>Ємність АКБ: <strong>${capacity} Ah</strong> при <strong>${voltage}V</strong> (${capacityWh.toFixed(1)} Wh)</p>`;
+            } else {
+                const mobileCapacity = parseFloat(document.getElementById('mobile-capacity').value);
+                
+                if (isNaN(mobileCapacity)) {
+                    alert('Введіть коректне значення ємності мобільної батареї');
+                    return;
+                }
+                
+                capacityWh = (mobileCapacity / 1000) * 3.7; // Конвертація mAh в Wh для 3.7V
+                capacityInfo = `<p>Ємність батареї: <strong>${mobileCapacity} mAh</strong> при <strong>3.7V</strong> (${capacityWh.toFixed(1)} Wh)</p>`;
             }
             
             // Розрахунок часу роботи (з урахуванням ефективності інвертора 0.85)
-            const capacityWh = capacity * voltage;
             const runtimeHours = (capacityWh * 0.85) / totalPower;
             const runtimeMinutes = Math.floor((runtimeHours % 1) * 60);
             
             resultHTML = `
                 <h3>Результати розрахунку:</h3>
                 <p>Загальна потужність: <strong>${totalPower.toFixed(1)} Вт</strong></p>
-                <p>Ємність АКБ: <strong>${capacity} Ah</strong> при <strong>${voltage}V</strong> (${capacityWh.toFixed(1)} Wh)</p>
+                ${capacityInfo}
                 <p>Розрахунковий час роботи: <strong>${Math.floor(runtimeHours)} год ${runtimeMinutes} хв</strong></p>
             `;
         }
