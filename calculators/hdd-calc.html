@@ -2,399 +2,409 @@
 <html lang="uk">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Калькулятор HDD - Розрахунок обсягу та днів архіву</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Відеоархів - Калькулятор відеоспостереження</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.2/font/bootstrap-icons.css">
     <style>
-        body {
-            background-color: #f8f9fa;
+        html, body {
+            background: #fff;
+            margin: 0;
+            padding: 0;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            max-width: 430px;
+            margin-left: auto;
+            margin-right: auto;
+            color: #222;
         }
-        .card {
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            margin-bottom: 20px;
+        a {
+            color: #2196f3;
+            text-decoration: none;
         }
-        .card-header {
-            background-color: #f1f5f9;
-            border-bottom: 1px solid #e9ecef;
+        a:hover {
+            text-decoration: underline;
+        }
+        .back-link {
+            display: block;
+            margin: 15px 0 20px 0;
+            font-size: 15px;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 25px;
+            padding: 0 15px;
+        }
+        .header-icon {
+            color: #3b82f6;
+            font-size: 28px;
+            margin-bottom: 5px;
+        }
+        .header h1 {
+            margin: 5px 0;
+            font-size: 24px;
             font-weight: 600;
         }
-        .nav-tabs .nav-link {
-            color: #495057;
+        .header p {
+            margin: 5px 0 0;
+            color: #777;
+            font-size: 14px;
+        }
+        .main-content {
+            padding: 0 15px 20px;
+        }
+        .tab-buttons {
+            display: flex;
+            margin-bottom: 20px;
+            gap: 8px;
+        }
+        .tab-button {
+            flex: 1;
+            background: #3b82f6;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 0;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+        .tab-button:active {
+            background: #2563eb;
+        }
+        .form-label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 15px;
             font-weight: 500;
         }
-        .nav-tabs .nav-link.active {
-            font-weight: 600;
-            color: #0d6efd;
-            border-bottom: 2px solid #0d6efd;
+        .form-input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            margin-bottom: 15px;
+            box-sizing: border-box;
         }
-        .calculator-container {
-            max-width: 900px;
-            margin: 0 auto;
+        .device-row {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 8px;
         }
-        .result-box {
-            background-color: #f1f8ff;
-            border-left: 4px solid #0d6efd;
-            padding: 15px;
-            margin-top: 20px;
-            border-radius: 5px;
-        }
-        .camera-item {
-            background-color: #f8f9fa;
+        .device-input {
+            border: 1px solid #ddd;
             border-radius: 8px;
             padding: 10px;
-            margin-bottom: 10px;
+            font-size: 16px;
+        }
+        .add-device-btn {
+            display: block;
+            width: 100%;
+            background: #e3f2fd;
+            color: #2196f3;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 0;
+            font-size: 15px;
+            margin-top: 5px;
+            margin-bottom: 20px;
+            cursor: pointer;
         }
         .remove-btn {
+            background: none;
+            border: none;
+            color: #e53935;
+            font-size: 22px;
+            padding: 0;
             cursor: pointer;
-            color: #dc3545;
+            display: flex;
+            align-items: center;
         }
-        .camera-container {
-            max-height: 300px;
-            overflow-y: auto;
-            padding-right: 5px;
+        .calc-button {
+            display: block;
+            width: 100%;
+            background: #3b82f6;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 0;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-bottom: 15px;
+        }
+        .calc-button:active {
+            background: #2563eb;
+        }
+        .result-box {
+            background: #e3f2fd;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 20px;
+            font-size: 15px;
+        }
+        .result-box strong {
+            color: #2196f3;
+        }
+        .tips-section {
+            margin-top: 20px;
+            font-size: 14px;
+            color: #666;
+        }
+        .tips-section ul {
+            padding-left: 20px;
+            margin: 10px 0;
+        }
+        .camera-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            background: #e3f2fd;
+            border-radius: 6px;
+            padding: 3px 8px;
+            margin-right: 5px;
+            margin-bottom: 5px;
+            font-size: 13px;
+        }
+        .info-icon {
+            display: inline-block;
+            color: #2196f3;
+            font-size: 15px;
+            margin-right: 5px;
         }
     </style>
 </head>
 <body>
-    <div class="container py-4 calculator-container">
-        <h1 class="text-center mb-4">Калькулятор HDD для відеоспостереження</h1>
-        <div class="card">
-            <div class="card-header">
-                <ul class="nav nav-tabs card-header-tabs" id="calculatorTabs" role="tablist">
-                    <li class="nav-item" role="presentation">
-                        <a class="nav-link active" id="hdd-tab" data-bs-toggle="tab" href="#hdd-calc" role="tab" aria-controls="hdd-calc" aria-selected="true">
-                            <i class="bi bi-hdd"></i> Розрахунок об'єму HDD
-                        </a>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <a class="nav-link" id="days-tab" data-bs-toggle="tab" href="#days-calc" role="tab" aria-controls="days-calc" aria-selected="false">
-                            <i class="bi bi-calendar-week"></i> Розрахунок днів архіву
-                        </a>
-                    </li>
-                </ul>
-            </div>
-            <div class="card-body">
-                <div class="tab-content" id="calculatorTabContent">
-                    <!-- HDD Size Calculator Tab -->
-                    <div class="tab-pane fade show active" id="hdd-calc" role="tabpanel" aria-labelledby="hdd-tab">
-                        <h5 class="card-title">Розрахунок необхідного об'єму HDD</h5>
-                        <p class="card-text text-muted">Введіть кількість днів архіву та параметри камер</p>
-                        
-                        <form id="hddCalcForm">
-                            <div class="mb-3">
-                                <label for="days" class="form-label">Кількість днів архіву</label>
-                                <input type="number" class="form-control" id="days" min="1" value="30" required>
-                            </div>
-                            
-                            <div class="mb-3">
-                                <label class="form-label">Камери та бітрейти</label>
-                                <div id="camerasHdd" class="camera-container">
-                                    <div class="camera-item d-flex align-items-center">
-                                        <div class="row w-100">
-                                            <div class="col-5">
-                                                <div class="input-group">
-                                                    <span class="input-group-text">Кількість</span>
-                                                    <input type="number" class="form-control camera-count" min="1" value="1" required>
-                                                </div>
-                                            </div>
-                                            <div class="col-6">
-                                                <div class="input-group">
-                                                    <span class="input-group-text">Бітрейт</span>
-                                                    <input type="number" class="form-control bitrate" min="128" value="2048" required>
-                                                    <span class="input-group-text">Kbps</span>
-                                                </div>
-                                            </div>
-                                            <div class="col-1 d-flex align-items-center justify-content-center">
-                                                <i class="bi bi-x-circle-fill remove-btn"></i>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <button type="button" id="addCameraHdd" class="btn btn-outline-primary btn-sm mt-2">
-                                    <i class="bi bi-plus-circle"></i> Додати камеру
-                                </button>
-                            </div>
-                            
-                            <div class="d-grid gap-2">
-                                <button type="submit" class="btn btn-primary">Розрахувати</button>
-                            </div>
-                        </form>
-                        
-                        <div id="hddResult" class="result-box d-none">
-                            <h5><i class="bi bi-calculator"></i> Результати розрахунку:</h5>
-                            <div id="hddResultContent"></div>
-                        </div>
-                    </div>
-                    
-                    <!-- Days Calculator Tab -->
-                    <div class="tab-pane fade" id="days-calc" role="tabpanel" aria-labelledby="days-tab">
-                        <h5 class="card-title">Розрахунок тривалості архіву</h5>
-                        <p class="card-text text-muted">Введіть об'єм HDD та параметри камер</p>
-                        
-                        <form id="daysCalcForm">
-                            <div class="mb-3">
-                                <label for="hddSize" class="form-label">Об'єм HDD</label>
-                                <div class="input-group">
-                                    <input type="number" class="form-control" id="hddSize" min="0.1" step="0.1" value="4" required>
-                                    <span class="input-group-text">TB</span>
-                                </div>
-                            </div>
-                            
-                            <div class="mb-3">
-                                <label class="form-label">Камери та бітрейти</label>
-                                <div id="camerasDays" class="camera-container">
-                                    <div class="camera-item d-flex align-items-center">
-                                        <div class="row w-100">
-                                            <div class="col-5">
-                                                <div class="input-group">
-                                                    <span class="input-group-text">Кількість</span>
-                                                    <input type="number" class="form-control camera-count" min="1" value="1" required>
-                                                </div>
-                                            </div>
-                                            <div class="col-6">
-                                                <div class="input-group">
-                                                    <span class="input-group-text">Бітрейт</span>
-                                                    <input type="number" class="form-control bitrate" min="128" value="2048" required>
-                                                    <span class="input-group-text">Kbps</span>
-                                                </div>
-                                            </div>
-                                            <div class="col-1 d-flex align-items-center justify-content-center">
-                                                <i class="bi bi-x-circle-fill remove-btn"></i>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <button type="button" id="addCameraDays" class="btn btn-outline-primary btn-sm mt-2">
-                                    <i class="bi bi-plus-circle"></i> Додати камеру
-                                </button>
-                            </div>
-                            
-                            <div class="d-grid gap-2">
-                                <button type="submit" class="btn btn-primary">Розрахувати</button>
-                            </div>
-                        </form>
-                        
-                        <div id="daysResult" class="result-box d-none">
-                            <h5><i class="bi bi-calculator"></i> Результати розрахунку:</h5>
-                            <div id="daysResultContent"></div>
-                        </div>
+    <a href="../index.html" class="back-button">← Повернутися до меню</a>
+    <div class="header">
+        <i class="bi bi-camera-video-fill header-icon"></i>
+        <h1>Калькулятор відеоархіву</h1>
+        <p>Планування ємності для систем відеоспостереження</p>
+    </div>
+
+    <div class="main-content">
+        <div class="tab-buttons">
+            <button class="tab-button" id="capacityTabBtn"><i class="bi bi-hdd"></i> Розрахувати об'єм HDD</button>
+            <button class="tab-button" id="daysTabBtn"><i class="bi bi-calendar3"></i> Розрахувати глибину архіву</button>
+        </div>
+
+        <!-- HDD Capacity Tab -->
+        <div id="capacityTab">
+            <form id="hddCalcForm" autocomplete="off">
+                <label class="form-label"><i class="info-icon bi bi-calendar-week"></i>Глибина архіву (днів):</label>
+                <input type="number" class="form-input" id="days" min="1" value="30" required>
+                
+                <label class="form-label"><i class="info-icon bi bi-camera-video"></i>Відеокамери:</label>
+                <div id="camerasHdd">
+                    <div class="device-row">
+                        <input type="number" class="device-input camera-count" min="1" value="1" required placeholder="К-сть" style="width: 80px;">
+                        <input type="number" class="device-input" min="128" value="2048" required placeholder="Бітрейт (Kbps)" style="flex-grow: 1;">
+                        <button type="button" class="remove-btn" tabindex="-1" aria-label="Видалити"><i class="bi bi-x-circle"></i></button>
                     </div>
                 </div>
+                <button type="button" id="addCameraHdd" class="add-device-btn"><i class="bi bi-plus-circle"></i> Додати відеокамеру</button>
+                
+                <button type="submit" class="calc-button"><i class="bi bi-calculator"></i> Розрахувати</button>
+            </form>
+            
+            <div id="hddResult" class="result-box" style="display:none;">
+                <div id="hddResultContent"></div>
             </div>
-            <div class="card-footer text-muted">
-                <small>Примітка: Розрахунки є приблизними і не враховують додаткові фактори, такі як метадані та динамічний бітрейт.</small>
+        </div>
+        
+        <!-- Days Calculator Tab -->
+        <div id="daysTab" style="display:none;">
+            <form id="daysCalcForm" autocomplete="off">
+                <label class="form-label"><i class="info-icon bi bi-hdd-fill"></i>Доступний об'єм диска:</label>
+                <input type="number" class="form-input" id="hddSize" min="0.1" step="0.1" value="4" required>
+                
+                <label class="form-label"><i class="info-icon bi bi-camera-video"></i>Відеокамери:</label>
+                <div id="camerasDays">
+                    <div class="device-row">
+                        <input type="number" class="device-input camera-count" min="1" value="1" required placeholder="К-сть" style="width: 80px;">
+                        <input type="number" class="device-input" min="128" value="2048" required placeholder="Бітрейт (Kbps)" style="flex-grow: 1;">
+                        <button type="button" class="remove-btn" tabindex="-1" aria-label="Видалити"><i class="bi bi-x-circle"></i></button>
+                    </div>
+                </div>
+                <button type="button" id="addCameraDays" class="add-device-btn"><i class="bi bi-plus-circle"></i> Додати відеокамеру</button>
+                
+                <button type="submit" class="calc-button"><i class="bi bi-calculator"></i> Розрахувати</button>
+            </form>
+            
+            <div id="daysResult" class="result-box" style="display:none;">
+                <div id="daysResultContent"></div>
             </div>
+        </div>
+
+        <div class="tips-section">
+            <p><i class="bi bi-info-circle"></i> <strong>Як використовувати калькулятор?</strong></p>
+            <p>Бітрейт - середній обсяг даних, що передається камерою за секунду.</p>
+            <p>Типові значення бітрейту:</p>
+            <div style="display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 10px;">
+                <span class="camera-badge"><i class="bi bi-camera-video"></i> 1 Мп: 1024-2048 Kbps</span>
+                <span class="camera-badge"><i class="bi bi-camera-video"></i> 2 Мп: 2048-4096 Kbps</span>
+                <span class="camera-badge"><i class="bi bi-camera-video"></i> 4 Мп: 4096-8192 Kbps</span>
+            </div>
+            
+            <p><i class="bi bi-gear"></i> <strong>Технічні деталі розрахунків:</strong></p>
+            <ul>
+                <li>1 Mbps = 1024 Kbps</li>
+                <li>Розрахунок включає конвертацію бітів у байти (÷8)</li>
+                <li>Для обчислення днів застосовується коефіцієнт форматування (0.909)</li>
+                <li>Результат показує необхідну ємність для цілодобового запису</li>
+            </ul>
+            
+            <p><i class="bi bi-lightbulb"></i> <strong>Приклади використання:</strong></p>
+            <ul>
+                <li>2 камери по 2048 Kbps + 4 камери по 4096 Kbps на 30 днів = <strong>~6.2 TB</strong></li>
+                <li>Диск 10TB з 5 камерами (1024 Kbps) + 3 камерами (8192 Kbps) = <strong>~60 днів</strong></li>
+            </ul>
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Add Camera buttons functionality
-            document.getElementById('addCameraHdd').addEventListener('click', function() {
-                addCameraItem('camerasHdd');
-            });
-            
-            document.getElementById('addCameraDays').addEventListener('click', function() {
-                addCameraItem('camerasDays');
-            });
-            
-            // Initialize remove buttons for default camera items
-            document.querySelectorAll('.remove-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    // Don't remove if it's the last camera
-                    const container = this.closest('.camera-container');
-                    if (container.querySelectorAll('.camera-item').length > 1) {
-                        this.closest('.camera-item').remove();
-                    }
-                });
-            });
-            
-            // Form submission handlers
-            document.getElementById('hddCalcForm').addEventListener('submit', function(e) {
-                e.preventDefault();
-                calculateHddSize();
-            });
-            
-            document.getElementById('daysCalcForm').addEventListener('submit', function(e) {
-                e.preventDefault();
-                calculateDays();
-            });
-        });
+        // Tab switching
+        const capacityTabBtn = document.getElementById('capacityTabBtn');
+        const daysTabBtn = document.getElementById('daysTabBtn');
+        const capacityTab = document.getElementById('capacityTab');
+        const daysTab = document.getElementById('daysTab');
         
-        // Function to add new camera items
+        // Set default active tab
+        capacityTabBtn.style.background = '#2563eb';
+        
+        capacityTabBtn.onclick = function() {
+            capacityTabBtn.style.background = '#2563eb';
+            daysTabBtn.style.background = '#3b82f6';
+            capacityTab.style.display = '';
+            daysTab.style.display = 'none';
+        };
+        
+        daysTabBtn.onclick = function() {
+            daysTabBtn.style.background = '#2563eb';
+            capacityTabBtn.style.background = '#3b82f6';
+            daysTab.style.display = '';
+            capacityTab.style.display = 'none';
+        };
+
+        // Add/remove camera rows
         function addCameraItem(containerId) {
             const container = document.getElementById(containerId);
-            const newItem = document.createElement('div');
-            newItem.className = 'camera-item d-flex align-items-center';
-            newItem.innerHTML = `
-                <div class="row w-100">
-                    <div class="col-5">
-                        <div class="input-group">
-                            <span class="input-group-text">Кількість</span>
-                            <input type="number" class="form-control camera-count" min="1" value="1" required>
-                        </div>
-                    </div>
-                    <div class="col-6">
-                        <div class="input-group">
-                            <span class="input-group-text">Бітрейт</span>
-                            <input type="number" class="form-control bitrate" min="128" value="2048" required>
-                            <span class="input-group-text">Kbps</span>
-                        </div>
-                    </div>
-                    <div class="col-1 d-flex align-items-center justify-content-center">
-                        <i class="bi bi-x-circle-fill remove-btn"></i>
-                    </div>
-                </div>
+            const row = document.createElement('div');
+            row.className = 'device-row';
+            row.innerHTML = `
+                <input type="number" class="device-input camera-count" min="1" value="1" required placeholder="К-сть" style="width: 80px;">
+                <input type="number" class="device-input" min="128" value="2048" required placeholder="Бітрейт (Kbps)" style="flex-grow: 1;">
+                <button type="button" class="remove-btn" tabindex="-1" aria-label="Видалити"><i class="bi bi-x-circle"></i></button>
             `;
             
-            container.appendChild(newItem);
+            row.querySelector('.remove-btn').onclick = function() {
+                if (container.querySelectorAll('.device-row').length > 1) row.remove();
+            };
             
-            // Add event listener to the new remove button
-            newItem.querySelector('.remove-btn').addEventListener('click', function() {
-                if (container.querySelectorAll('.camera-item').length > 1) {
-                    newItem.remove();
-                }
-            });
+            container.appendChild(row);
         }
         
-        // Parse camera data from container
+        document.getElementById('addCameraHdd').onclick = function() { 
+            addCameraItem('camerasHdd'); 
+        };
+        
+        document.getElementById('addCameraDays').onclick = function() { 
+            addCameraItem('camerasDays'); 
+        };
+        
+        // Remove camera row for initial rows
+        document.querySelectorAll('.remove-btn').forEach(btn => {
+            btn.onclick = function() {
+                const container = btn.closest('div[id^="cameras"]');
+                if (container.querySelectorAll('.device-row').length > 1) 
+                    btn.closest('.device-row').remove();
+            };
+        });
+
+        // Parse camera data
         function parseCameraData(containerId) {
             const container = document.getElementById(containerId);
             let total_bitrate = 0;
             let total_cameras = 0;
             let camera_details = [];
             
-            container.querySelectorAll('.camera-item').forEach(item => {
+            container.querySelectorAll('.device-row').forEach(item => {
                 const count = parseInt(item.querySelector('.camera-count').value) || 0;
-                const bitrate = parseInt(item.querySelector('.bitrate').value) || 0;
+                const bitrate = parseInt(item.querySelectorAll('.device-input')[1].value) || 0;
                 
                 if (count > 0 && bitrate > 0) {
                     total_cameras += count;
                     total_bitrate += count * bitrate;
-                    camera_details.push(`${count} камер x ${bitrate} Kbps (${((count * bitrate) / 1024).toFixed(1)} Mbps)`);
+                    camera_details.push(`${count} × ${bitrate} Kbps (${((count * bitrate) / 1024).toFixed(1)} Mbps)`);
                 }
             });
             
             return { total_bitrate, total_cameras, camera_details };
         }
-        
-        // Calculate HDD Size
-        function calculateHddSize() {
+
+        // HDD Size Calculation
+        document.getElementById('hddCalcForm').onsubmit = function(e) {
+            e.preventDefault();
             try {
                 const days = parseInt(document.getElementById('days').value);
-                if (days <= 0) {
-                    throw new Error("Кількість днів має бути більше 0");
-                }
+                if (days <= 0) throw new Error("Кількість днів має бути більше 0");
                 
                 const { total_bitrate, total_cameras, camera_details } = parseCameraData('camerasHdd');
-                if (total_cameras === 0) {
-                    throw new Error("Додайте хоча б одну камеру з бітрейтом");
-                }
+                if (total_cameras === 0) throw new Error("Додайте хоча б одну камеру з бітрейтом");
                 
                 // Формула розрахунку (біти -> байти -> кілобайти -> мегабайти -> гігабайти -> терабайти)
                 const total_bits = total_bitrate * days * 24 * 60 * 60;
                 const total_tb = total_bits / 8 / 1024 / 1024 / 1024;
                 
-                // Display result
-                const resultContent = `
-                    <div class="mt-3">
-                        <ul class="list-group list-group-flush">
-                            <li class="list-group-item d-flex justify-content-between align-items-center">
-                                Дні архіву:
-                                <span class="badge bg-primary rounded-pill">${days}</span>
-                            </li>
-                            <li class="list-group-item d-flex justify-content-between align-items-center">
-                                Загальна кількість камер:
-                                <span class="badge bg-primary rounded-pill">${total_cameras}</span>
-                            </li>
-                            <li class="list-group-item">
-                                <div>Конфігурація камер:</div>
-                                <ul class="list-unstyled mt-2">
-                                    ${camera_details.map(detail => `<li><i class="bi bi-camera-video"></i> ${detail}</li>`).join('')}
-                                </ul>
-                            </li>
-                            <li class="list-group-item d-flex justify-content-between align-items-center">
-                                Сумарний бітрейт:
-                                <span class="badge bg-primary rounded-pill">${total_bitrate} Kbps (${(total_bitrate/1024).toFixed(1)} Mbps)</span>
-                            </li>
-                            <li class="list-group-item d-flex justify-content-between align-items-center fw-bold">
-                                Мінімально необхідно:
-                                <span class="badge bg-success rounded-pill fs-6">${total_tb.toFixed(2)} TB</span>
-                            </li>
-                        </ul>
-                    </div>
+                document.getElementById('hddResultContent').innerHTML = `
+                    <div><i class="bi bi-bar-chart-fill"></i> <strong>Результати розрахунку:</strong></div>
+                    <div style="margin-top:10px;"><i class="bi bi-calendar3"></i> Глибина архіву: <strong>${days} днів</strong></div>
+                    <div><i class="bi bi-camera-video"></i> Камер загалом: <strong>${total_cameras}</strong></div>
+                    <div><i class="bi bi-list-check"></i> Конфігурація камер:</div>
+                    <ul style="margin:4px 0 8px 20px;padding:0;">
+                        ${camera_details.map(d => `<li>${d}</li>`).join('')}
+                    </ul>
+                    <div><i class="bi bi-speedometer2"></i> Сумарний бітрейт: <strong>${total_bitrate} Kbps</strong> (${(total_bitrate/1024).toFixed(1)} Mbps)</div>
+                    <div style="margin-top:10px;font-weight:500;"><i class="bi bi-hdd-fill"></i> Потрібна ємність: <strong>${total_tb.toFixed(2)} TB</strong></div>
                 `;
-                
-                const resultElement = document.getElementById('hddResult');
-                document.getElementById('hddResultContent').innerHTML = resultContent;
-                resultElement.classList.remove('d-none');
-                
-            } catch (error) {
-                alert("Помилка: " + error.message);
+                document.getElementById('hddResult').style.display = '';
+            } catch (err) {
+                alert("Помилка: " + err.message);
             }
-        }
-        
-        // Calculate Days
-        function calculateDays() {
+        };
+
+        // Days Calculation
+        document.getElementById('daysCalcForm').onsubmit = function(e) {
+            e.preventDefault();
             try {
                 const hdd_tb = parseFloat(document.getElementById('hddSize').value);
-                if (hdd_tb <= 0) {
-                    throw new Error("Об'єм HDD має бути більше 0");
-                }
+                if (hdd_tb <= 0) throw new Error("Об'єм HDD має бути більше 0");
                 
                 const { total_bitrate, total_cameras, camera_details } = parseCameraData('camerasDays');
-                if (total_cameras === 0) {
-                    throw new Error("Додайте хоча б одну камеру з бітрейтом");
-                }
+                if (total_cameras === 0) throw new Error("Додайте хоча б одну камеру з бітрейтом");
                 
                 // Формула розрахунку (терабайти -> біти/секунду)
                 const total_bits_per_second = total_bitrate * 1024; // Kbps -> Kb/s
                 const hdd_bits = hdd_tb * 8 * 1024 * 1024 * 1024 * 1024; // Кількість бітів на диску
                 
-                // Розрахунок днів
+                // Розрахунок днів з урахуванням коефіцієнта форматування диска (0.909)
                 const total_days = hdd_bits / (total_bits_per_second * 24 * 60 * 60) * 0.909;
                 
-                // Display result
-                const resultContent = `
-                    <div class="mt-3">
-                        <ul class="list-group list-group-flush">
-                            <li class="list-group-item d-flex justify-content-between align-items-center">
-                                Доступний об'єм HDD:
-                                <span class="badge bg-primary rounded-pill">${hdd_tb} TB</span>
-                            </li>
-                            <li class="list-group-item d-flex justify-content-between align-items-center">
-                                Загальна кількість камер:
-                                <span class="badge bg-primary rounded-pill">${total_cameras}</span>
-                            </li>
-                            <li class="list-group-item">
-                                <div>Конфігурація камер:</div>
-                                <ul class="list-unstyled mt-2">
-                                    ${camera_details.map(detail => `<li><i class="bi bi-camera-video"></i> ${detail}</li>`).join('')}
-                                </ul>
-                            </li>
-                            <li class="list-group-item d-flex justify-content-between align-items-center">
-                                Сумарний бітрейт:
-                                <span class="badge bg-primary rounded-pill">${total_bitrate} Kbps (${(total_bitrate/1024).toFixed(1)} Mbps)</span>
-                            </li>
-                            <li class="list-group-item d-flex justify-content-between align-items-center fw-bold">
-                                Запис триватиме:
-                                <span class="badge bg-success rounded-pill fs-6">${total_days.toFixed(1)} днів</span>
-                            </li>
-                        </ul>
-                    </div>
+                document.getElementById('daysResultContent').innerHTML = `
+                    <div><i class="bi bi-bar-chart-fill"></i> <strong>Результати розрахунку:</strong></div>
+                    <div style="margin-top:10px;"><i class="bi bi-hdd-fill"></i> Доступна ємність: <strong>${hdd_tb} TB</strong></div>
+                    <div><i class="bi bi-camera-video"></i> Камер загалом: <strong>${total_cameras}</strong></div>
+                    <div><i class="bi bi-list-check"></i> Конфігурація камер:</div>
+                    <ul style="margin:4px 0 8px 20px;padding:0;">
+                        ${camera_details.map(d => `<li>${d}</li>`).join('')}
+                    </ul>
+                    <div><i class="bi bi-speedometer2"></i> Сумарний бітрейт: <strong>${total_bitrate} Kbps</strong> (${(total_bitrate/1024).toFixed(1)} Mbps)</div>
+                    <div style="margin-top:10px;font-weight:500;"><i class="bi bi-calendar3"></i> Глибина архіву: <strong>${total_days.toFixed(1)} днів</strong></div>
                 `;
-                
-                const resultElement = document.getElementById('daysResult');
-                document.getElementById('daysResultContent').innerHTML = resultContent;
-                resultElement.classList.remove('d-none');
-                
-            } catch (error) {
-                alert("Помилка: " + error.message);
+                document.getElementById('daysResult').style.display = '';
+            } catch (err) {
+                alert("Помилка: " + err.message);
             }
-        }
+        };
     </script>
 </body>
 </html>
