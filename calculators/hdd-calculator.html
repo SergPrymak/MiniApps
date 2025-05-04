@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Калькулятор HDD для відеоспостереження</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        
+        .container {
+            background-color: white;
+            border-radius: 8px;
+            padding: 25px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-top: 0;
+        }
+        
+        .mode-selector {
+            display: flex;
+            margin-bottom: 20px;
+            background-color: #f0f0f0;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+        
+        .mode-button {
+            flex: 1;
+            padding: 12px;
+            text-align: center;
+            background: none;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+        
+        .mode-button.active {
+            background-color: #3498db;
+            color: white;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 500;
+        }
+        
+        input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        
+        .camera-input {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+            align-items: center;
+        }
+        
+        .camera-input input {
+            flex: 1;
+        }
+        
+        .remove-camera {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .add-camera, .calculate-btn {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            margin-top: 10px;
+            transition: background-color 0.3s;
+        }
+        
+        .add-camera:hover, .calculate-btn:hover {
+            background-color: #2980b9;
+        }
+        
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #edf7ff;
+            border-radius: 6px;
+            border-left: 4px solid #3498db;
+            display: none;
+        }
+        
+        .error-message {
+            color: #e74c3c;
+            margin-top: 5px;
+            font-size: 14px;
+        }
+        
+        .help-text {
+            font-size: 14px;
+            color: #7f8c8d;
+            margin-top: 5px;
+        }
+        
+        .camera-container {
+            max-height: 300px;
+            overflow-y: auto;
+            padding-right: 5px;
+        }
+        
+        .bitrate-total {
+            font-weight: bold;
+            margin-top: 10px;
+            color: #2c3e50;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📊 Калькулятор HDD для відеоархіву</h1>
+        
+        <div class="mode-selector">
+            <button class="mode-button active" id="calc-hdd">Розрахувати обсяг HDD</button>
+            <button class="mode-button" id="calc-days">Розрахувати тривалість запису</button>
+        </div>
+        
+        <div id="calc-hdd-form">
+            <div class="form-group">
+                <label for="days">Кількість днів архіву:</label>
+                <input type="number" id="days" min="1" placeholder="Наприклад: 30">
+                <div class="help-text">Вкажіть кількість днів, на які потрібно зберігати архів</div>
+            </div>
+        </div>
+        
+        <div id="calc-days-form" style="display: none;">
+            <div class="form-group">
+                <label for="hdd-size">Доступний обсяг HDD (TB):</label>
+                <input type="number" id="hdd-size" min="0.1" step="0.1" placeholder="Наприклад: 4">
+                <div class="help-text">Вкажіть обсяг жорсткого диска в терабайтах</div>
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label>Конфігурація камер:</label>
+            <div class="help-text">Вкажіть кількість камер та бітрейт для кожної групи камер з однаковими параметрами</div>
+            
+            <div id="camera-container" class="camera-container">
+                <div class="camera-input">
+                    <input type="number" class="camera-count" min="1" placeholder="Кількість камер">
+                    <input type="number" class="camera-bitrate" min="1" placeholder="Бітрейт (Kbps)">
+                    <button class="remove-camera">×</button>
+                </div>
+            </div>
+            
+            <div class="bitrate-total" id="bitrate-total">Сумарний бітрейт: 0 Kbps</div>
+            <button class="add-camera" id="add-camera">+ Додати групу камер</button>
+        </div>
+        
+        <button class="calculate-btn" id="calculate">Розрахувати</button>
+        
+        <div class="result" id="result"></div>
+    </div>
+
+    <script src="hdd-calculator.js"></script>
+</body>
+</html>
