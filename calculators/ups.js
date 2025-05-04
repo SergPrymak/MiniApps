@@ -38,24 +38,30 @@ document.addEventListener('DOMContentLoaded', function() {
                 upsInputs.forEach(el => el.style.display = 'block');
                 mobileInputs.forEach(el => el.style.display = 'none');
                 
-                // Просто знімаємо required, замість відключення полів
+                // Активуємо/деактивуємо поля
                 document.getElementById('mobile-capacity').required = false;
                 document.getElementById('battery-capacity').required = true;
+                document.getElementById('mobile-capacity').disabled = true;
+                document.getElementById('battery-capacity').disabled = false;
             } else {
                 mobileInputs.forEach(el => el.style.display = 'block');
                 upsInputs.forEach(el => el.style.display = 'none');
                 
-                // Просто знімаємо required, замість відключення полів
+                // Активуємо/деактивуємо поля
                 document.getElementById('battery-capacity').required = false;
                 document.getElementById('mobile-capacity').required = true;
+                document.getElementById('battery-capacity').disabled = true;
+                document.getElementById('mobile-capacity').disabled = false;
             }
         });
         
         // Ініціалізуємо стан полів при завантаженні
         if (batteryTypeSelector.value === 'ups') {
-            document.querySelectorAll('.battery-input-mobile input').forEach(input => input.disabled = true);
+            document.getElementById('mobile-capacity').disabled = true;
+            document.getElementById('battery-capacity').disabled = false;
         } else {
-            document.querySelectorAll('.battery-input-ups input').forEach(input => input.disabled = true);
+            document.getElementById('battery-capacity').disabled = true;
+            document.getElementById('mobile-capacity').disabled = false;
         }
     }
     
@@ -85,11 +91,11 @@ document.addEventListener('DOMContentLoaded', function() {
             // Ініціалізуємо стан полів при зміні режиму
             if (activeMode === 'time-mode') {
                 if (batteryTypeSelector.value === 'ups') {
-                    document.querySelectorAll('.battery-input-mobile input').forEach(input => input.disabled = true);
-                    document.querySelectorAll('.battery-input-ups input').forEach(input => input.disabled = false);
+                    document.getElementById('mobile-capacity').disabled = true;
+                    document.getElementById('battery-capacity').disabled = false;
                 } else {
-                    document.querySelectorAll('.battery-input-ups input').forEach(input => input.disabled = true);
-                    document.querySelectorAll('.battery-input-mobile input').forEach(input => input.disabled = false);
+                    document.getElementById('battery-capacity').disabled = true;
+                    document.getElementById('mobile-capacity').disabled = false;
                 }
             }
         });
@@ -123,7 +129,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Обробка кнопки розрахунку (замість обробки відправки форми)
+    // Обробка кнопки розрахунку
     if (calculateBtn) {
         calculateBtn.addEventListener('click', function() {
             calculateResults();
@@ -293,7 +299,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
                 
                 // Розрахунок часу роботи (з урахуванням ефективності інвертора 0.85)
-                const runtimeHours = (capacityWh * 0.85) / totalPower;
+                const runtimeHours = (capacityWh) / totalPower;
                 const runtimeMinutes = Math.floor((runtimeHours % 1) * 60);
                 
                 resultHTML = `
@@ -313,9 +319,6 @@ document.addEventListener('DOMContentLoaded', function() {
             alert('Сталася помилка при розрахунку: ' + error.message);
         }
     }
-
-    // Видаляємо обробник submit форми, оскільки тепер використовуємо кнопку
-    // form.addEventListener('submit', function(e) { ... });
 
     console.log('Скрипт ініціалізовано');
 });
