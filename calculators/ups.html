@@ -3,23 +3,92 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Розрахунок ємності АКБ</title>
+    <title>Калькулятор АКБ</title>
     <link rel="stylesheet" href="../style.css">
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        .mode-selector {
+            display: flex;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            overflow: hidden;
+            /* Removing border */
+        }
+        .mode-btn {
+            flex: 1;
+            padding: 10px;
+            text-align: center;
+            background-color: #3390ec; /* Matching the blue color from the bottom buttons */
+            color: white;
+            cursor: pointer;
+            border: none;
+            transition: background-color 0.3s;
+        }
+        .mode-btn:first-child {
+            border-top-left-radius: 8px;
+            border-bottom-left-radius: 8px;
+        }
+        .mode-btn:last-child {
+            border-top-right-radius: 8px;
+            border-bottom-right-radius: 8px;
+        }
+        .mode-btn.active {
+            background-color: #2377d6; /* Darker blue for active state */
+            font-weight: bold;
+        }
+        .mode-btn:not(.active) {
+            opacity: 0.8;
+        }
+        .calculation-mode {
+            display: none;
+        }
+        .calculation-mode.active {
+            display: block;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
         <a href="../index.html" class="back-button">Повернутися до меню</a>
         
         <header>
-            <h1>🔋 Розрахунок ємності АКБ</h1>
-            <p>Розрахунок необхідної ємності акумуляторів для системи</p>
+            <h1>🔋 Калькулятор АКБ</h1>
+            <p>Розрахунок параметрів системи безперебійного живлення</p>
         </header>
         
+        <div class="mode-selector">
+            <button type="button" class="mode-btn active" data-mode="capacity-mode">Розрахувати ємність АКБ</button>
+            <button type="button" class="mode-btn" data-mode="time-mode">Розрахувати час роботи</button>
+        </div>
+        
         <form id="ups-calculator-form">
-            <div class="form-group">
-                <label for="hours">Необхідний час роботи (годин):</label>
-                <input type="number" id="hours" step="0.1" min="0.1" required>
+            <div id="capacity-mode" class="calculation-mode active">
+                <div class="form-group">
+                    <label for="hours">Необхідний час роботи (годин):</label>
+                    <input type="number" id="hours" step="0.1" min="0.1" required>
+                </div>
+            </div>
+            
+            <div id="time-mode" class="calculation-mode">
+                <div class="form-group">
+                    <label for="battery-type">Тип акумулятора:</label>
+                    <select id="battery-type">
+                        <option value="ups">UPS батарея (12V, в Ah)</option>
+                        <option value="mobile">Мобільна батарея (3.7V, в mAh)</option>
+                    </select>
+                </div>
+                <div class="form-group battery-input-ups">
+                    <label for="battery-capacity">Ємність АКБ (Ah):</label>
+                    <input type="number" id="battery-capacity" step="0.1" min="0.1">
+                </div>
+                <div class="form-group battery-input-ups">
+                    <label for="battery-voltage">Напруга АКБ (V):</label>
+                    <input type="number" id="battery-voltage" step="0.1" min="0.1" value="12">
+                </div>
+                <div class="form-group battery-input-mobile" style="display: none;">
+                    <label for="mobile-capacity">Ємність батареї (mAh):</label>
+                    <input type="number" id="mobile-capacity" step="100" min="100">
+                </div>
             </div>
             
             <div id="devices-container">
