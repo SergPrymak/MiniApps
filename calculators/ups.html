@@ -2,123 +2,463 @@
 <html lang="uk">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Калькулятор АКБ</title>
-    <link rel="stylesheet" href="../style.css">
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>UPS - Калькулятор безперебійного живлення</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.2/font/bootstrap-icons.css">
     <style>
-        .mode-selector {
+        html, body {
+            background: #fff;
+            margin: 0;
+            padding: 0;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            max-width: 430px;
+            margin-left: auto;
+            margin-right: auto;
+            color: #222;
+        }
+        a {
+            color: #2196f3;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        .back-link {
+            display: block;
+            margin: 15px 0 20px 0;
+            font-size: 15px;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 25px;
+            padding: 0 15px;
+        }
+        .header-icon {
+            color: #3b82f6;
+            font-size: 28px;
+            margin-bottom: 5px;
+        }
+        .header h1 {
+            margin: 5px 0;
+            font-size: 24px;
+            font-weight: 600;
+        }
+        .header p {
+            margin: 5px 0 0;
+            color: #777;
+            font-size: 14px;
+        }
+        .main-content {
+            padding: 0 15px 20px;
+        }
+        .tab-buttons {
             display: flex;
             margin-bottom: 20px;
-            border-radius: 8px;
-            overflow: hidden;
-            /* Removing border */
+            gap: 8px;
         }
-        .mode-btn {
+        .tab-button {
             flex: 1;
-            padding: 10px;
-            text-align: center;
-            background-color: #3390ec; /* Matching the blue color from the bottom buttons */
+            background: #3b82f6;
             color: white;
-            cursor: pointer;
             border: none;
-            transition: background-color 0.3s;
+            border-radius: 8px;
+            padding: 10px 0;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
         }
-        .mode-btn:first-child {
-            border-top-left-radius: 8px;
-            border-bottom-left-radius: 8px;
+        .tab-button:active {
+            background: #2563eb;
         }
-        .mode-btn:last-child {
-            border-top-right-radius: 8px;
-            border-bottom-right-radius: 8px;
-        }
-        .mode-btn.active {
-            background-color: #2377d6; /* Darker blue for active state */
-            font-weight: bold;
-        }
-        .mode-btn:not(.active) {
-            opacity: 0.8;
-        }
-        .calculation-mode {
-            display: none;
-        }
-        .calculation-mode.active {
+        .form-label {
             display: block;
+            margin-bottom: 5px;
+            font-size: 15px;
+            font-weight: 500;
+        }
+        .form-input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            margin-bottom: 15px;
+            box-sizing: border-box;
+        }
+        .device-row {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+        .device-input {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 10px;
+            font-size: 16px;
+        }
+        .add-device-btn {
+            display: block;
+            width: 100%;
+            background: #e3f2fd;
+            color: #2196f3;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 0;
+            font-size: 15px;
+            margin-top: 5px;
+            margin-bottom: 20px;
+            cursor: pointer;
+        }
+        .remove-btn {
+            background: none;
+            border: none;
+            color: #e53935;
+            font-size: 22px;
+            padding: 0;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
+        .calc-button {
+            display: block;
+            width: 100%;
+            background: #3b82f6;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 0;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-bottom: 15px;
+        }
+        .calc-button:active {
+            background: #2563eb;
+        }
+        .result-box {
+            background: #e3f2fd;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 20px;
+            font-size: 15px;
+        }
+        .result-box strong {
+            color: #2196f3;
+        }
+        .tips-section {
+            margin-top: 20px;
+            font-size: 14px;
+            color: #666;
+        }
+        .tips-section ul {
+            padding-left: 20px;
+            margin: 10px 0;
+        }
+        .camera-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            background: #e3f2fd;
+            border-radius: 6px;
+            padding: 3px 8px;
+            margin-right: 5px;
+            margin-bottom: 5px;
+            font-size: 13px;
+        }
+        .info-icon {
+            display: inline-block;
+            color: #2196f3;
+            font-size: 15px;
+            margin-right: 5px;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <a href="../index.html" class="back-button">Повернутися до меню</a>
-        
-        <header>
-            <h1>🔋 Калькулятор АКБ</h1>
-            <p>Розрахунок параметрів системи безперебійного живлення</p>
-        </header>
-        
-        <div class="mode-selector">
-            <button type="button" class="mode-btn active" data-mode="capacity-mode">Розрахувати ємність АКБ</button>
-            <button type="button" class="mode-btn" data-mode="time-mode">Розрахувати час роботи</button>
+    <a href="../index.html" class="back-button">← Повернутися до меню</a>
+    <div class="header">
+        <i class="bi bi-battery-charging header-icon"></i>
+        <h1>Калькулятор UPS</h1>
+        <p>Планування безперебійного живлення для систем відеоспостереження</p>
+    </div>
+
+    <div class="main-content">
+        <div class="tab-buttons">
+            <button class="tab-button" id="capacityTabBtn"><i class="bi bi-battery-full"></i> Розрахувати ємність АКБ</button>
+            <button class="tab-button" id="timeTabBtn"><i class="bi bi-clock"></i> Розрахувати час автономії</button>
+        </div>
+
+        <!-- Battery Capacity Tab -->
+        <div id="capacityTab">
+            <form id="capacityCalcForm" autocomplete="off">
+                <label class="form-label"><i class="info-icon bi bi-clock"></i>Час автономної роботи (год):</label>
+                <input type="number" class="form-input" id="hours" min="0.1" step="0.1" value="24" required>
+                
+                <label class="form-label"><i class="info-icon bi bi-pc-display"></i>Обладнання:</label>
+                <div id="devicesCapacity">
+                    <div class="device-row">
+                        <input type="number" class="device-input device-count" min="1" value="1" required placeholder="К-сть" style="width: 80px;">
+                        <input type="number" class="device-input" min="1" value="4" required placeholder="Споживання (Вт)" style="flex-grow: 1;">
+                        <button type="button" class="remove-btn" tabindex="-1" aria-label="Видалити"><i class="bi bi-x-circle"></i></button>
+                    </div>
+                </div>
+                <button type="button" id="addDeviceCapacity" class="add-device-btn"><i class="bi bi-plus-circle"></i> Додати пристрій</button>
+                
+                <button type="submit" class="calc-button"><i class="bi bi-calculator"></i> Розрахувати</button>
+            </form>
+            
+            <div id="capacityResult" class="result-box" style="display:none;">
+                <div id="capacityResultContent"></div>
+            </div>
         </div>
         
-        <form id="ups-calculator-form">
-            <div id="capacity-mode" class="calculation-mode active">
-                <div class="form-group">
-                    <label for="hours">Необхідний час роботи (годин):</label>
-                    <input type="number" id="hours" step="0.1" min="0.1" required>
+        <!-- Battery Time Calculator Tab -->
+        <div id="timeTab" style="display:none;">
+            <form id="timeCalcForm" autocomplete="off">
+                <label class="form-label"><i class="info-icon bi bi-battery-full"></i>Ємність АКБ:</label>
+                <input type="number" class="form-input" id="capacity" min="1" step="1" value="100" required>
+                
+                <label class="form-label"><i class="info-icon bi bi-lightning"></i>Напруга АКБ (V):</label>
+                <div style="display: flex; gap: 8px; margin-bottom: 15px;">
+                    <button type="button" id="v12Btn" class="tab-button" style="flex: 1; padding: 8px 0;">12V</button>
+                    <button type="button" id="v37Btn" class="tab-button" style="flex: 1; padding: 8px 0; background: #3b82f6;">3.7V</button>
                 </div>
-            </div>
-            
-            <div id="time-mode" class="calculation-mode">
-                <div class="form-group">
-                    <label for="battery-type">Тип акумулятора:</label>
-                    <select id="battery-type">
-                        <option value="ups">UPS батарея (12V, в Ah)</option>
-                        <option value="mobile">DC UPS (3.7V, в mAh)</option>
-                    </select>
-                </div>
-                <div class="form-group battery-input-ups">
-                    <label for="battery-capacity">Ємність АКБ (Ah):</label>
-                    <input type="number" id="battery-capacity" step="0.1" min="0.1" required>
-                </div>
-                <div class="form-group battery-input-mobile" style="display: none;">
-                    <label for="mobile-capacity">Ємність DC UPS (mAh):</label>
-                    <input type="number" id="mobile-capacity" step="100" min="100" required>
-                </div>
-            </div>
-            
-            <div id="devices-container">
-                <div class="form-group device-group">
-                    <div style="display: flex; justify-content: space-between; align-items: center">
-                        <label style="white-space: nowrap;">Пристрій 1:</label>
-                    </div>
-                    <div style="display: flex; gap: 8px;">
-                        <input type="number" min="1" value="1" class="device-count" placeholder="Кількість" required>
-                        <input type="number" min="0.1" step="0.1" class="device-power" placeholder="Споживання (Вт)" required>
+                <input type="hidden" id="voltage" value="3.7">
+                
+                <label class="form-label"><i class="info-icon bi bi-pc-display"></i>Обладнання:</label>
+                <div id="devicesTime">
+                    <div class="device-row">
+                        <input type="number" class="device-input device-count" min="1" value="1" required placeholder="К-сть" style="width: 80px;">
+                        <input type="number" class="device-input" min="1" value="4" required placeholder="Споживання (Вт)" style="flex-grow: 1;">
+                        <button type="button" class="remove-btn" tabindex="-1" aria-label="Видалити"><i class="bi bi-x-circle"></i></button>
                     </div>
                 </div>
+                <button type="button" id="addDeviceTime" class="add-device-btn"><i class="bi би-plus-circle"></i> Додати пристрій</button>
+                
+                <button type="submit" class="calc-button"><i class="bi bi-calculator"></i> Розрахувати</button>
+            </form>
+            
+            <div id="timeResult" class="result-box" style="display:none;">
+                <div id="timeResultContent"></div>
+            </div>
+        </div>
+
+        <div class="tips-section">
+            <p><i class="bi bi-info-circle"></i> <strong>Як використовувати калькулятор?</strong></p>
+            <p>Споживання - енергоспоживання пристрою в ватах (Вт).</p>
+            <p>Типове споживання обладнання для відеоспостереження:</p>
+            <div style="display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 10px;">
+                <span class="camera-badge"><i class="bi bi-camera-video"></i> Камера Dahua: 4 Вт</span>
+                <span class="camera-badge"><i class="bi bi-camera-video"></i> Камера Hikvision: 6 Вт</span>
+                <span class="camera-badge"><i class="bi bi-router"></i> Світч: 2 Вт</span>
+                <span class="camera-badge"><i class="bi bi-hdd-fill"></i> NVR з 1 HDD: 10 Вт</span>
+                <span class="camera-badge"><i class="bi bi-modem"></i> ONU: 4 Вт</span>
+                <span class="camera-badge"><i class="bi bi-wifi"></i> Роутер 2.4G: 2 Вт</span>
+                <span class="camera-badge"><i class="bi bi-wifi"></i> Роутер 2.4G+5G: 7 Вт</span>
             </div>
             
-            <button type="button" id="add-device">+ Додати пристрій</button>
-            <button type="button" id="calculate-btn">Розрахувати</button>
-        </form>
-        
-        <div id="result" class="result-container" style="display: none;"></div>
-        
-        <div style="margin-top: 20px;">
-            <h3>Середнє споживання пристроїв:</h3>
+            <p><i class="bi bi-gear"></i> <strong>Технічні деталі розрахунків:</strong></p>
             <ul>
-                <li>Світч: 2W</li>
-                <li>Камера Dahua: 4W</li>
-                <li>Камера Hikvision: 6W</li>
-                <li>NVR з 1 HDD: 10W</li>
-                <li>ONU: 4W</li>
-                <li>Роутер 2.4G: 2W</li>
-                <li>Роутер 2.4G+5G: 7W</li>
+                <li>Для 12V систем ємність вказується в Ah (ампер-годинах)</li>
+                <li>Для 3.7V систем (Li-Ion) ємність вказується в mAh (міліампер-годинах)</li>
+                <li>Загальна енергія розраховується як Напруга × Ємність</li>
+                <li>Реальний час автономії може бути меншим через втрати та розряд АКБ</li>
+            </ul>
+            
+            <p><i class="bi bi-lightbulb"></i> <strong>Приклади використання:</strong></p>
+            <ul>
+                <li>9 камер по 4 Вт + 2 світча по 2 Вт + 1 NVR на 10 Вт = <strong>~ 52 Ah при 12V</strong></li>
+                <li>Акумулятор 100 Ah 12V з навантаженням 15 Вт = <strong>~ 80 годин автономії</strong></li>
             </ul>
         </div>
     </div>
-    
-    <script src="ups.js"></script>
+
+    <script>
+        // Tab switching
+        const capacityTabBtn = document.getElementById('capacityTabBtn');
+        const timeTabBtn = document.getElementById('timeTabBtn');
+        const capacityTab = document.getElementById('capacityTab');
+        const timeTab = document.getElementById('timeTab');
+        
+        // Set default active tab
+        capacityTabBtn.style.background = '#2563eb';
+        
+        capacityTabBtn.onclick = function() {
+            capacityTabBtn.style.background = '#2563eb';
+            timeTabBtn.style.background = '#3b82f6';
+            capacityTab.style.display = '';
+            timeTab.style.display = 'none';
+        };
+        
+        timeTabBtn.onclick = function() {
+            timeTabBtn.style.background = '#2563eb';
+            capacityTabBtn.style.background = '#3b82f6';
+            timeTab.style.display = '';
+            capacityTab.style.display = 'none';
+        };
+        
+        // Battery voltage selector
+        const v12Btn = document.getElementById('v12Btn');
+        const v37Btn = document.getElementById('v37Btn');
+        const voltageInput = document.getElementById('voltage');
+        const capacityInput = document.getElementById('capacity');
+        
+        v12Btn.onclick = function() {
+            v12Btn.style.background = '#2563eb';
+            v37Btn.style.background = '#3b82f6';
+            voltageInput.value = '12';
+            // Adjust placeholder and default value when switching to 12V (Ah)
+            if (capacityInput.value > 1000) {
+                capacityInput.value = Math.round(capacityInput.value / 1000);
+            }
+        };
+        
+        v37Btn.onclick = function() {
+            v37Btn.style.background = '#2563eb';
+            v12Btn.style.background = '#3b82f6';
+            voltageInput.value = '3.7';
+            // Adjust placeholder and default value when switching to 3.7V (mAh)
+            if (capacityInput.value < 1000) {
+                capacityInput.value = capacityInput.value * 1000;
+            }
+        };
+
+        // Add/remove device rows
+        function addDeviceItem(containerId) {
+            const container = document.getElementById(containerId);
+            const row = document.createElement('div');
+            row.className = 'device-row';
+            row.innerHTML = `
+                <input type="number" class="device-input device-count" min="1" value="1" required placeholder="К-сть" style="width: 80px;">
+                <input type="number" class="device-input" min="1" value="4" required placeholder="Споживання (Вт)" style="flex-grow: 1;">
+                <button type="button" class="remove-btn" tabindex="-1" aria-label="Видалити"><i class="bi bi-x-circle"></i></button>
+            `;
+            
+            row.querySelector('.remove-btn').onclick = function() {
+                if (container.querySelectorAll('.device-row').length > 1) row.remove();
+            };
+            
+            container.appendChild(row);
+        }
+        
+        document.getElementById('addDeviceCapacity').onclick = function() { 
+            addDeviceItem('devicesCapacity'); 
+        };
+        
+        document.getElementById('addDeviceTime').onclick = function() { 
+            addDeviceItem('devicesTime'); 
+        };
+        
+        // Remove device row for initial rows
+        document.querySelectorAll('.remove-btn').forEach(btn => {
+            btn.onclick = function() {
+                const container = btn.closest('div[id^="devices"]');
+                if (container.querySelectorAll('.device-row').length > 1) 
+                    btn.closest('.device-row').remove();
+            };
+        });
+
+        // Parse device data
+        function parseDeviceData(containerId) {
+            const container = document.getElementById(containerId);
+            let total_power = 0;
+            let total_devices = 0;
+            let device_details = [];
+            
+            container.querySelectorAll('.device-row').forEach(item => {
+                const count = parseInt(item.querySelector('.device-count').value) || 0;
+                const power = parseInt(item.querySelectorAll('.device-input')[1].value) || 0;
+                
+                if (count > 0 && power > 0) {
+                    total_devices += count;
+                    total_power += count * power;
+                    device_details.push(`${count} × ${power} Вт`);
+                }
+            });
+            
+            return { total_power, total_devices, device_details };
+        }
+
+        // Battery Capacity Calculation
+        document.getElementById('capacityCalcForm').onsubmit = function(e) {
+            e.preventDefault();
+            try {
+                const hours = parseFloat(document.getElementById('hours').value);
+                if (hours <= 0) throw new Error("Час автономії має бути більше 0");
+                
+                const { total_power, total_devices, device_details } = parseDeviceData('devicesCapacity');
+                if (total_devices === 0) throw new Error("Додайте хоча б один пристрій з потужністю");
+                
+                // Розрахунок необхідної ємності акумуляторів
+                const total_wh = total_power * hours; // Ват-години
+                
+                // Для 12V системи (Ah)
+                const ah_12v = total_wh / 12;
+                
+                // Для 3.7V системи (mAh)
+                const mah_37v = (total_wh / 3.7) * 1000;
+                
+                document.getElementById('capacityResultContent').innerHTML = `
+                    <div><i class="bi bi-bar-chart-fill"></i> <strong>Результати розрахунку:</strong></div>
+                    <div style="margin-top:10px;"><i class="bi bi-clock"></i> Час автономії: <strong>${hours} годин</strong></div>
+                    <div><i class="bi bi-pc-display"></i> Всього пристроїв: <strong>${total_devices}</strong></div>
+                    <div><i class="bi bi-list-check"></i> Конфігурація пристроїв:</div>
+                    <ul style="margin:4px 0 8px 20px;padding:0;">
+                        ${device_details.map(d => `<li>${d}</li>`).join('')}
+                    </ul>
+                    <div><i class="bi bi-lightning"></i> Загальне споживання: <strong>${total_power} Вт</strong></div>
+                    <div><i class="bi bi-plug"></i> Загальна потреба в енергії: <strong>${total_wh.toFixed(2)} Wh</strong></div>
+                    <div style="margin-top:10px;font-weight:500;"><i class="bi bi-battery-full"></i> Для 12V системи: <strong>${ah_12v.toFixed(2)} Ah</strong></div>
+                    <div style="margin-top:5px;font-weight:500;"><i class="bi bi-battery-half"></i> Для 3.7V (Li-Ion): <strong>${Math.round(mah_37v)} mAh</strong></div>
+                `;
+                document.getElementById('capacityResult').style.display = '';
+            } catch (err) {
+                alert("Помилка: " + err.message);
+            }
+        };
+
+        // Battery Runtime Calculation
+        document.getElementById('timeCalcForm').onsubmit = function(e) {
+            e.preventDefault();
+            try {
+                const capacity = parseFloat(document.getElementById('capacity').value);
+                if (capacity <= 0) throw new Error("Ємність АКБ має бути більше 0");
+                
+                const voltage = parseFloat(document.getElementById('voltage').value);
+                const { total_power, total_devices, device_details } = parseDeviceData('devicesTime');
+                
+                if (total_devices === 0) throw new Error("Додайте хоча б один пристрій з потужністю");
+                if (total_power <= 0) throw new Error("Загальне споживання має бути більше 0");
+                
+                // Розрахунок часу автономної роботи від акумулятора
+                // Якщо напруга 3.7V, ємність в mAh, переводимо в Ah
+                const energy_wh = (voltage <= 4) ? 
+                    (capacity * voltage / 1000) : // Для Li-Ion (mAh)
+                    (capacity * voltage);          // Для звичайних АКБ (Ah)
+                
+                const hours = energy_wh / total_power;
+                const hours_int = Math.floor(hours);
+                const minutes = Math.round((hours - hours_int) * 60);
+                
+                const capacity_unit = (voltage <= 4) ? 'mAh' : 'Ah';
+                
+                document.getElementById('timeResultContent').innerHTML = `
+                    <div><i class="bi bi-bar-chart-fill"></i> <strong>Результати розрахунку:</strong></div>
+                    <div style="margin-top:10px;"><i class="bi bi-battery-full"></i> Ємність акумулятора: <strong>${capacity} ${capacity_unit} / ${voltage}V</strong></div>
+                    <div><i class="bi bi-pc-display"></i> Всього пристроїв: <strong>${total_devices}</strong></div>
+                    <div><i class="bi bi-list-check"></i> Конфігурація пристроїв:</div>
+                    <ul style="margin:4px 0 8px 20px;padding:0;">
+                        ${device_details.map(d => `<li>${d}</li>`).join('')}
+                    </ul>
+                    <div><i class="bi bi-lightning"></i> Загальне споживання: <strong>${total_power} Вт</strong></div>
+                    <div><i class="bi bi-plug"></i> Доступна енергія: <strong>${energy_wh.toFixed(2)} Wh</strong></div>
+                    <div style="margin-top:10px;font-weight:500;"><i class="bi bi-clock"></i> Тривалість роботи: <strong>${hours_int} год ${minutes} хв</strong></div>
+                    <div style="margin-top:5px;font-size:13px;color:#777;"><i class="bi bi-exclamation-circle"></i> Реальний час може бути меншим через втрати та спрацювання АКБ</div>
+                `;
+                document.getElementById('timeResult').style.display = '';
+            } catch (err) {
+                alert("Помилка: " + err.message);
+            }
+        };
+    </script>
 </body>
 </html>
