@@ -103,12 +103,29 @@ document.addEventListener('DOMContentLoaded', function() {
                 const totalTB = totalBits / 8 / 1024 / 1024 / 1024;
                 
                 result = `
-                    <h3>📊 Результати розрахунку</h3>
-                    <p><strong>Дні архіву:</strong> ${days}</p>
-                    <p><strong>Загальна кількість камер:</strong> ${cameraData.totalCameras}</p>
-                    <p><strong>Сумарний бітрейт:</strong> ${cameraData.totalBitrate} Kbps</p>
-                    <p><strong>Мінімально необхідний обсяг HDD:</strong> ${totalTB.toFixed(2)} TB</p>
-                    <div class="help-text">Примітка: Рекомендовано додати 10-15% запасу для службових даних та запасу</div>
+                    <h2 class="result-title">Результати розрахунку</h2>
+                    <div class="result-description">На основі вказаних параметрів</div>
+                    <div class="result-items">
+                        <div class="result-item">
+                            <span class="result-label">Дні архіву:</span>
+                            <span class="result-value">${days}</span>
+                        </div>
+                        <div class="result-item">
+                            <span class="result-label">Загальна кількість камер:</span>
+                            <span class="result-value">${cameraData.totalCameras}</span>
+                        </div>
+                        <div class="result-item">
+                            <span class="result-label">Сумарний бітрейт:</span>
+                            <span class="result-value">${cameraData.totalBitrate} Kbps</span>
+                        </div>
+                        <div class="result-item highlight">
+                            <span class="result-label">Необхідний обсяг HDD:</span>
+                            <span class="result-value">${totalTB.toFixed(2)} TB</span>
+                        </div>
+                    </div>
+                    <div class="result-notes">
+                        <p class="result-note">💡 Рекомендовано додати 10-15% запасу для службових даних</p>
+                    </div>
                 `;
             } else {
                 // Розрахунок днів
@@ -122,12 +139,29 @@ document.addEventListener('DOMContentLoaded', function() {
                 const totalDays = hddBits / (totalBitsPerSecond * 24 * 60 * 60) * 0.909;
                 
                 result = `
-                    <h3>📊 Результати розрахунку</h3>
-                    <p><strong>Обсяг HDD:</strong> ${hddTB} TB</p>
-                    <p><strong>Загальна кількість камер:</strong> ${cameraData.totalCameras}</p>
-                    <p><strong>Сумарний бітрейт:</strong> ${cameraData.totalBitrate} Kbps</p>
-                    <p><strong>Тривалість запису:</strong> ${totalDays.toFixed(1)} днів</p>
-                    <div class="help-text">Примітка: Розрахунок включає коефіцієнт форматування диска 0.909</div>
+                    <h2 class="result-title">Результати розрахунку</h2>
+                    <div class="result-description">На основі вказаних параметрів</div>
+                    <div class="result-items">
+                        <div class="result-item">
+                            <span class="result-label">Обсяг HDD:</span>
+                            <span class="result-value">${hddTB} TB</span>
+                        </div>
+                        <div class="result-item">
+                            <span class="result-label">Загальна кількість камер:</span>
+                            <span class="result-value">${cameraData.totalCameras}</span>
+                        </div>
+                        <div class="result-item">
+                            <span class="result-label">Сумарний бітрейт:</span>
+                            <span class="result-value">${cameraData.totalBitrate} Kbps</span>
+                        </div>
+                        <div class="result-item highlight">
+                            <span class="result-label">Тривалість запису:</span>
+                            <span class="result-value">${totalDays.toFixed(1)} днів</span>
+                        </div>
+                    </div>
+                    <div class="result-notes">
+                        <p class="result-note">💡 Розрахунок включає коефіцієнт форматування диска 0.909</p>
+                    </div>
                 `;
             }
             
@@ -135,9 +169,16 @@ document.addEventListener('DOMContentLoaded', function() {
             resultElement.innerHTML = result;
             resultElement.style.display = 'block';
             
+            // Прокрутка до результатів
+            resultElement.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            
         } catch (error) {
             const resultElement = document.getElementById('result');
-            resultElement.innerHTML = `<div class="error-message">Помилка: ${error.message}</div>`;
+            resultElement.innerHTML = `
+                <div class="error-message">
+                    <p>❌ Помилка: ${error.message}</p>
+                </div>
+            `;
             resultElement.style.display = 'block';
         }
     }
