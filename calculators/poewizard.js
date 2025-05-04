@@ -1,4 +1,3 @@
-let tg = window.Telegram.WebApp;
 let extenderCount = 0;
 const MAX_EXTENDERS = 3;
 
@@ -15,14 +14,23 @@ const MAX_TOTAL_LENGTH = 400; // Maximum total cable length
 const MODE_B_MAX_DISTANCE = 250; // Maximum distance for Mode B
 
 document.addEventListener('DOMContentLoaded', function() {
-    // Initialize Telegram WebApp
+    // Ініціалізація Telegram WebApp (опціонально)
+    window.tg = window.Telegram && window.Telegram.WebApp ? window.Telegram.WebApp : { 
+        expand: function(){}, 
+        MainButton: { setText: function(){}, show: function(){}, onClick: function(){} }, 
+        sendData: function(){}
+    };
     tg.expand();
-    
-    // Add extender button
-    document.getElementById('add-extender').addEventListener('click', addExtenderInput);
-    
-    // Form submission
-    document.getElementById('poewizard-form').addEventListener('submit', calculatePoe);
+
+    // Додаємо обробники тільки якщо елементи існують
+    const addExtenderBtn = document.getElementById('add-extender');
+    if (addExtenderBtn) {
+        addExtenderBtn.addEventListener('click', addExtenderInput);
+    }
+    const form = document.getElementById('poewizard-form');
+    if (form) {
+        form.addEventListener('submit', calculatePoe);
+    }
 });
 
 function addExtenderInput() {
@@ -344,3 +352,136 @@ function displayResults(result, pdPower, totalDistance, extenderPositions) {
         }));
     });
 }
+
+// Перемикання вкладок
+const poePowerTabBtn = document.getElementById('poePowerTabBtn');
+const poeBudgetTabBtn = document.getElementById('poeBudgetTabBtn');
+const poePowerTab = document.getElementById('poePowerTab');
+const poeBudgetTab = document.getElementById('poeBudgetTab');
+
+// За замовчуванням активна перша вкладка
+poePowerTabBtn.style.background = '#2563eb';
+
+poePowerTabBtn.onclick = function() {
+    poePowerTabBtn.style.background = '#2563eb';
+    poeBudgetTabBtn.style.background = '#3b82f6';
+    poePowerTab.style.display = '';
+    poeBudgetTab.style.display = 'none';
+};
+
+poeBudgetTabBtn.onclick = function() {
+    poeBudgetTabBtn.style.background = '#2563eb';
+    poePowerTabBtn.style.background = '#3b82f6';
+    poeBudgetTab.style.display = '';
+    poePowerTab.style.display = 'none';
+};
+
+// Додавання/видалення рядків пристроїв
+function addDeviceItem(containerId) {
+    const container = document.getElementById(containerId);
+    const row = document.createElement('div');
+    row.className = 'device-row';
+    row.innerHTML = `
+        <input type="number" class="device-input device-count" min="1" value="1" required placeholder="К-сть" style="width: 80px;">
+        <input type="number" class="device-input" min="1" value="7" required placeholder="Споживання (Вт)" style="flex-grow: 1;">
+        <button type="button" class="remove-btn" tabindex="-1" aria-label="Видалити"><i class="bi bi-x-circle"></i></button>
+    `;
+    row.querySelector('.remove-btn').onclick = function() {
+        if (container.querySelectorAll('.device-row').length > 1) row.remove();
+    };
+    container.appendChild(row);
+}
+
+document.getElementById('addDevicePoE').onclick = function() {
+    addDeviceItem('devicesPoE');
+};
+document.getElementById('addDevicePoEBudget').onclick = function() {
+    addDeviceItem('devicesPoEBudget');
+};
+
+// Видалення для початкових рядків
+document.querySelectorAll('.remove-btn').forEach(btn => {
+    btn.onclick = function() {
+        const container = btn.closest('div[id^="devices"]');
+        if (container.querySelectorAll('.device-row').length > 1)
+            btn.closest('.device-row').remove();
+    };
+});
+
+// Парсинг пристроїв
+function parseDeviceData(containerId) {
+    const container = document.getElementById(containerId);
+    let total_power = 0;
+    let total_devices = 0;
+    let device_details = [];
+    container.querySelectorAll('.device-row').forEach(item => {
+        const count = parseInt(item.querySelector('.device-count').value) || 0;
+        const power = parseInt(item.querySelectorAll('.device-input')[1].value) || 0;
+        if (count > 0 && power > 0) {
+            total_devices += count;
+            total_power += count * power;
+            device_details.push(`${count} × ${power} Вт`);
+        }
+    });
+    return { total_power, total_devices, device_details };
+}
+
+// Розрахунок PoE потужності
+document.getElementById('poePowerForm').onsubmit = function(e) {
+    e.preventDefault();
+    try {
+        const { total_power, total_devices, device_details } = parseDeviceData('devicesPoE');
+        if (total_devices === 0) throw new Error("Додайте хоча б один пристрій з потужністю");
+        document.getElementById('poePowerResultContent').innerHTML = `
+            <div><i class="bi bi-bar-chart-fill"></i> <strong>Результати розрахунку:</strong></div>
+            <div style="margin-top:10px;"><i class="bi bi-pc-display"></i> Всього пристроїв: <strong>${total_devices}</strong></div>
+            <div><i class="bi bi-list-check"></i> Конфігурація пристроїв:</div>
+            <ul style="margin:4px 0 8px 20px;padding:0;">
+                ${device_details.map(d => `<li>${d}</li>`).join('')}
+            </ul>
+            <div><i class="bi bi-lightning"></i> Загальна потужність: <strong>${total_power} Вт</strong></div>
+        `;
+        document.getElementById('poePowerResult').style.display = '';
+    } catch (err) {
+        alert("Помилка: " + err.message);
+    }
+};
+
+// Перевірка PoE бюджету
+document.getElementById('poeBudgetForm').onsubmit = function(e) {
+    e.preventDefault();
+    try {
+        const poeBudget = parseFloat(document.getElementById('poeBudget').value);
+        if (poeBudget <= 0) throw new Error("PoE бюджет має бути більше 0");
+        const { total_power, total_devices, device_details } = parseDeviceData('devicesPoEBudget');
+        if (total_devices === 0) throw new Error("Додайте хоча б один пристрій з потужністю");
+        let status, statusIcon, statusColor;
+        if (total_power <= poeBudget * 0.8) {
+            status = "Бюджет достатній з запасом";
+            statusIcon = "bi bi-check-circle-fill";
+            statusColor = "#22c55e";
+        } else if (total_power <= poeBudget) {
+            status = "Бюджет майже вичерпано";
+            statusIcon = "bi bi-exclamation-triangle-fill";
+            statusColor = "#f59e42";
+        } else {
+            status = "Перевищено бюджет PoE!";
+            statusIcon = "bi bi-x-octagon-fill";
+            statusColor = "#e53935";
+        }
+        document.getElementById('poeBudgetResultContent').innerHTML = `
+            <div><i class="bi bi-bar-chart-fill"></i> <strong>Результати перевірки бюджету:</strong></div>
+            <div style="margin-top:10px;"><i class="bi bi-diagram-3"></i> PoE бюджет комутатора: <strong>${poeBudget} Вт</strong></div>
+            <div><i class="bi bi-pc-display"></i> Всього пристроїв: <strong>${total_devices}</strong></div>
+            <div><i class="bi bi-list-check"></i> Конфігурація пристроїв:</div>
+            <ul style="margin:4px 0 8px 20px;padding:0;">
+                ${device_details.map(d => `<li>${d}</li>`).join('')}
+            </ul>
+            <div><i class="bi bi-lightning"></i> Загальна потужність: <strong>${total_power} Вт</strong></div>
+            <div style="margin-top:10px;font-weight:500;color:${statusColor};"><i class="${statusIcon}"></i> ${status}</div>
+        `;
+        document.getElementById('poeBudgetResult').style.display = '';
+    } catch (err) {
+        alert("Помилка: " + err.message);
+    }
+};
