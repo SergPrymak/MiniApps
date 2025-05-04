@@ -2,64 +2,116 @@
 <html lang="uk">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Технічні калькулятори</title>
-    <link rel="stylesheet" href="style.css">
+    <meta name="viewport" content="width=430, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>MiniApps - Калькулятори</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.2/font/bootstrap-icons.css">
+    <style>
+        html, body {
+            background: #fff;
+            margin: 0;
+            padding: 0;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            max-width: 430px;
+            margin-left: auto;
+            margin-right: auto;
+            color: #222;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 25px;
+            padding: 0 15px;
+        }
+        .header-icon {
+            color: #3b82f6;
+            font-size: 32px;
+            margin-bottom: 5px;
+        }
+        .header h1 {
+            margin: 5px 0;
+            font-size: 26px;
+            font-weight: 700;
+        }
+        .header p {
+            margin: 5px 0 0;
+            color: #777;
+            font-size: 15px;
+        }
+        .menu-list {
+            padding: 0 15px;
+            margin: 0;
+            list-style: none;
+        }
+        .menu-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: #e3f2fd;
+            border-radius: 10px;
+            margin-bottom: 18px;
+            padding: 16px 18px;
+            font-size: 18px;
+            font-weight: 500;
+            color: #222;
+            text-decoration: none;
+            transition: background 0.2s;
+        }
+        .menu-item:hover {
+            background: #bbdefb;
+            text-decoration: none;
+        }
+        .menu-icon {
+            font-size: 28px;
+            color: #2196f3;
+            flex-shrink: 0;
+        }
+        .menu-desc {
+            font-size: 14px;
+            color: #666;
+            font-weight: 400;
+            margin-top: 2px;
+        }
+        .tips-section {
+            margin: 30px 15px 0 15px;
+            font-size: 14px;
+            color: #666;
+        }
+        .tips-section strong {
+            color: #2196f3;
+        }
+    </style>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>Технічні калькулятори</h1>
-            <p>Виберіть потрібний калькулятор:</p>
-        </header>
-        
-        <h2 class="section-title">Електроживлення</h2>
-        <div class="calculator-grid">
-            <div class="calculator-card" onclick="openCalculator('ups')">
-                <div class="icon">🔋</div>
-                <h2>Розрахунок ДБЖ для системи</h2>
-                <p>Визначення необхідного АКБ та часу роботи від UPS</p>
-            </div>
-            
-            <div class="calculator-card" onclick="openCalculator('poewizard')">
-                <div class="icon">🔌</div>
-                <h2>PoE калькулятор</h2>
-                <p>Розрахунок параметрів PoE з/без Extender'ів, падіння напруги</p>
-            </div>
-        </div>
-        
-        <h2 class="section-title">Відеоспостереження</h2>
-        <div class="calculator-grid">
-            <div class="calculator-card" onclick="openCalculator('lens')">
-                <div class="icon">👁️</div>
-                <h2>Розрахунок оптики</h2>
-                <p>Розрахунок кута огляду, фокусної відстані та вибір об'єктиву</p>
-            </div>
-            
-            <div class="calculator-card" onclick="openCalculator('hdd-calc')">
-                <div class="icon">💾</div>
-                <h2>Калькулятор глибини архіву та HDD</h2>
-                <p>Розрахунко необхідного диску для відеоархіву</p>
-            </div>
-        </div>
-        
-        <h2 class="section-title">Сонячна енергія</h2>
-        <div class="calculator-grid">
-            <div class="calculator-card" onclick="openCalculator('solar')">
-                <div class="icon">☀️</div>
-                <h2>Сонячні панелі</h2>
-                <p>Розрахунок необхідної потужності сонячних панелей і окупності</p>
-            </div>
-            
-            <div class="calculator-card" onclick="openCalculator('battery')">
-                <div class="icon">🔌</div>
-                <h2>Ємність акумуляторів</h2>
-                <p>Розрахунок ємності АКБ для сонячної системи</p>
-            </div>
-        </div>
+    <div class="header">
+        <i class="bi bi-calculator header-icon"></i>
+        <h1>MiniApps</h1>
+        <p>Зручні калькулятори для інженерів та монтажників</p>
     </div>
-    
+    <ul class="menu-list">
+        <li>
+            <a href="calculators/ups.html" class="menu-item">
+                <i class="bi bi-battery-charging menu-icon"></i>
+                <div>
+                    Калькулятор UPS<br>
+                    <span class="menu-desc">Розрахунок ємності та часу автономії для систем відеоспостереження</span>
+                </div>
+            </a>
+        </li>
+        <li>
+            <a href="calculators/poewizard.html" class="menu-item">
+                <i class="bi bi-ethernet menu-icon"></i>
+                <div>
+                    PoE Wizard<br>
+                    <span class="menu-desc">Розрахунок PoE, падіння напруги, вибір стандарту, Extender'и</span>
+                </div>
+            </a>
+        </li>
+        <!-- Додайте інші калькулятори тут за потреби -->
+    </ul>
+    <div class="tips-section">
+        <strong>ℹ️ Порада:</strong> Всі калькулятори працюють офлайн.<br>
+        Для Telegram MiniApp використовуйте ці ж інтерфейси!
+    </div>
     <script src="main.js"></script>
 </body>
 </html>
