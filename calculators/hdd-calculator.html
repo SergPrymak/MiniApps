@@ -2,197 +2,240 @@
 <html lang="uk">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Калькулятор HDD для відеоспостереження</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #f5f5f5;
-            color: #333;
+            background: #f3f6fa;
+            font-family: 'Montserrat', 'Segoe UI', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
         }
-        
-        .container {
-            background-color: white;
-            border-radius: 8px;
-            padding: 25px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        .battery-main {
+            max-width: 430px;
+            margin: 40px auto 0 auto;
+            background: #fff;
+            border-radius: 18px;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.09);
+            padding: 32px 22px 28px 22px;
         }
-        
-        h1 {
+        .battery-title {
+            font-size: 2.1rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: #1a2b3c;
             text-align: center;
-            color: #2c3e50;
-            margin-top: 0;
+            letter-spacing: -1px;
         }
-        
-        .mode-selector {
+        .battery-subtitle {
+            font-size: 1.08rem;
+            color: #7a8ca3;
+            margin-bottom: 22px;
+            text-align: center;
+        }
+        .battery-switch {
             display: flex;
-            margin-bottom: 20px;
-            background-color: #f0f0f0;
-            border-radius: 6px;
-            overflow: hidden;
+            justify-content: center;
+            margin-bottom: 22px;
         }
-        
-        .mode-button {
-            flex: 1;
-            padding: 12px;
-            text-align: center;
-            background: none;
+        .battery-switch-btn {
+            background: #f2f5fa;
             border: none;
-            cursor: pointer;
-            transition: all 0.3s;
+            border-radius: 9px 9px 0 0;
+            padding: 10px 26px;
+            font-size: 1rem;
             font-weight: 500;
+            color: #7a8ca3;
+            cursor: pointer;
+            margin: 0 2px;
+            transition: background 0.2s, color 0.2s;
         }
-        
-        .mode-button.active {
-            background-color: #3498db;
-            color: white;
+        .battery-switch-btn.active {
+            background: #1a7ff9;
+            color: #fff;
         }
-        
-        .form-group {
-            margin-bottom: 15px;
+        .battery-form-section {
+            margin-bottom: 18px;
         }
-        
-        label {
+        .battery-label {
             display: block;
             margin-bottom: 6px;
+            color: #1a2b3c;
             font-weight: 500;
         }
-        
-        input[type="number"] {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            box-sizing: border-box;
-        }
-        
-        .camera-input {
-            display: flex;
-            gap: 10px;
+        .battery-camera-inputs {
             margin-bottom: 10px;
-            align-items: center;
         }
-        
-        .camera-input input {
-            flex: 1;
+        .battery-camera-input {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 8px;
         }
-        
-        .remove-camera {
-            background: #e74c3c;
-            color: white;
+        .battery-camera-input input[type="number"] {
+            width: 100px;
+            padding: 7px 10px;
+            border: 1px solid #e0e4ea;
+            border-radius: 6px;
+            font-size: 1rem;
+        }
+        .battery-remove-camera {
+            background: #f2f5fa;
             border: none;
-            width: 30px;
-            height: 30px;
             border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            font-size: 1.2rem;
+            color: #b0b8c1;
             cursor: pointer;
-            font-size: 16px;
+            align-self: center;
+            transition: background 0.2s, color 0.2s;
+        }
+        .battery-remove-camera:hover {
+            background: #ffeaea;
+            color: #e53935;
+        }
+        .battery-add-camera-btn {
+            background: #eaf3ff;
+            color: #1a7ff9;
+            border: none;
+            border-radius: 6px;
+            padding: 7px 18px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            margin-bottom: 10px;
+            transition: background 0.2s;
+        }
+        .battery-add-camera-btn:hover {
+            background: #d2e6ff;
+        }
+        .battery-bitrate-total {
+            font-size: 1rem;
+            color: #1a7ff9;
+            margin-bottom: 14px;
+            text-align: right;
+        }
+        .battery-input-row {
             display: flex;
             align-items: center;
-            justify-content: center;
+            gap: 12px;
+            margin-bottom: 12px;
         }
-        
-        .add-camera, .calculate-btn {
-            background-color: #3498db;
-            color: white;
-            border: none;
-            padding: 10px 15px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: 500;
-            margin-top: 10px;
-            transition: background-color 0.3s;
-        }
-        
-        .add-camera:hover, .calculate-btn:hover {
-            background-color: #2980b9;
-        }
-        
-        .result {
-            margin-top: 20px;
-            padding: 15px;
-            background-color: #edf7ff;
+        .battery-input-row input[type="number"] {
+            width: 110px;
+            padding: 7px 10px;
+            border: 1px solid #e0e4ea;
             border-radius: 6px;
-            border-left: 4px solid #3498db;
+            font-size: 1rem;
+        }
+        .battery-calc-btn {
+            width: 100%;
+            background: #1a7ff9;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 0;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: background 0.2s;
+        }
+        .battery-calc-btn:hover {
+            background: #155fc9;
+        }
+        #result {
+            margin-top: 28px;
             display: none;
         }
-        
-        .error-message {
-            color: #e74c3c;
-            margin-top: 5px;
-            font-size: 14px;
+        .battery-result-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #1a2b3c;
+            margin-bottom: 6px;
         }
-        
-        .help-text {
-            font-size: 14px;
-            color: #7f8c8d;
-            margin-top: 5px;
+        .battery-result-description {
+            color: #7a8ca3;
+            margin-bottom: 14px;
         }
-        
-        .camera-container {
-            max-height: 300px;
-            overflow-y: auto;
-            padding-right: 5px;
+        .battery-result-items {
+            background: #f3f6fa;
+            border-radius: 10px;
+            padding: 14px 18px;
+            margin-bottom: 10px;
         }
-        
-        .bitrate-total {
-            font-weight: bold;
+        .battery-result-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 7px;
+            font-size: 1rem;
+        }
+        .battery-result-item.highlight {
+            font-weight: 700;
+            color: #1a7ff9;
+        }
+        .battery-result-notes {
+            font-size: 0.98rem;
+            color: #7a8ca3;
+            margin-top: 8px;
+        }
+        .battery-error-message {
+            background: #ffeaea;
+            color: #e53935;
+            border-radius: 8px;
+            padding: 12px 16px;
+            font-size: 1rem;
             margin-top: 10px;
-            color: #2c3e50;
+        }
+        @media (max-width: 600px) {
+            .battery-main {
+                padding: 16px 4vw 18px 4vw;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <a href="../index.html" class="back-button">Повернутися до меню</a>
-        
-    <div class="container">
-        <h1>📊 Калькулятор HDD для відеоархіву</h1>
-        
-        <div class="mode-selector">
-            <button class="mode-button active" id="calc-hdd">Розрахувати обсяг HDD</button>
-            <button class="mode-button" id="calc-days">Розрахувати тривалість запису</button>
+    <div class="battery-main">
+        <div class="battery-title">Калькулятор HDD</div>
+        <div class="battery-subtitle">Розрахуйте обсяг жорсткого диска або тривалість архіву для системи відеоспостереження</div>
+        <div class="battery-switch">
+            <button id="calc-hdd" class="battery-switch-btn active" type="button">За кількістю днів</button>
+            <button id="calc-days" class="battery-switch-btn" type="button">За обсягом HDD</button>
         </div>
-        
-        <div id="calc-hdd-form">
-            <div class="form-group">
-                <label for="days">Кількість днів архіву:</label>
-                <input type="number" id="days" min="1" placeholder="Наприклад: 30">
-                <div class="help-text">Вкажіть кількість днів, на які потрібно зберігати архів</div>
-            </div>
-        </div>
-        
-        <div id="calc-days-form" style="display: none;">
-            <div class="form-group">
-                <label for="hdd-size">Доступний обсяг HDD (TB):</label>
-                <input type="number" id="hdd-size" min="0.1" step="0.1" placeholder="Наприклад: 4">
-                <div class="help-text">Вкажіть обсяг жорсткого диска в терабайтах</div>
-            </div>
-        </div>
-        
-        <div class="form-group">
-            <label>Конфігурація камер:</label>
-            <div class="help-text">Вкажіть кількість камер та бітрейт для кожної групи камер з однаковими параметрами</div>
-            
-            <div id="camera-container" class="camera-container">
-                <div class="camera-input">
+        <!-- HDD Mode Form -->
+        <form id="calc-hdd-form" class="battery-form-section" autocomplete="off" style="display: block;">
+            <label class="battery-label">Параметри камер:</label>
+            <div id="camera-container" class="battery-camera-inputs">
+                <div class="battery-camera-input">
                     <input type="number" class="camera-count" min="1" placeholder="Кількість камер">
                     <input type="number" class="camera-bitrate" min="1" placeholder="Бітрейт (Kbps)">
-                    <button class="remove-camera">×</button>
+                    <button class="battery-remove-camera remove-camera" type="button">×</button>
                 </div>
             </div>
-            
-            <div class="bitrate-total" id="bitrate-total">Сумарний бітрейт: 0 Kbps</div>
-            <button class="add-camera" id="add-camera">+ Додати групу камер</button>
-        </div>
-        
-        <button class="calculate-btn" id="calculate">Розрахувати</button>
-        
-        <div class="result" id="result"></div>
+            <button id="add-camera" class="battery-add-camera-btn add-camera-btn" type="button">+ Додати камеру</button>
+            <div id="bitrate-total" class="battery-bitrate-total bitrate-total">Сумарний бітрейт: 0 Kbps</div>
+            <div class="battery-input-row">
+                <label for="days" class="battery-label" style="margin-bottom:0;">Дні архіву:</label>
+                <input type="number" id="days" min="1" placeholder="Кількість днів">
+            </div>
+            <button id="calculate" class="battery-calc-btn calculate-btn" type="button">Розрахувати</button>
+        </form>
+        <!-- HDD Size Mode Form -->
+        <form id="calc-days-form" class="battery-form-section" autocomplete="off" style="display: none;">
+            <label class="battery-label">Параметри камер:</label>
+            <div id="camera-container" class="battery-camera-inputs">
+                <!-- JS додасть камери -->
+            </div>
+            <button id="add-camera" class="battery-add-camera-btn add-camera-btn" type="button">+ Додати камеру</button>
+            <div id="bitrate-total" class="battery-bitrate-total bitrate-total">Сумарний бітрейт: 0 Kbps</div>
+            <div class="battery-input-row">
+                <label for="hdd-size" class="battery-label" style="margin-bottom:0;">Обсяг HDD (TB):</label>
+                <input type="number" id="hdd-size" min="0.1" step="0.01" placeholder="Обсяг HDD">
+            </div>
+            <button id="calculate" class="battery-calc-btn calculate-btn" type="button">Розрахувати</button>
+        </form>
+        <div id="result"></div>
     </div>
-
     <script src="hdd-calculator.js"></script>
 </body>
 </html>
