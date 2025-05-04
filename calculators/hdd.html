@@ -3,86 +3,122 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Розрахунок об'єму HDD</title>
+    <title>Калькулятор АКБ</title>
     <link rel="stylesheet" href="../style.css">
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        .mode-selector {
+            display: flex;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            overflow: hidden;
+            /* Removing border */
+        }
+        .mode-btn {
+            flex: 1;
+            padding: 10px;
+            text-align: center;
+            background-color: #3390ec; /* Matching the blue color from the bottom buttons */
+            color: white;
+            cursor: pointer;
+            border: none;
+            transition: background-color 0.3s;
+        }
+        .mode-btn:first-child {
+            border-top-left-radius: 8px;
+            border-bottom-left-radius: 8px;
+        }
+        .mode-btn:last-child {
+            border-top-right-radius: 8px;
+            border-bottom-right-radius: 8px;
+        }
+        .mode-btn.active {
+            background-color: #2377d6; /* Darker blue for active state */
+            font-weight: bold;
+        }
+        .mode-btn:not(.active) {
+            opacity: 0.8;
+        }
+        .calculation-mode {
+            display: none;
+        }
+        .calculation-mode.active {
+            display: block;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
         <a href="../index.html" class="back-button">Повернутися до меню</a>
         
         <header>
-            <h1>💾 Розрахунок об'єму HDD</h1>
-            <p>Розрахунок необхідного дискового простору для відеоархіву</p>
+            <h1>🔋 Калькулятор АКБ</h1>
+            <p>Розрахунок параметрів системи безперебійного живлення</p>
         </header>
         
-        <form id="hdd-calculator-form">
-            <div id="cameras-container">
-                <div class="camera-group">
-                    <h3>Камера 1</h3>
-                    <div class="form-group">
-                        <label for="resolution-0">Роздільна здатність:</label>
-                        <select id="resolution-0" class="resolution-select">
-                            <option value="1.0">1 MP (720p)</option>
-                            <option value="2.0" selected>2 MP (1080p)</option>
-                            <option value="3.0">3 MP (1536p)</option>
-                            <option value="4.0">4 MP (1440p)</option>
-                            <option value="6.0">6 MP (2736p)</option>
-                            <option value="8.0">8 MP (4K)</option>
-                            <option value="12.0">12 MP (4000p)</option>
-                        </select>
+        <div class="mode-selector">
+            <button type="button" class="mode-btn active" data-mode="capacity-mode">Розрахувати ємність АКБ</button>
+            <button type="button" class="mode-btn" data-mode="time-mode">Розрахувати час роботи</button>
+        </div>
+        
+        <form id="ups-calculator-form">
+            <div id="capacity-mode" class="calculation-mode active">
+                <div class="form-group">
+                    <label for="hours">Необхідний час роботи (годин):</label>
+                    <input type="number" id="hours" step="0.1" min="0.1" required>
+                </div>
+            </div>
+            
+            <div id="time-mode" class="calculation-mode">
+                <div class="form-group">
+                    <label for="battery-type">Тип акумулятора:</label>
+                    <select id="battery-type">
+                        <option value="ups">UPS батарея (12V, в Ah)</option>
+                        <option value="mobile">DC UPS (3.7V, в mAh)</option>
+                    </select>
+                </div>
+                <div class="form-group battery-input-ups">
+                    <label for="battery-capacity">Ємність АКБ (Ah):</label>
+                    <input type="number" id="battery-capacity" step="0.1" min="0.1" required>
+                </div>
+                <div class="form-group battery-input-mobile" style="display: none;">
+                    <label for="mobile-capacity">Ємність DC UPS (mAh):</label>
+                    <input type="number" id="mobile-capacity" step="100" min="100" required>
+                </div>
+            </div>
+            
+            <div id="devices-container">
+                <div class="form-group device-group">
+                    <div style="display: flex; justify-content: space-between; align-items: center">
+                        <label style="white-space: nowrap;">Пристрій 1:</label>
                     </div>
-                    
-                    <div class="form-group">
-                        <label for="fps-0">Частота кадрів (FPS):</label>
-                        <select id="fps-0" class="fps-select">
-                            <option value="6">6 FPS</option>
-                            <option value="12">12 FPS</option>
-                            <option value="15" selected>15 FPS</option>
-                            <option value="20">20 FPS</option>
-                            <option value="25">25 FPS</option>
-                            <option value="30">30 FPS</option>
-                        </select>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="codec-0">Кодек:</label>
-                        <select id="codec-0" class="codec-select">
-                            <option value="0.1">H.265</option>
-                            <option value="0.2" selected>H.264</option>
-                            <option value="0.4">MJPEG</option>
-                        </select>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="count-0">Кількість камер:</label>
-                        <input type="number" id="count-0" class="camera-count" min="1" value="1" required>
+                    <div style="display: flex; gap: 8px;">
+                        <input type="number" min="1" value="1" class="device-count" placeholder="Кількість" required>
+                        <input type="number" min="0.1" step="0.1" class="device-power" placeholder="Споживання (Вт)" required>
                     </div>
                 </div>
             </div>
             
-            <button type="button" id="add-camera">+ Додати ще тип камер</button>
-            
-            <div class="form-group">
-                <label for="days">Термін зберігання (днів):</label>
-                <input type="number" id="days" min="1" value="30" required>
-            </div>
-            
-            <div class="form-group">
-                <label for="recording-mode">Режим запису:</label>
-                <select id="recording-mode">
-                    <option value="1">24/7 (постійний)</option>
-                    <option value="0.5">За рухом (12 год/добу)</option>
-                    <option value="0.25">За рухом (6 год/добу)</option>
-                </select>
-            </div>
-            
-            <button type="submit">Розрахувати</button>
+            <button type="button" id="add-device">+ Додати пристрій</button>
+            <button type="button" id="calculate-btn">Розрахувати</button>
         </form>
         
         <div id="result" class="result-container" style="display: none;"></div>
+        
+        <div style="margin-top: 20px;">
+            <h3>Середнє споживання пристроїв:</h3>
+            <ul>
+                <li>Світч: 2W</li>
+                <li>Камера Dahua: 4W</li>
+                <li>Камера Hikvision: 6W</li>
+                <li>NVR з 1 HDD: 10W</li>
+                <li>ONU: 4W</li>
+                <li>Роутер 2.4G: 2W</li>
+                <li>Роутер 2.4G+5G: 7W</li>
+            </ul>
+        </div>
     </div>
     
-    <script src="hdd.js"></script>
+    <script src="ups.js"></script>
 </body>
 </html>
