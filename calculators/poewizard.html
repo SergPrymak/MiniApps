@@ -2,53 +2,245 @@
 <html lang="uk">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PoE калькулятор</title>
-    <link rel="stylesheet" href="../style.css">
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <meta name="viewport" content="width=430, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>PoE Wizard - Калькулятор живлення PoE</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.2/font/bootstrap-icons.css">
+    <style>
+        /* --- СТИЛІ з ups.html --- */
+        html, body {
+            background: #fff;
+            margin: 0;
+            padding: 0;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            max-width: 430px;
+            margin-left: auto;
+            margin-right: auto;
+            color: #222;
+        }
+        a {
+            color: #2196f3;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        .back-link {
+            display: block;
+            margin: 15px 0 20px 0;
+            font-size: 15px;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 25px;
+            padding: 0 15px;
+        }
+        .header-icon {
+            color: #3b82f6;
+            font-size: 28px;
+            margin-bottom: 5px;
+        }
+        .header h1 {
+            margin: 5px 0;
+            font-size: 24px;
+            font-weight: 600;
+        }
+        .header p {
+            margin: 5px 0 0;
+            color: #777;
+            font-size: 14px;
+        }
+        .main-content {
+            padding: 0 15px 20px;
+        }
+        .form-label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 15px;
+            font-weight: 500;
+        }
+        .form-input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            margin-bottom: 15px;
+            box-sizing: border-box;
+        }
+        .device-row {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+        .extender-row {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+        .device-input {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 10px;
+            font-size: 16px;
+        }
+        .add-device-btn {
+            display: block;
+            width: 100%;
+            background: #e3f2fd;
+            color: #2196f3;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 0;
+            font-size: 15px;
+            margin-top: 5px;
+            margin-bottom: 20px;
+            cursor: pointer;
+        }
+        .remove-btn {
+            background: none;
+            border: none;
+            color: #e53935;
+            font-size: 22px;
+            padding: 0;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
+        .calc-button {
+            display: block;
+            width: 100%;
+            background: #3b82f6;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 0;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-bottom: 15px;
+        }
+        .calc-button:active {
+            background: #2563eb;
+        }
+        .result-box {
+            background: #e3f2fd;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 20px;
+            font-size: 15px;
+        }
+        .result-box strong {
+            color: #2196f3;
+        }
+        .tips-section {
+            margin-top: 20px;
+            font-size: 14px;
+            color: #666;
+        }
+        .tips-section ul {
+            padding-left: 20px;
+            margin: 10px 0;
+        }
+        .camera-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            background: #e3f2fd;
+            border-radius: 6px;
+            padding: 3px 8px;
+            margin-right: 5px;
+            margin-bottom: 5px;
+            font-size: 13px;
+        }
+        .info-icon {
+            display: inline-block;
+            color: #2196f3;
+            font-size: 15px;
+            margin-right: 5px;
+        }
+        .result-variant {
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid #d1e7fc;
+        }
+        .result-variant h3 {
+            margin-top: 0;
+            margin-bottom: 10px;
+            font-size: 16px;
+            color: #2196f3;
+        }
+        pre {
+            font-family: monospace;
+            background: #f5f5f5;
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 12px;
+            overflow-x: auto;
+            white-space: pre-wrap;
+        }
+        .warning {
+            color: #e53935;
+            font-weight: bold;
+        }
+    </style>
 </head>
 <body>
-    <div class="container">
-        <a href="../index.html" class="back-button">Повернутися до меню</a>
-        
-        <header>
-            <h1>🔌 PoE калькулятор</h1>
-            <p>Розрахунок параметрів PoE з/без Extender'ів</p>
-        </header>
-        
-        <form id="poewizard-form">
-            <div class="form-group">
-                <label for="power">Споживання пристрою (Вт):</label>
-                <input type="number" id="power" min="0.1" step="0.1" required>
-            </div>
+    <a href="../index.html" class="back-button">← Повернутися до меню</a>
+    <div class="header">
+        <i class="bi bi-ethernet header-icon"></i>
+        <h1>PoE Wizard</h1>
+        <p>Розрахунок Power over Ethernet з/без Extender'ів</p>
+    </div>
+
+    <div class="main-content">
+        <form id="poewizard-form" autocomplete="off">
+            <label class="form-label"><i class="info-icon bi bi-lightning"></i>Споживання пристрою (Вт):</label>
+            <input type="number" class="form-input" id="power" min="0.1" step="0.1" value="8" required>
             
-            <div class="form-group">
-                <label for="distance">Загальна відстань (м):</label>
-                <input type="number" id="distance" min="1" required>
-            </div>
+            <label class="form-label"><i class="info-icon bi bi-arrows-angle-expand"></i>Загальна відстань (м):</label>
+            <input type="number" class="form-input" id="distance" min="1" step="1" value="240" required>
             
-            <div class="form-group" id="extenders-container">
-                <label>Позиції Extender'ів (метрів від початку):</label>
-                <div id="extender-positions"></div>
-                <button type="button" id="add-extender" style="margin-top: 8px;">+ Додати Extender</button>
+            <label class="form-label"><i class="info-icon bi bi-diagram-3"></i>Позиції Extender'ів (м від початку):</label>
+            <div id="extender-positions">
+                <!-- Динамічні екстендери будуть додаватися тут -->
             </div>
+            <button type="button" id="add-extender" class="add-device-btn"><i class="bi bi-plus-circle"></i> Додати Extender</button>
             
-            <button type="submit">Розрахувати</button>
+            <button type="submit" class="calc-button"><i class="bi bi-calculator"></i> Розрахувати</button>
         </form>
         
-        <div id="result" class="result-container" style="display: none;"></div>
-        
-        <div style="margin-top: 20px;">
-            <h3>Обмеження:</h3>
+        <div id="result" class="result-box" style="display:none;">
+            <!-- Результати будуть відображатися тут -->
+        </div>
+
+        <div class="tips-section">
+            <p><i class="bi bi-info-circle"></i> <strong>PoE Wizard - калькулятор:</strong></p>
+            <p>Розрахунок падіння напруги, вибір стандарту PoE та варіанти з Extender'ами.</p>
+            
+            <p><i class="bi bi-gear"></i> <strong>Обмеження технології:</strong></p>
             <ul>
-                <li>Mode B (af/at): макс. 250м, 10Мбіт/с</li>
-                <li>Еталон: Finmark мідь 0,51</li>
-                <li>З Extender'ами: макс. 3, загальна ≤400м</li>
-                <li>При ручному розташуванні розширювачів враховуйте, що сегменти >100м мають високий ризик втрати пакетних даних</li>
+                <li>Mode B (af/at): макс. 250м, швидкість 10Мбіт/с</li>
+                <li>З Extender'ами: макс. 3шт, сегмент ≤100м, загальна ≤400м</li>
+                <li>Розрахунки для кабелю Finmark мідь 0.51мм</li>
+            </ul>
+            
+            <p><i class="bi bi-lightbulb"></i> <strong>Стандарти PoE:</strong></p>
+            <div style="display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 10px;">
+                <span class="camera-badge"><i class="bi bi-lightning"></i> 802.3af (Type 1): 15.4Вт</span>
+                <span class="camera-badge"><i class="bi bi-lightning-charge"></i> 802.3at (Type 2): 30Вт</span>
+                <span class="camera-badge"><i class="bi bi-lightning-charge-fill"></i> 802.3bt (Type 3): 60Вт</span>
+            </div>
+            
+            <p><i class="bi bi-question-circle"></i> <strong>Як використовувати:</strong></p>
+            <ul>
+                <li>Введіть споживання пристрою в ватах (Вт)</li>
+                <li>Вкажіть загальну відстань в метрах (м)</li>
+                <li>За потреби додайте позиції Extender'ів (відстань від початку в метрах)</li>
+                <li>Якщо Extender'и не вказані, система розрахує оптимальне розміщення</li>
             </ul>
         </div>
     </div>
-    
+
     <script src="poewizard.js"></script>
 </body>
 </html>
