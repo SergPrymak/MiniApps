@@ -3,25 +3,66 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>PixelWizard - Калькулятор піксельної щільності</title>
+    <title>PixelWizard - Чарівник піксельної щільності</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.2/font/bootstrap-icons.css">
     <link rel="stylesheet" href="miniapps-common.css">
+    <style>
+        /* Додаткові специфічні стилі для pixelwizard */
+        body {
+            line-height: 1.4;
+        }
+        .result-box {
+            background: #e8f4fa;
+            padding: 12px;
+        }
+        .result-box p {
+            margin: 3px 0;
+        }
+        .result-section p {
+            margin: 2px 0;
+        }
+        .result-title {
+            font-weight: 600;
+            color: #2196f3;
+            margin-bottom: 5px;
+        }
+        .result-distance {
+            color: #2196f3;
+            font-weight: 600;
+        }
+        .result-width {
+            color: #666;
+            font-size: 14px;
+        }
+        /* Деякі дрібні коригування відступів */
+        .form-input {
+            margin-bottom: 12px;
+        }
+        .calc-button {
+            margin-bottom: 12px;
+        }
+        .tips-section ul {
+            margin: 5px 0;
+        }
+    </style>
 </head>
 <body>
     <a href="../index.html" class="back-button">← Повернутися до меню</a>
     <div class="header">
         <i class="bi bi-magic header-icon"></i>
         <h1>PixelWizard</h1>
-        <p>Аналіз піксельної щільності та можливостей відеоспостереження</p>
+        <p>Чарівник піксельної щільності</p>
     </div>
 
     <div class="main-content">
         <form id="pixelWizardForm" autocomplete="off">
-            <label class="form-label"><i class="info-icon bi bi-grid-3x3"></i>Роздільна здатність (MP):</label>
-            <select class="form-input" id="megapixels"></select>
+            <label class="form-label"><i class="info-icon bi bi-camera"></i>Роздільна здатність (MP):</label>
+            <select class="form-input" id="megapixels" required>
+                <!-- Динамічно заповниться зі скрипта -->
+            </select>
             
-            <label class="form-label"><i class="info-icon bi bi-arrows-angle"></i>Кут огляду (°):</label>
-            <input type="number" class="form-input" id="fovDegrees" min="1" max="360" step="0.1" value="90" required>
+            <label class="form-label"><i class="info-icon bi bi-arrows-angle"></i>Кут огляду (FOV°):</label>
+            <input type="number" class="form-input" id="fov" min="1" max="360" step="1" value="90" required>
             
             <label class="form-label"><i class="info-icon bi bi-rulers"></i>Відстань до об'єкта (м):</label>
             <input type="number" class="form-input" id="distance" min="0.1" step="0.1" value="10" required>
@@ -37,120 +78,35 @@
             <p><i class="bi bi-info-circle"></i> <strong>Що таке DORI?</strong></p>
             <p>DORI - це стандартизована система для оцінки ефективності відеоспостереження:</p>
             <ul>
-                <li><strong>D</strong>etection (Детекція) - можливість виявити, що в кадрі є людина</li>
-                <li><strong>O</strong>bservation (Огляд) - розрізнення деталей одягу та особливостей</li>
-                <li><strong>R</strong>ecognition (Розпізнавання) - впізнавання знайомої людини</li>
-                <li><strong>I</strong>dentification (Ідентифікація) - чітка ідентифікація особи</li>
+                <li><strong>D</strong>etection (Детекція) - 25+ px/м - можливість виявити, що в кадрі є людина</li>
+                <li><strong>O</strong>bservation (Огляд) - 62+ px/м - розрізнення деталей одягу та особливостей</li>
+                <li><strong>R</strong>ecognition (Розпізнавання) - 125+ px/м - впізнавання знайомої людини</li>
+                <li><strong>I</strong>dentification (Ідентифікація) - 250+ px/м - чітка ідентифікація особи</li>
             </ul>
             
-            <p><i class="bi bi-gear"></i> <strong>Технічні деталі:</strong></p>
+            <p><i class="bi bi-robot"></i> <strong>Можливості ШІ для розпізнавання обличчя:</strong></p>
             <ul>
-                <li>Розраховані значення є теоретичними і можуть відрізнятися в реальних умовах</li>
-                <li>На якість зображення впливають: освітленість, атмосферні умови, якість оптики</li>
-                <li>Піксельна щільність (px/м) показує, скільки пікселів припадає на 1 метр об'єкта</li>
-                <li>Чим вища піксельна щільність, тим більше деталей можна розрізнити</li>
+                <li><strong>Базове виявлення обличчя</strong> - мінімум 50 px/м</li>
+                <li><strong>Впізнавання (пошук в БД)</strong> - від 100 px/м</li>
+                <li><strong>Високоточне розпізнавання</strong> - від 145 px/м (працює при поганому освітленні, в русі)</li>
+            </ul>
+            
+            <p><i class="bi bi-person-badge"></i> <strong>Спеціальні можливості:</strong></p>
+            <ul>
+                <li><strong>Розпізнавання купюр</strong> - потрібно щонайменше 300 px/м</li>
+                <li><strong>Читання номерів авто</strong> - потрібно щонайменше 150 px/м</li>
+                <li><strong>Часткове читання номерів</strong> - від 90 px/м</li>
             </ul>
             
             <p><i class="bi bi-lightbulb"></i> <strong>Поради:</strong></p>
             <ul>
-                <li>Для розпізнавання обличчя потрібно мінімум 125 px/м (рівень Recognition)</li>
-                <li>Для читання номерних знаків авто потрібно мінімум 150 px/м</li>
-                <li>Для розпізнавання купюр потрібно мінімум 300 px/м</li>
-                <li>При зменшенні кута огляду (FOV) збільшується піксельна щільність на тій самій відстані</li>
-            </ul>
+                <li>Чим більший кут огляду, тим менша піксельна щільність на потрібній відстані</li>
+                <li>Для точного розпізнавання облич та номерів авто обирайте камери з вищою роздільною здатністю</li>
+                <li>Зменшення відстані вдвічі збільшує піксельну щільність вдвічі</li>
+            </ul>            
         </div>
     </div>
-    <script src="visionrange.js"></script>
-    <script>
-        // Динамічне наповнення select#megapixels із RESOLUTION_MAP
-        document.addEventListener('DOMContentLoaded', function() {
-            if (typeof RESOLUTION_MAP !== 'undefined') {
-                const select = document.getElementById('megapixels');
-                Object.entries(RESOLUTION_MAP).forEach(([mp, px]) => {
-                    const opt = document.createElement('option');
-                    opt.value = mp;
-                    opt.textContent = `${mp} MP (${px})`;
-                    if (mp === "2") opt.selected = true;
-                    select.appendChild(opt);
-                });
-            }
-            
-            // Обробник форми
-            document.getElementById('pixelWizardForm').addEventListener('submit', function(e) {
-                e.preventDefault();
-                
-                // Отримання значень з форми
-                const megapixels = parseFloat(document.getElementById('megapixels').value);
-                const fovDegrees = parseFloat(document.getElementById('fovDegrees').value);
-                const distance = parseFloat(document.getElementById('distance').value);
-                
-                // Розрахунки
-                const width_px = RESOLUTION_MAP[megapixels.toString()];
-                const width_m = 2 * distance * Math.tan((fovDegrees / 2) * (Math.PI / 180));
-                const px_per_m = width_px / width_m;
-                
-                // Визначення рівня DORI
-                let dori_level, dori_desc;
-                if (px_per_m >= 250) {
-                    dori_level = "🆔 IDENTIFY (ідентифікація)";
-                    dori_desc = "Можливість ідентифікувати особу";
-                } else if (px_per_m >= 125) {
-                    dori_level = "👤 RECOGNIZE (розпізнавання)";
-                    dori_desc = "Можливість розпізнати особу";
-                } else if (px_per_m >= 62) {
-                    dori_level = "👀 OBSERVE (спостереження)";
-                    dori_desc = "Можливість детально описати об'єкт";
-                } else if (px_per_m >= 25) {
-                    dori_level = "🔍 DETECT (виявлення)";
-                    dori_desc = "Можливість виявити рух/об'єкт";
-                } else {
-                    dori_level = "⚠️ Нижче DETECT";
-                    dori_desc = "Недостатньо для надійного виявлення";
-                }
-                
-                // Додаткові можливості
-                const extra_features = [];
-                if (px_per_m >= 300) {
-                    extra_features.push("🪙 <strong>Розпізнавання купюр</strong> (300+ px/м)");
-                } else if (px_per_m >= 150) {
-                    extra_features.push("🪙 Часткове розрізнення номіналів");
-                }
-                
-                if (px_per_m >= 150) {
-                    extra_features.push("🚗 <strong>Читання номерів авто</strong> (150+ px/м)");
-                } else if (px_per_m >= 90) {
-                    extra_features.push("🚗 Впізнавання номерів (часткове)");
-                }
-                
-                // Формування результату
-                let resultHTML = `
-                    <h3>📊 Результати обрахунку:</h3>
-                    <p><strong>📐 Параметри:</strong></p>
-                    <ul>
-                        <li>Роздільна здатність: ${megapixels} MP</li>
-                        <li>Кут огляду: ${fovDegrees}°</li>
-                        <li>Відстань до об'єкта: ${distance} м</li>
-                        <li>Ширина зони: ${width_m.toFixed(1)} м</li>
-                    </ul>
-                    <p><strong>📈 Піксельна щільність:</strong> ${px_per_m.toFixed(1)} px/м</p>
-                    <p><strong>Стандарт DORI:</strong> ${dori_level}</p>
-                    <p><strong>Технічні можливості:</strong> ${dori_desc}</p>
-                `;
-                
-                if (extra_features.length > 0) {
-                    resultHTML += `
-                        <p><strong>🔍 Спеціальні можливості:</strong></p>
-                        <ul>
-                            ${extra_features.map(feature => `<li>${feature}</li>`).join('')}
-                        </ul>
-                    `;
-                }
-                
-                // Виведення результату
-                document.getElementById('resultContent').innerHTML = resultHTML;
-                document.getElementById('resultBox').style.display = 'block';
-            });
-        });
-    </script>
+    
+    <script type="module" src="pixelwizard.js"></script>
 </body>
 </html>
