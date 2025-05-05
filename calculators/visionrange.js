@@ -1,67 +1,12 @@
-// Constants for sensor sizes (width in mm)
-const SENSOR_SIZES = {
-    "1/4": 3.6, 
-    "1/3.6": 4.0, 
-    "1/3.2": 4.5, 
-    "1/3": 4.8,
-    "1/2.9": 5.0, 
-    "1/2.8": 5.35, 
-    "1/2.7": 5.37, 
-    "1/2.5": 5.76,
-    "1/2": 6.4, 
-    "1/1.8": 7.18, 
-    "1/1.7": 7.6, 
-    "1/1.2": 10.2,
-    "2/3": 8.8
-};
+// Імпорт констант з config.js
+import { RESOLUTION_MAP, DORI_THRESHOLDS, FACE_RECOGNITION_THRESHOLDS, OTHER_DETECTION_FEATURES as OTHER_FEATURES, SENSOR_SIZES } from './config.js';
 
-// const SENSOR_SIZES = {
-//     "1/4": 3.2,
-//     "1/3": 4.8,
-//     "1/2.8": 5.5,
-//     "1/2.7": 5.7,
-//     "1/2": 6.4,
-//     "1/1.8": 7.2,
-//     "2/3": 8.8,
-//     "1/1.2": 10.8,
-//     "1/1": 12.8
-// };
-
-// Resolution approximations (megapixels to width in pixels)
-const RESOLUTION_MAP = {
-    1: 1280,
-    1.3: 1280,
-    2: 1920,
-    3: 2048,
-    3.6:2560,
-    4: 2688,
-    5: 2560,
-    6: 3072,
-    8: 3840,
-    12: 4000
-};
-
-// DORI thresholds (pixels per meter)
-const DORI_THRESHOLDS = {
-    "Ідентифікація (чітко іден. особу)": 250,
-    "Розпізнавання (впізнати знайому особу)": 125,
-    "Огляд (деталі особи/одяг)": 62,
-    "Детекція (виявити рух/наявність людини)": 25
-};
-
-// Face recognition thresholds
-const FACE_RECOGNITION_THRESHOLDS = {
-    "👤 Базове виявлення обличчя (мінімум для виявлення)": 50,
-    "👥 Впізнавання (пошук в БД)": 100,
-    "🔍 Високоточне розпізнавання (погане освітлення, рух)": 145
-};
-
-// Other special features
-const OTHER_FEATURES = {
-    "💵 Розпізнавання купюр": 300,
-    "🚗 Читання номерів авто": 150,
-    "🚙 Часткове читання номерів": 90
-};
+// Коментуємо константи, які тепер в config.js
+// const SENSOR_SIZES = {...}
+// const RESOLUTION_MAP = {...}
+// const DORI_THRESHOLDS = {...}
+// const FACE_RECOGNITION_THRESHOLDS = {...}
+// const OTHER_FEATURES = {...}
 
 // Initialize form handling when DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {
@@ -106,11 +51,11 @@ function calculateVisionRange(e) {
         
         // Get closest resolution
         const closestMp = Object.keys(RESOLUTION_MAP)
-            .map(Number)
+            .map(mp => parseFloat(mp))
             .reduce((prev, curr) => 
                 Math.abs(curr - megapixels) < Math.abs(prev - megapixels) ? curr : prev
             );
-        const widthPx = RESOLUTION_MAP[closestMp];
+        const widthPx = RESOLUTION_MAP[String(closestMp)];
         
         // Calculate field of view
         const fovDegrees = (2 * Math.atan(sensorWidthMm / (2 * focalLength)) * 180 / Math.PI) * 1.085;
