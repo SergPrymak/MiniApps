@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>PixelWizard - Чарівник піксельної щільності</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.2/font/bootstrap-icons.css">
+    <style>
+        html, body {
+            background: #fff;
+            margin: 0;
+            padding: 0;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            max-width: 430px;
+            margin-left: auto;
+            margin-right: auto;
+            color: #222;
+            line-height: 1.4;
+        }
+        a {
+            color: #2196f3;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        .back-link {
+            display: block;
+            margin: 15px 0 20px 0;
+            font-size: 15px;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+            padding: 0 15px;
+        }
+        .header-icon {
+            color: #3b82f6;
+            font-size: 28px;
+            margin-bottom: 5px;
+        }
+        .header h1 {
+            margin: 5px 0;
+            font-size: 24px;
+            font-weight: 600;
+        }
+        .header p {
+            margin: 5px 0 0;
+            color: #777;
+            font-size: 14px;
+        }
+        .main-content {
+            padding: 0 15px 20px;
+        }
+        .form-label {
+            display: block;
+            margin-bottom: 3px;
+            font-size: 15px;
+            font-weight: 500;
+        }
+        .form-input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            margin-bottom: 12px;
+            box-sizing: border-box;
+        }
+        .calc-button {
+            display: block;
+            width: 100%;
+            background: #3b82f6;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 0;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-bottom: 12px;
+        }
+        .calc-button:active {
+            background: #2563eb;
+        }
+        .result-box {
+            background: #e8f4fa;
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 15px;
+            font-size: 15px;
+        }
+        .result-box strong {
+            color: #2196f3;
+        }
+        .result-box p {
+            margin: 3px 0;
+        }
+        .result-section {
+            margin-top: 8px;
+            padding-top: 8px;
+        }
+        .result-section p {
+            margin: 2px 0;
+        }
+        .result-title {
+            font-weight: 600;
+            color: #2196f3;
+            margin-bottom: 5px;
+        }
+        .result-distance {
+            color: #2196f3;
+            font-weight: 600;
+        }
+        .result-width {
+            color: #666;
+            font-size: 14px;
+        }
+        .tips-section {
+            margin-top: 15px;
+            font-size: 14px;
+            color: #666;
+        }
+        .tips-section p {
+            margin: 5px 0;
+        }
+        .tips-section ul {
+            padding-left: 20px;
+            margin: 5px 0;
+        }
+        .tips-section li {
+            margin-bottom: 3px;
+        }
+        .camera-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            background: #e3f2fd;
+            border-radius: 6px;
+            padding: 3px 8px;
+            margin-right: 5px;
+            margin-bottom: 5px;
+            font-size: 13px;
+        }
+        .info-icon {
+            display: inline-block;
+            color: #2196f3;
+            font-size: 15px;
+            margin-right: 5px;
+        }
+    </style>
+</head>
+<body>
+    <a href="../index.html" class="back-button">← Повернутися до меню</a>
+    <div class="header">
+        <i class="bi bi-magic header-icon"></i>
+        <h1>PixelWizard</h1>
+        <p>Чарівник піксельної щільності</p>
+    </div>
+
+    <div class="main-content">
+        <form id="pixelWizardForm" autocomplete="off">
+            <label class="form-label"><i class="info-icon bi bi-camera"></i>Роздільна здатність (MP):</label>
+            <select class="form-input" id="megapixels" required>
+                <option value="0.3">0.3 MP (VGA)</option>
+                <option value="0.9">0.9 MP (720p / HD Ready)</option>
+                <option value="1.2">1.2 MP</option>
+                <option value="1.3">1.3 MP</option>
+                <option value="2" selected>2 MP (1080p / Full HD)</option>
+                <option value="3">3 MP</option>
+                <option value="4">4 MP</option>
+                <option value="5">5 MP</option>
+                <option value="6">6 MP</option>
+                <option value="8">8 MP (4K UHD)</option>
+                <option value="12">12 MP</option>
+            </select>
+            
+            <label class="form-label"><i class="info-icon bi bi-arrows-angle"></i>Кут огляду (FOV°):</label>
+            <input type="number" class="form-input" id="fov" min="1" max="360" step="1" value="90" required>
+            
+            <label class="form-label"><i class="info-icon bi bi-rulers"></i>Відстань до об'єкта (м):</label>
+            <input type="number" class="form-input" id="distance" min="0.1" step="0.1" value="10" required>
+            
+            <button type="submit" class="calc-button"><i class="bi bi-calculator"></i> Розрахувати</button>
+        </form>
+        
+        <div id="resultBox" class="result-box" style="display:none;">
+            <div id="resultContent"></div>
+        </div>
+
+        <div class="tips-section">
+            <p><i class="bi bi-info-circle"></i> <strong>Що таке DORI?</strong></p>
+            <p>DORI - це стандартизована система для оцінки ефективності відеоспостереження:</p>
+            <ul>
+                <li><strong>D</strong>etection (Детекція) - 25+ px/м - можливість виявити, що в кадрі є людина</li>
+                <li><strong>O</strong>bservation (Огляд) - 62+ px/м - розрізнення деталей одягу та особливостей</li>
+                <li><strong>R</strong>ecognition (Розпізнавання) - 125+ px/м - впізнавання знайомої людини</li>
+                <li><strong>I</strong>dentification (Ідентифікація) - 250+ px/м - чітка ідентифікація особи</li>
+            </ul>
+            
+            <p><i class="bi bi-person-badge"></i> <strong>Спеціальні можливості:</strong></p>
+            <ul>
+                <li><strong>Розпізнавання купюр</strong> - потрібно щонайменше 300 px/м</li>
+                <li><strong>Читання номерів авто</strong> - потрібно щонайменше 150 px/м</li>
+                <li><strong>Часткове розпізнавання номерів</strong> - від 90 px/м</li>
+            </ul>
+            
+            <p><i class="bi bi-lightbulb"></i> <strong>Поради:</strong></p>
+            <ul>
+                <li>Чим більший кут огляду, тим менша піксельна щільність на потрібній відстані</li>
+                <li>Для точного розпізнавання облич та номерів авто обирайте камери з вищою роздільною здатністю</li>
+                <li>Зменшення відстані вдвічі збільшує піксельну щільність вдвічі</li>
+            </ul>            
+        </div>
+    </div>
+    
+    <script>
+        // Карта роздільних здатностей мегапікселів до ширини в пікселях
+        const RESOLUTION_MAP = {
+            0.3: 640,   // VGA
+            0.9: 1280,  // 720p / HD Ready
+            1.2: 1280,
+            1.3: 1280,
+            2: 1920,    // 1080p / Full HD
+            3: 2048,
+            4: 2688,    // 4MP
+            5: 2592,
+            6: 3072,
+            8: 3840,    // 4K UHD
+            12: 4000,
+        };
+        
+        document.getElementById('pixelWizardForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            calculatePixelDensity();
+        });
+        
+        function calculatePixelDensity() {
+            // Отримати вхідні дані
+            const megapixels = parseFloat(document.getElementById('megapixels').value);
+            const fovDegrees = parseFloat(document.getElementById('fov').value);
+            const distanceM = parseFloat(document.getElementById('distance').value);
+            
+            // Валідація вхідних даних
+            if (megapixels <= 0 || fovDegrees <= 0 || distanceM <= 0) {
+                alert("Усі параметри мають бути більше 0");
+                return;
+            }
+            
+            // Знаходимо найближче значення MP і отримуємо ширину в пікселях
+            const width_px = RESOLUTION_MAP[megapixels];
+            
+            // Основні розрахунки
+            const widthM = 2 * distanceM * Math.tan((fovDegrees / 2) * (Math.PI / 180));
+            const pxPerM = width_px / widthM;
+            
+            // Визначення DORI
+            let doriLevel, doriDesc;
+            if (pxPerM >= 250) {
+                doriLevel = "🆔 IDENTIFY (ідентифікація)";
+                doriDesc = "Можливість ідентифікувати особу";
+            } else if (pxPerM >= 125) {
+                doriLevel = "👤 RECOGNIZE (розпізнавання)";
+                doriDesc = "Можливість розпізнати особу";
+            } else if (pxPerM >= 62) {
+                doriLevel = "👀 OBSERVE (спостереження)";
+                doriDesc = "Можливість детально описати об'єкт";
+            } else if (pxPerM >= 25) {
+                doriLevel = "🔍 DETECT (виявлення)";
+                doriDesc = "Можливість виявити рух/об'єкт";
+            } else {
+                doriLevel = "⚠️ Нижче DETECT";
+                doriDesc = "Недостатньо для надійного виявлення";
+            }
+            
+            // Розрахунок дистанцій DORI
+            const identifyDistance = (250 * distanceM) / pxPerM;
+            const identifyWidth = 2 * identifyDistance * Math.tan((fovDegrees / 2) * (Math.PI / 180));
+            
+            const recognizeDistance = (125 * distanceM) / pxPerM;
+            const recognizeWidth = 2 * recognizeDistance * Math.tan((fovDegrees / 2) * (Math.PI / 180));
+            
+            const observeDistance = (62 * distanceM) / pxPerM;
+            const observeWidth = 2 * observeDistance * Math.tan((fovDegrees / 2) * (Math.PI / 180));
+            
+            const detectDistance = (25 * distanceM) / pxPerM;
+            const detectWidth = 2 * detectDistance * Math.tan((fovDegrees / 2) * (Math.PI / 180));
+            
+            // Розрахунок для розпізнавання обличчя
+            const faceBasicDistance = (50 * distanceM) / pxPerM;
+            const faceRecognizeDistance = (100 * distanceM) / pxPerM;
+            const faceDetailedDistance = (145 * distanceM) / pxPerM;
+            
+            // Розрахунок спеціальних можливостей
+            const banknoteDistance = (300 * distanceM) / pxPerM;
+            const licensePlateDistance = (150 * distanceM) / pxPerM;
+            const partialLicenseDistance = (90 * distanceM) / pxPerM;
+            
+            // Формування результату
+            let resultHTML = `
+                <p class="result-title"><i class="bi bi-boxes"></i> Результати аналізу:</p>
+                
+                <div class="result-section">
+                    <p class="result-title"><i class="bi bi-gear"></i> Вхідні параметри:</p>
+                    <p>- Роздільна здатність: ~${megapixels} MP → ${width_px} px</p>
+                    <p>- Кут огляду: ${fovDegrees}°</p>
+                    <p>- Відстань до об'єкта: ${distanceM} м</p>
+                    <p>- Ширина зони: ${widthM.toFixed(1)} м</p>
+                    <p>- Піксельна щільність: <strong>${pxPerM.toFixed(1)} px/м</strong></p>
+                </div>
+                
+                <div class="result-section">
+                    <p class="result-title"><i class="bi bi-eye"></i> Рівень DORI для даної конфігурації:</p>
+                    <p>- <strong>${doriLevel}</strong></p>
+                    <p>- ${doriDesc}</p>
+                </div>`;
+            
+            // Доступні функції в залежності від піксельної щільності
+            resultHTML += `
+                <div class="result-section">
+                    <p class="result-title"><i class="bi bi-check-circle"></i> Доступні функції при ${pxPerM.toFixed(1)} px/м:</p>`;
+                    
+            let availableFunctions = [];
+            
+            // Додаємо функції DORI від найвищого до найнижчого
+            if (pxPerM >= 250) {
+                availableFunctions.push("<p>- 🆔 <strong>Ідентифікація особи</strong> (250+ px/м)</p>");
+            }
+            if (pxPerM >= 125) {
+                availableFunctions.push("<p>- 👤 <strong>Розпізнавання особи</strong> (125+ px/м)</p>");
+            }
+            if (pxPerM >= 62) {
+                availableFunctions.push("<p>- 👀 <strong>Детальний огляд</strong> (62+ px/м)</p>");
+            }
+            if (pxPerM >= 25) {
+                availableFunctions.push("<p>- 🔍 <strong>Виявлення руху</strong> (25+ px/м)</p>");
+            }
+            
+            // Додаємо спеціальні можливості
+            if (pxPerM >= 300) {
+                availableFunctions.push("<p>- 💵 <strong>Розпізнавання купюр</strong> (300+ px/м)</p>");
+            } else if (pxPerM >= 150) {
+                availableFunctions.push("<p>- 💵 <strong>Часткове розрізнення номіналів</strong> (150+ px/м)</p>");
+            }
+            
+            if (pxPerM >= 150) {
+                availableFunctions.push("<p>- 🚗 <strong>Читання номерів авто</strong> (150+ px/м)</p>");
+            } else if (pxPerM >= 90) {
+                availableFunctions.push("<p>- 🚗 <strong>Часткове читання номерів</strong> (90+ px/м)</p>");
+            }
+            
+            if (availableFunctions.length > 0) {
+                resultHTML += availableFunctions.join("");
+            } else {
+                resultHTML += "<p>⚠️ Недостатня щільність для жодної з функцій розпізнавання</p>";
+            }
+            
+            resultHTML += `</div>`;
+            
+            // Додаємо розділ з еквівалентними дистанціями
+            resultHTML += `
+                <div class="result-section">
+                    <p class="result-title"><i class="bi bi-rulers"></i> Еквівалентні дистанції для обраної камери:</p>
+                    <p>- Ідентифікація особи: <span class="result-distance">${(250 * distanceM / pxPerM).toFixed(1)} м</span></p>
+                    <p>- Розпізнавання особи: <span class="result-distance">${(125 * distanceM / pxPerM).toFixed(1)} м</span></p>
+                    <p>- Детальний огляд: <span class="result-distance">${(62 * distanceM / pxPerM).toFixed(1)} м</span></p>
+                    <p>- Виявлення руху: <span class="result-distance">${(25 * distanceM / pxPerM).toFixed(1)} м</span></p>
+                    <p>- Розпізнавання купюр: <span class="result-distance">${(300 * distanceM / pxPerM).toFixed(1)} м</span></p>
+                    <p>- Читання номерів авто: <span class="result-distance">${(150 * distanceM / pxPerM).toFixed(1)} м</span></p>
+                </div>`;
+            
+            // Відображення результату
+            document.getElementById('resultContent').innerHTML = resultHTML;
+            document.getElementById('resultBox').style.display = 'block';
+            
+            // Прокрутка до результату
+            document.getElementById('resultBox').scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>
