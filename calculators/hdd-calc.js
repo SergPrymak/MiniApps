@@ -100,7 +100,7 @@ document.getElementById('hddCalcForm').onsubmit = function(e) {
                 ${camera_details.map(d => `<li>${d}</li>`).join('')}
             </ul>
             <div><i class="bi bi-speedometer2"></i> Сумарний бітрейт: <strong>${total_bitrate} Kbps</strong> (${(total_bitrate/1024).toFixed(1)} Mbps)</div>
-            <div style="margin-top:10px;font-weight:500;"><i class="bi bi-hdd-fill"></i> Потрібна ємність: <strong>${total_tb.toFixed(2)} TB</strong></div>
+            <div style="margin-top:10px;font-weight:500;"><i class="bi bi-hdd-fill"></i> Потрібна номінальна ємність: <strong>${(total_tb / 0.909).toFixed(2)} TB (реал. ${total_tb.toFixed(2)}) </strong></div>
         `;
         document.getElementById('hddResult').style.display = '';
     } catch (err) {
