@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ZoomWizard - Підбір фокусної відстані камери</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.2/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="miniapps-common.css">
+</head>
+<body>
+    <a href="../index.html" class="back-button">← Повернутися до меню</a>
+    <div class="header">
+        <i class="bi bi-binoculars header-icon"></i>
+        <h1>ZoomWizard</h1>
+        <p>Підбір оптимальної фокусної відстані та типу камери</p>
+    </div>
+
+    <div class="main-content">
+        <form id="zoomWizardForm" autocomplete="off">
+            <label class="form-label"><i class="info-icon bi bi-grid-3x3"></i>Роздільна здатність (MP):</label>
+            <select class="form-input" id="megapixels">
+                <!-- Буде заповнено динамічно зі словника RESOLUTION_MAP -->
+            </select>
+            
+            <label class="form-label"><i class="info-icon bi bi-rulers"></i>Щільність пікселів (px/m):</label>
+            <select class="form-input" id="pixelDensity">
+                <!-- Буде заповнено динамічно зі словників DORI_THRESHOLDS та SPECIAL_PIXEL_DENSITY -->
+            </select>
+            
+            <div id="customDensityContainer" style="display: none;">
+                <label class="form-label"><i class="info-icon bi bi-rulers"></i>Власне значення (px/m):</label>
+                <input type="number" class="form-input" id="customDensity" min="10" step="1" value="250">
+            </div>
+            
+            <label class="form-label"><i class="info-icon bi bi-signpost-2"></i>Відстань до цілі (м):</label>
+            <input type="number" class="form-input" id="distance" min="0.1" step="0.1" value="10" required>
+            
+            <label class="form-label"><i class="info-icon bi bi-cpu"></i>Сенсор:</label>
+            <select class="form-input" id="sensor">
+                <!-- Буде заповнено динамічно зі словника SENSOR_SIZES -->
+            </select>
+            
+            <button type="submit" class="calc-button"><i class="bi bi-calculator"></i> Розрахувати</button>
+        </form>
+        
+        <div id="resultBox" class="result-box" style="display:none;">
+            <div id="resultContent"></div>
+        </div>
+
+        <div class="tips-section">
+            <p><i class="bi bi-info-circle"></i> <strong>Про ZoomWizard</strong></p>
+            <p>ZoomWizard допомагає підібрати оптимальну фокусну відстань об'єктива для конкретних умов спостереження.</p>
+            
+            <p><i class="bi bi-lightbulb"></i> <strong>Що таке щільність пікселів (px/m)?</strong></p>
+            <p>Це кількість пікселів, що припадає на 1 метр об'єкта в кадрі. Визначає рівень деталізації:</p>
+            <ul>
+                <li><strong>25 px/m</strong> - Детекція (виявлення людини в кадрі)</li>
+                <li><strong>62 px/m</strong> - Огляд (розрізнення деталей одягу)</li>
+                <li><strong>125 px/m</strong> - Розпізнавання (знайомої людини)</li>
+                <li><strong>250 px/m</strong> - Ідентифікація (чітка ідентифікація людини)</li>
+            </ul>
+            
+            <p><i class="bi bi-camera"></i> <strong>Типи камер за фокусною відстанню:</strong></p>
+            <ul>
+                <li><strong>Варіофокальна (2.8-12 мм)</strong> - для загального огляду та ідентифікації на невеликій відстані</li>
+                <li><strong>Long-range (12-50 мм)</strong> - для спостереження на середній відстані</li>
+                <li><strong>PTZ SpeedDome (>50 мм)</strong> - для спостереження на великій відстані з можливістю масштабування</li>
+            </ul>
+            
+            <p><i class="bi би-gear"></i> <strong>Технічні деталі:</strong></p>
+            <ul>
+                <li>Більший сенсор дозволяє досягти ширшого кута огляду при тій самій фокусній відстані</li>
+                <li>Оптимальний кут огляду для більшості випадків становить 45-60 градусів</li>
+                <li>Для спостереження за вхідними зонами рекомендується кут 80-90 градусів</li>
+                <li>Для масштабованого спостереження на великій відстані доцільно використовувати PTZ камери</li>
+            </ul>
+        </div>
+    </div>
+    
+    <script src="zoomwizard.js"></script>
+</body>
+</html>
