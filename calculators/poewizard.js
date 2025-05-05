@@ -267,31 +267,62 @@ function calculatePoeVariants(pdPower, totalDistance, customSegments, extenderPo
 
 function displayResults(result, pdPower, totalDistance, extenderPositions) {
     const resultDiv = document.getElementById('result');
-    let resultHtml = `<h2>PoE розрахунок для ${pdPower}Вт на ${totalDistance}м:</h2>`;
     
-    // Variant 1: Without Extenders
-    resultHtml += `<h3>Варіант 1: Тільки POE Світч</h3>`;
+    let resultHtml = `
+        <div><i class="bi bi-bar-chart-fill"></i> <strong>Результати розрахунку:</strong></div>
+        
+        <div style="margin-top:10px;"><i class="bi bi-lightning"></i> Споживання: <strong>${pdPower} Вт</strong></div>
+        <div><i class="bi bi-arrows-angle-expand"></i> Відстань: <strong>${totalDistance} м</strong></div>
+        
+        <div style="margin-top:10px;"><i class="bi bi-hdd-network"></i> <strong>Варіант 1:</strong> <strong>Тільки POE Світч</strong></div>`;
     
     if (result.noExt) {
         resultHtml += `
-            <p><strong>🔌 Стандарт:</strong> ${result.noExt.name}</p>
-            <p><strong>⚡ Портова потужність:</strong> ${result.noExt.port_power.toFixed(2)} Вт</p>
-            <p><strong>📉 Падіння напруги:</strong> ${result.noExt.v_drop.toFixed(2)} В</p>
-            <p><strong>🔋 Напруга на PD:</strong> ${result.noExt.voltage_at_pd.toFixed(2)} В</p>
-            <p><strong>🚀 Швидкість:</strong> ${result.noExt.speed}</p>
-        `;
+            <div><i class="bi bi-diagram-2"></i> Стандарт: <strong>${result.noExt.name}</strong></div>
+            <div><i class="bi bi-lightning"></i> Портова потужність: <strong>${result.noExt.port_power.toFixed(2)} Вт</strong></div>
+            <div><i class="bi bi-arrow-down"></i> Падіння напруги: <strong>${result.noExt.v_drop.toFixed(2)} В</strong></div>
+            <div><i class="bi bi-battery-half"></i> Напруга на PD: <strong>${result.noExt.voltage_at_pd.toFixed(2)} В</strong></div>
+            <div><i class="bi bi-speedometer"></i> Швидкість: <strong>${result.noExt.speed}</strong></div>`;
+        
+        if (totalDistance > 250 || result.noExt.voltage_at_pd < 37) {
+            resultHtml += `
+                <div style="color:#e53935;"><i class="bi bi-exclamation-triangle-fill"></i> Перевищено максимальну відстань або недостатня напруга на PD!</div>`;
+        }
     } else {
-        resultHtml += `<p>❌ <strong>Недоступно</strong> (перевищення потужності або недостатня напруга)</p>`;
+        resultHtml += `
+            <div style="color:#e53935;"><i class="bi bi-x-octagon-fill"></i> Недоступно (перевищення потужності або недостатня напруга)</div>`;
     }
     
-    // Variant 2: With Extenders
-    resultHtml += `<h3>Варіант 2: З Extender'ами</h3>`;
+    resultHtml += `<div style="margin-top:10px;"><i class="bi bi-hdd-stack"></i> <strong>Варіант 2: З Extender'ами</strong></div>`;
     
     if (result.withExt) {
-        // Build topology
-        let topology = `PSE (${result.withExt.standard.name} ${result.withExt.total_power.toFixed(2)}Вт)\n`;
-        let currentPosition = 0;
+        resultHtml += `
+            <div><i class="bi bi-boxes"></i> Extender'ів: <strong>${result.withExt.num_ext}</strong></div>`;
         
+        if (extenderPositions.length > 0) {
+            const positionsStr = extenderPositions.map(pos => `<strong>${pos.toFixed(0)}м</strong>`).join(", ");
+            resultHtml += `
+                <div><i class="bi bi-geo-alt"></i> Позиції extender'ів: ${positionsStr}</div>`;
+        }
+        
+        resultHtml += `
+            <div><i class="bi bi-distribute-horizontal"></i> Сегменти: ${result.withExt.segment_lengths.map(sl => `<strong>${sl.toFixed(1)}м</strong>`).join(", ")}</div>
+            <div><i class="bi bi-lightning-charge-fill"></i> Загальна потужність: <strong>${result.withExt.total_power.toFixed(2)} Вт</strong></div>
+            <div><i class="bi bi-diagram-2"></i> Стандарт: <strong>${result.withExt.standard.name}</strong></div>
+            <div><i class="bi bi-arrow-down-up"></i> Сумарне падіння напруги: <strong>${result.withExt.total_vdrop.toFixed(2)} В</strong></div>
+            <div><i class="bi bi-battery-half"></i> Напруга на PD: <strong>${result.withExt.voltage_at_pd.toFixed(2)} В</strong></div>
+            <div><i class="bi bi-speedometer"></i> Швидкість: <strong>${result.withExt.speed}</strong></div>`;
+        
+        if (result.longSegmentsWarning) {
+            resultHtml += `
+                <div style="color:#e53935;"><i class="bi bi-exclamation-triangle-fill"></i> Увага! Виявлено сегменти довші за 100м. Високий ризик втрати пакетних даних.</div>`;
+        }
+        
+        resultHtml += `
+            <div style="margin-top:10px;"><i class="bi bi-diagram-3"></i> <strong>Топологія:</strong></div>
+            <pre style="background:#f3f6fa;border-radius:10px;padding:8px 10px;font-size:0.9em;margin-top:4px;">PSE (${result.withExt.standard.name} ${result.withExt.total_power.toFixed(2)}Вт)`;
+        
+        let currentPosition = 0;
         for (let idx = 0; idx < result.withExt.segment_powers.length; idx++) {
             const [pwr, vdrop, _, segmentLen] = result.withExt.segment_powers[idx];
             currentPosition += segmentLen;
@@ -299,40 +330,17 @@ function displayResults(result, pdPower, totalDistance, extenderPositions) {
             const node = idx < result.withExt.num_ext ? `Extender${idx+1} 802.3at` : "PD";
             const positionText = idx < result.withExt.num_ext ? ` @ ${currentPosition.toFixed(0)}м` : "";
             
-            topology += `├── ${segmentLen.toFixed(0)}м (${pwr.toFixed(1)}Вт, Δ${vdrop.toFixed(2)}В) ──▶ ${node}${positionText}\n`;
-            if (idx < result.withExt.num_ext) {
-                topology += "│\n";
+            if (idx === result.withExt.segment_powers.length - 1) {
+                resultHtml += `\n└── ${segmentLen.toFixed(0)}м (${pwr.toFixed(1)}Вт, Δ${vdrop.toFixed(2)}В) ──▶ ${node}${positionText}`;
+            } else {
+                resultHtml += `\n├── ${segmentLen.toFixed(0)}м (${pwr.toFixed(1)}Вт, Δ${vdrop.toFixed(2)}В) ──▶ ${node}${positionText}\n│`;
             }
         }
         
-        // Extender positions info
-        let extenderPositionsText = "";
-        if (extenderPositions.length > 0) {
-            const positionsStr = extenderPositions.map(pos => `${pos.toFixed(0)}м`).join(", ");
-            extenderPositionsText = `<p><strong>📍 Позиції розширювачів:</strong> ${positionsStr}</p>`;
-        }
-        
-        // Warning for long segments
-        let warningText = "";
-        if (result.longSegmentsWarning) {
-            warningText = `<p class="warning" style="color: red; font-weight: bold;">⚠️ Увага! Виявлено сегменти довші за 100м. Високий ризик втрати пакетних даних.</p>`;
-        }
-        
-        resultHtml += `
-            <p><strong>🔢 Extender'ів:</strong> ${result.withExt.num_ext}</p>
-            ${extenderPositionsText}
-            <p><strong>📏 Сегменти:</strong> ${result.withExt.segment_lengths.map(sl => `${sl.toFixed(1)}м`).join(", ")}</p>
-            <p><strong>⚡ Загальна потужність:</strong> ${result.withExt.total_power.toFixed(2)} Вт</p>
-            <p><strong>🔌 Стандарт:</strong> ${result.withExt.standard.name}</p>
-            <p><strong>📉 Сумарне падіння напруги:</strong> ${result.withExt.total_vdrop.toFixed(2)} В</p>
-            <p><strong>🔋 Напруга на PD:</strong> ${result.withExt.voltage_at_pd.toFixed(2)} В</p>
-            <p><strong>🚀 Швидкість:</strong> ${result.withExt.speed}</p>
-            ${warningText}
-            <p><strong>📡 Топологія:</strong></p>
-            <pre>${topology}</pre>
-        `;
+        resultHtml += `</pre>`;
     } else {
-        resultHtml += `<p>${result.extendersInfo || "❌ Недоступно (немає підходящого стандарту) або відстань до 100м"}</p>`;
+        resultHtml += `
+            <div style="color:#e53935;"><i class="bi bi-x-octagon-fill"></i> ${result.extendersInfo || "Недоступно (перевищені обмеження або недостатня напруга)"}</div>`;
     }
     
     resultDiv.innerHTML = resultHtml;
@@ -352,136 +360,3 @@ function displayResults(result, pdPower, totalDistance, extenderPositions) {
         }));
     });
 }
-
-// Перемикання вкладок
-const poePowerTabBtn = document.getElementById('poePowerTabBtn');
-const poeBudgetTabBtn = document.getElementById('poeBudgetTabBtn');
-const poePowerTab = document.getElementById('poePowerTab');
-const poeBudgetTab = document.getElementById('poeBudgetTab');
-
-// За замовчуванням активна перша вкладка
-poePowerTabBtn.style.background = '#2563eb';
-
-poePowerTabBtn.onclick = function() {
-    poePowerTabBtn.style.background = '#2563eb';
-    poeBudgetTabBtn.style.background = '#3b82f6';
-    poePowerTab.style.display = '';
-    poeBudgetTab.style.display = 'none';
-};
-
-poeBudgetTabBtn.onclick = function() {
-    poeBudgetTabBtn.style.background = '#2563eb';
-    poePowerTabBtn.style.background = '#3b82f6';
-    poeBudgetTab.style.display = '';
-    poePowerTab.style.display = 'none';
-};
-
-// Додавання/видалення рядків пристроїв
-function addDeviceItem(containerId) {
-    const container = document.getElementById(containerId);
-    const row = document.createElement('div');
-    row.className = 'device-row';
-    row.innerHTML = `
-        <input type="number" class="device-input device-count" min="1" value="1" required placeholder="К-сть" style="width: 80px;">
-        <input type="number" class="device-input" min="1" value="7" required placeholder="Споживання (Вт)" style="flex-grow: 1;">
-        <button type="button" class="remove-btn" tabindex="-1" aria-label="Видалити"><i class="bi bi-x-circle"></i></button>
-    `;
-    row.querySelector('.remove-btn').onclick = function() {
-        if (container.querySelectorAll('.device-row').length > 1) row.remove();
-    };
-    container.appendChild(row);
-}
-
-document.getElementById('addDevicePoE').onclick = function() {
-    addDeviceItem('devicesPoE');
-};
-document.getElementById('addDevicePoEBudget').onclick = function() {
-    addDeviceItem('devicesPoEBudget');
-};
-
-// Видалення для початкових рядків
-document.querySelectorAll('.remove-btn').forEach(btn => {
-    btn.onclick = function() {
-        const container = btn.closest('div[id^="devices"]');
-        if (container.querySelectorAll('.device-row').length > 1)
-            btn.closest('.device-row').remove();
-    };
-});
-
-// Парсинг пристроїв
-function parseDeviceData(containerId) {
-    const container = document.getElementById(containerId);
-    let total_power = 0;
-    let total_devices = 0;
-    let device_details = [];
-    container.querySelectorAll('.device-row').forEach(item => {
-        const count = parseInt(item.querySelector('.device-count').value) || 0;
-        const power = parseInt(item.querySelectorAll('.device-input')[1].value) || 0;
-        if (count > 0 && power > 0) {
-            total_devices += count;
-            total_power += count * power;
-            device_details.push(`${count} × ${power} Вт`);
-        }
-    });
-    return { total_power, total_devices, device_details };
-}
-
-// Розрахунок PoE потужності
-document.getElementById('poePowerForm').onsubmit = function(e) {
-    e.preventDefault();
-    try {
-        const { total_power, total_devices, device_details } = parseDeviceData('devicesPoE');
-        if (total_devices === 0) throw new Error("Додайте хоча б один пристрій з потужністю");
-        document.getElementById('poePowerResultContent').innerHTML = `
-            <div><i class="bi bi-bar-chart-fill"></i> <strong>Результати розрахунку:</strong></div>
-            <div style="margin-top:10px;"><i class="bi bi-pc-display"></i> Всього пристроїв: <strong>${total_devices}</strong></div>
-            <div><i class="bi bi-list-check"></i> Конфігурація пристроїв:</div>
-            <ul style="margin:4px 0 8px 20px;padding:0;">
-                ${device_details.map(d => `<li>${d}</li>`).join('')}
-            </ul>
-            <div><i class="bi bi-lightning"></i> Загальна потужність: <strong>${total_power} Вт</strong></div>
-        `;
-        document.getElementById('poePowerResult').style.display = '';
-    } catch (err) {
-        alert("Помилка: " + err.message);
-    }
-};
-
-// Перевірка PoE бюджету
-document.getElementById('poeBudgetForm').onsubmit = function(e) {
-    e.preventDefault();
-    try {
-        const poeBudget = parseFloat(document.getElementById('poeBudget').value);
-        if (poeBudget <= 0) throw new Error("PoE бюджет має бути більше 0");
-        const { total_power, total_devices, device_details } = parseDeviceData('devicesPoEBudget');
-        if (total_devices === 0) throw new Error("Додайте хоча б один пристрій з потужністю");
-        let status, statusIcon, statusColor;
-        if (total_power <= poeBudget * 0.8) {
-            status = "Бюджет достатній з запасом";
-            statusIcon = "bi bi-check-circle-fill";
-            statusColor = "#22c55e";
-        } else if (total_power <= poeBudget) {
-            status = "Бюджет майже вичерпано";
-            statusIcon = "bi bi-exclamation-triangle-fill";
-            statusColor = "#f59e42";
-        } else {
-            status = "Перевищено бюджет PoE!";
-            statusIcon = "bi bi-x-octagon-fill";
-            statusColor = "#e53935";
-        }
-        document.getElementById('poeBudgetResultContent').innerHTML = `
-            <div><i class="bi bi-bar-chart-fill"></i> <strong>Результати перевірки бюджету:</strong></div>
-            <div style="margin-top:10px;"><i class="bi bi-diagram-3"></i> PoE бюджет комутатора: <strong>${poeBudget} Вт</strong></div>
-            <div><i class="bi bi-pc-display"></i> Всього пристроїв: <strong>${total_devices}</strong></div>
-            <div><i class="bi bi-list-check"></i> Конфігурація пристроїв:</div>
-            <ul style="margin:4px 0 8px 20px;padding:0;">
-                ${device_details.map(d => `<li>${d}</li>`).join('')}
-            </ul>
-            <div><i class="bi bi-lightning"></i> Загальна потужність: <strong>${total_power} Вт</strong></div>
-            <div style="margin-top:10px;font-weight:500;color:${statusColor};"><i class="${statusIcon}"></i> ${status}</div>
-        `;
-        document.getElementById('poeBudgetResult').style.display = '';
-    } catch (err) {
-        alert("Помилка: " + err.message);
-    }
-};
