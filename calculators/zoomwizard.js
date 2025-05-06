@@ -192,7 +192,7 @@ function handleFormSubmit(event) {
             <div class="result-section"><i class="bi bi-lightbulb"></i> <strong>Рекомендація</strong></div>
             <div>Для такої відстані і деталізації краще використовувати PTZ SpeedDome камеру з автоматичним фокусуванням та масштабуванням.</div>
         `;
-    } else if (focalLength > 12) {
+    } else if (focalLength > 13.5) {
         resultHTML += `
             <div class="result-section"><i class="bi bi-lightbulb"></i> <strong>Рекомендація</strong></div>
             <div>Рекомендується варіофокальна камера з розширеним діапазоном фокусних відстаней (наприклад, 5-50 мм).</div>
