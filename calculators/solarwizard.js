@@ -209,7 +209,7 @@ function calculateSolarSystem(event) {
         resultContent.innerHTML = `
             <div><i class="bi bi-sun-fill"></i> <strong>Сонячна автономна система ${REGION_NAMES[region]}</strong></div>
             
-            <div style="margin-top:10px;"><i class="bi bi-lightning-fill"></i> <strong>Енергетичний аналіз:</strong></div>
+            <div style="margin-top:0px;"><i class="bi bi-lightning-fill"></i> <strong>Енергетичний аналіз:</strong></div>
             <div>- Пристрої: ${devicesInfo.join(' + ')}</div>
             <div>- Сумарне навантаження: <strong>${totalPowerConsumption.toFixed(1)} Вт</strong></div>
             <div>- Добова потреба: <strong>${dailyConsumptionWh.toFixed(1)} Вт·год</strong></div>
@@ -218,9 +218,7 @@ function calculateSolarSystem(event) {
             <div>- Ємність: <strong>${batteryCapacityWh.toFixed(1)} Вт·год</strong></div>
             <div>- Автономія: ${cloudyDays} дні(-в) без сонця</div>
             <div>- Глибина розряду: ${maxDischargePercent}%</div>
-            
             <div class="result-section"><i class="bi bi-brightness-high"></i> <strong>Сонячні панелі:</strong></div>
-            
             <div class="result-section"><i class="bi bi-snow"></i> <strong>Зимовий режим</strong></div>
             <div>- Потужність: <strong>${Math.round(solarPanelsPowerWinter)} Вт</strong></div>
             <div>- Інсоляція: ${minInsolWinter} кВт·год/м²</div>
