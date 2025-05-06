@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SolarGenWizard - Розрахунок генерації та прибутку сонячної станції</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.2/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="miniapps-common.css">
+    <link rel="stylesheet" href="solarwizard-styles.css">
+</head>
+<body>
+    <a href="../index.html" class="back-button">← Повернутися до меню</a>
+    <div class="header">
+        <i class="bi bi-sun header-icon"></i>
+        <h1>SolarGenWizard</h1>
+        <p>Розрахунок генерації та прибутку сонячної станції</p>
+    </div>
+
+    <div class="main-content">
+        <form id="solarGenWizardForm" autocomplete="off">
+            <label class="form-label"><i class="info-icon bi bi-geo-alt"></i>Регіон:</label>
+            <select class="form-input" id="region">
+                <!-- Буде заповнено динамічно -->
+            </select>
+            
+            <label class="form-label"><i class="info-icon bi bi-lightning-charge"></i>Потужність панелей (кВт):</label>
+            <input type="number" class="form-input" id="panelPower" min="0.1" step="0.1" value="10" required>
+            
+            <label class="form-label"><i class="info-icon bi bi-house-door"></i>Власне споживання (кВт·год/міс, необов'язково):</label>
+            <input type="number" class="form-input" id="ownConsumption" min="0" step="10" value="0" placeholder="Залишіть 0, якщо вся енергія на продаж">
+            
+            <button type="submit" class="calc-button"><i class="bi bi-calculator"></i> Розрахувати</button>
+        </form>
+        
+        <div id="resultBox" class="result-box" style="display:none;">
+            <div id="resultContent"></div>
+        </div>
+
+        <div class="tips-section">
+            <p><i class="bi bi-info-circle"></i> <strong>Про SolarGenWizard</strong></p>
+            <p>SolarGenWizard допомагає розрахувати річну генерацію сонячної станції та потенційний прибуток за "зеленим тарифом".</p>
+            
+            <p><i class="bi bi-lightning"></i> <strong>Річна генерація</strong></p>
+            <p>Розраховується на основі:</p>
+            <ul>
+                <li>Встановленої потужності сонячних панелей</li>
+                <li>Сонячної інсоляції для вибраного регіону</li>
+                <li>Ефективності сонячної системи</li>
+            </ul>
+            
+            <p><i class="bi bi-currency-euro"></i> <strong>Прибуток</strong></p>
+            <p>Розраховується з врахуванням:</p>
+            <ul>
+                <li>Поточної ставки "зеленого тарифу"</li>
+                <li>Податку на додану вартість (ПДВ)</li>
+                <li>Обсягу власного споживання (якщо вказано)</li>
+            </ul>
+            
+            <p><i class="bi bi-house-door"></i> <strong>Власне споживання</strong></p>
+            <ul>
+                <li>Якщо вказано власне споживання, калькулятор покаже скільки енергії ви використаєте самі</li>
+                <li>Показує кількість енергії, яку доведеться докупити з мережі</li>
+                <li>Розраховує економію на комунальних платежах</li>
+                <li>Обчислює прибуток від продажу надлишкової енергії</li>
+            </ul>
+            
+            <p><i class="bi bi-lightbulb"></i> <strong>Технічні примітки</strong></p>
+            <ul>
+                <li>Розрахунок ґрунтується на середньомісячних даних сонячної інсоляції</li>
+                <li>Враховано ефективність системи та втрати при конвертації</li>
+                <li>Результати надаються з розбивкою по місяцях для більш точного планування</li>
+            </ul>
+        </div>
+    </div>
+    
+    <script src="solargenwizard.js"></script>
+</body>
+</html>
