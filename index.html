@@ -69,6 +69,7 @@
             color: #666;
             font-weight: 400;
             margin-top: 2px;
+            width: 92%; /* Зменшено на 8% по горизонталі */
         }
         .tips-section {
             margin: 30px 15px 0 15px;
@@ -78,18 +79,87 @@
         .tips-section strong {
             color: #2196f3;
         }
+        
+        /* Спеціальні стилі для пункту меню SolarWizard */
+        .solar-wizard-item {
+            background: #FFF8E6;
+            border: 1px solid #F9A826;
+        }
+        
+        .solar-wizard-item:hover {
+            background: #FFF0CC;
+        }
+        
+        .solar-wizard-item .menu-icon {
+            color: #F9A826;
+        }
+        
+        .solar-wizard-item .menu-desc {
+            color: #5D6D7E;
+        }
+        
+        /* Групування категорій калькуляторів */
+        .category-header {
+            font-size: 16px;
+            color: #666;
+            margin: 25px 0 12px 18px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        /* Стилі для групи відеоспостереження */
+        .video-item {
+            background: #E8F4FD;
+            border: 1px solid #64B5F6;
+        }
+        
+        .video-item:hover {
+            background: #C7E5FC;
+        }
+        
+        .video-item .menu-icon {
+            color: #1E88E5;
+        }
+        
+        .video-item .menu-desc {
+            color: #455A64;
+        }
+        
+        /* Стилі для групи електроживлення */
+        .power-item {
+            background: #E8F5E9;
+            border: 1px solid #66BB6A;
+        }
+        
+        .power-item:hover {
+            background: #C8E6C9;
+        }
+        
+        .power-item .menu-icon {
+            color: #43A047;
+        }
+        
+        .power-item .menu-desc {
+            color: #37474F;
+        }
     </style>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
 </head>
 <body>
     <div class="header">
         <i class="bi bi-calculator header-icon"></i>
-        <h1>Спілка Інсталяторів Безпеки</h1>
-        <p>Інструменти для професіоналів</p>
+        <h1>Професіональні інструменти</h1>
+        <p>Калькулятори для інженерів та монтажників</p>
     </div>
     <ul class="menu-list">
+        <!-- Група Відеоспостереження -->
+        <div class="category-header">
+            <i class="bi bi-camera-video" style="color: #1E88E5;"></i> Відеоспостереження
+        </div>
         <li>
-            <a href="calculators/hdd-calc.html" class="menu-item">
+            <a href="calculators/hdd-calc.html" class="menu-item video-item">
                 <i class="bi bi-hdd-fill menu-icon"></i>
                 <div>
                     Проектування відеоархіву<br>
@@ -98,7 +168,39 @@
             </a>
         </li>
         <li>
-            <a href="calculators/ups.html" class="menu-item">
+            <a href="calculators/visionrange.html" class="menu-item video-item">
+                <i class="bi bi-camera-video menu-icon"></i>
+                <div>
+                    Довідник можливостей камери<br>
+                    <span class="menu-desc">Прогнозує деталізацію по DORI, розпізнавання обличчя, номерів, грошей</span>
+                </div>
+            </a>
+        </li>
+        <li>
+            <a href="calculators/pixelwizard.html" class="menu-item video-item">
+                <i class="bi bi-grid-3x3 menu-icon"></i>
+                <div>
+                    Розпізнавання цілі<br>
+                    <span class="menu-desc">Визначення через відстань до цілі піксельної щільності та можливостей розпізнання</span>
+                </div>
+            </a>
+        </li>
+        <li>
+            <a href="calculators/zoomwizard.html" class="menu-item video-item">
+                <i class="bi bi-binoculars menu-icon"></i>
+                <div>
+                    Підбір фокусної відстані<br>
+                    <span class="menu-desc">Розрахунок оптимальної оптики за відстанню та щільністю пікселів</span>
+                </div>
+            </a>
+        </li>
+        
+        <!-- Група Електроживлення -->
+        <div class="category-header">
+            <i class="bi bi-lightning-charge" style="color: #43A047;"></i> Електроживлення
+        </div>
+        <li>
+            <a href="calculators/ups.html" class="menu-item power-item">
                 <i class="bi bi-battery-charging menu-icon"></i>
                 <div>
                     Калькулятор UPS<br>
@@ -107,38 +209,25 @@
             </a>
         </li>
         <li>
-            <a href="calculators/poewizard.html" class="menu-item">
+            <a href="calculators/poewizard.html" class="menu-item power-item">
                 <i class="bi bi-ethernet menu-icon"></i>
                 <div>
-                    Дальність передачі по PoE <br>
+                    Дальність передачі по PoE<br>
                     <span class="menu-desc">Розрахунок PoE, падіння напруги, вибір стандарту, Extender'и</span>
                 </div>
             </a>
         </li>
+        
+        <!-- Група Сонячна енергія -->
+        <div class="category-header">
+            <i class="bi bi-sun" style="color: #F9A826;"></i> Альтернативна енергетика
+        </div>
         <li>
-            <a href="calculators/visionrange.html" class="menu-item">
-                <i class="bi bi-camera-video header-icon"></i>
+            <a href="calculators/solarwizard.html" class="menu-item solar-wizard-item">
+                <i class="bi bi-sun menu-icon"></i>
                 <div>
-                    Довідник можливостей камери<br>
-                    <span class="menu-desc"> Прогнозує деталізацію по DORI, розпізнавання обличчя, номерів, грошей </span>
-                </div>
-            </a>
-        </li>
-        <li>
-            <a href="calculators/pixelwizard.html" class="menu-item">
-                <i class="bi bi-grid-3x3 menu-icon"></i>
-                <div>
-                    Розпізнавання цілі<br>
-                    <span class="menu-desc"> Визначення через відстань до цілі піксельної щільності та можливостей розпізнання</span>
-                </div>
-            </a>
-        </li>
-        <li>
-            <a href="calculators/zoomwizard.html" class="menu-item">
-                <i class="bi bi-binoculars menu-icon"></i>
-                <div>
-                    Підбір фокусної відстані<br>
-                    <span class="menu-desc">Розрахунок оптимальної оптики за відстанню та щільністю пікселів</span>
+                    Автономна сонячна система<br>
+                    <span class="menu-desc">Розрахунок автономного електропостачання від сонячних панелей</span>
                 </div>
             </a>
         </li>
