@@ -1,0 +1,207 @@
+/* Додаткові стилі для калькулятора SolarWizard */
+
+.device-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 8px;
+    align-items: center;
+}
+
+.device-quantity {
+    width: 30%;
+}
+
+.device-wattage {
+    width: 60%;
+}
+
+.device-input {
+    border: 1px solid #C2CFE0;
+    border-radius: 8px;
+    padding: 10px;
+    font-size: 16px;
+}
+
+.remove-device-btn {
+    background-color: #E6704B;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.remove-device-btn:hover {
+    background-color: #D85A3A;
+}
+
+.add-button {
+    background-color: #50B83C;
+    color: white;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin: 10px 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+}
+
+.add-button:hover {
+    background-color: #429631;
+}
+
+.add-device-btn {
+    display: block;
+    width: 100%;
+    background: #FFF8E6;
+    color: #F9A826;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 0;
+    font-size: 15px;
+    margin-top: 5px;
+    margin-bottom: 20px;
+    cursor: pointer;
+}
+
+.add-device-btn:hover {
+    background: #FFF0CC;
+}
+
+.remove-btn {
+    background: none;
+    border: none;
+    color: #E6704B;
+    font-size: 22px;
+    padding: 0;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+
+/* Збереження стилів для результату */
+#resultContent h3, #resultContent h4, #resultContent h5 {
+    color: #F9A826;
+    margin-top: 15px;
+    margin-bottom: 10px;
+}
+
+#resultContent h3 {
+    font-size: 1.3em;
+    border-bottom: 1px solid #C2CFE0;
+    padding-bottom: 5px;
+}
+
+#resultContent h4 {
+    font-size: 1.1em;
+    margin-top: 15px;
+}
+
+#resultContent h5 {
+    font-size: 1em;
+}
+
+#resultContent p {
+    margin: 5px 0;
+    line-height: 1.5;
+    color: #34495E;
+}
+
+/* Стилізація блоку результатів */
+#resultBox {
+    background-color: #FAFCFF;
+    border: 1px solid #C2CFE0;
+    border-radius: 10px;
+    padding: 15px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+/* Загальні стилі для всіх іконок */
+.bi {
+    color: #F9A826;
+    margin-right: 6px;
+}
+
+/* Кастомізовані іконки за призначенням */
+.bi-sun-fill, .bi-brightness-high, .bi-brightness-alt-high {
+    color: #F9A826; /* сонячний */
+}
+
+.bi-lightning-fill {
+    color: #50B83C; /* зелений - енергія */
+}
+
+.bi-battery-charging {
+    color: #3498DB; /* блакитний - батарея */
+}
+
+.bi-snow {
+    color: #7FB3D5; /* голубий - зима */
+}
+
+.bi-flower1 {
+    color: #AED581; /* світло-зелений - весна */
+}
+
+.bi-info-circle {
+    color: #7F8C8D; /* сірий - інформація */
+}
+
+/* Розділи результатів */
+.result-section {
+    margin-top: 12px;
+    padding-top: 5px;
+    border-top: 1px dashed #E0E6ED;
+}
+
+/* Кнопки з додатковим стилем */
+#solarWizardForm button[type="submit"] {
+    background-color: #F9A826;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+#solarWizardForm button[type="submit"]:hover {
+    background-color: #E08E1C;
+}
+
+/* Фон форми калькулятора */
+#solarWizardForm {
+    background-color: #FCFCFD;
+    padding: 15px;
+    border-radius: 10px;
+    border: 1px solid #E0E6ED;
+}
+
+/* Стилізація селекта регіону */
+#region {
+    border: 1px solid #C2CFE0;
+    border-radius: 8px;
+    padding: 10px;
+    font-size: 16px;
+    background-color: white;
+    color: #34495E;
+}
+
+/* Заголовки та підзаголовки в результатах */
+#resultContent strong {
+    color: #34495E;
+}
+
+#resultContent div {
+    padding: 3px 0;
+    color: #5D6D7E;
+}
