@@ -286,11 +286,11 @@ function displayResults(result, pdPower, totalDistance, extenderPositions) {
         
         if (totalDistance > 250 || result.noExt.voltage_at_pd < 37) {
             resultHtml += `
-                <div style="color:#e53935;"><i class="bi bi-exclamation-triangle-fill"></i> Перевищено максимальну відстань або недостатня напруга на PD!</div>`;
+                <div style="color:#E6704B;"><i class="bi bi-exclamation-triangle-fill" style="color:#E6704B;"></i> Перевищено максимальну відстань або недостатня напруга на PD!</div>`;
         }
     } else {
         resultHtml += `
-            <div style="color:#e53935;"><i class="bi bi-x-octagon-fill"></i> Недоступно (перевищення потужності або недостатня напруга)</div>`;
+            <div style="color:#E6704B;"><i class="bi bi-x-octagon-fill" style="color:#E6704B;"></i> Недоступно (перевищення потужності або недостатня напруга)</div>`;
     }
     
     resultHtml += `<div style="margin-top:10px;"><i class="bi bi-hdd-stack"></i> <strong>Варіант 2: З Extender'ами</strong></div>`;
@@ -315,12 +315,12 @@ function displayResults(result, pdPower, totalDistance, extenderPositions) {
         
         if (result.longSegmentsWarning) {
             resultHtml += `
-                <div style="color:#e53935;"><i class="bi bi-exclamation-triangle-fill"></i> Увага! Виявлено сегменти довші за 100м. Високий ризик втрати пакетних даних.</div>`;
+                <div style="color:#E6704B;"><i class="bi bi-exclamation-triangle-fill" style="color:#E6704B;"></i> Увага! Виявлено сегменти довші за 100м. Високий ризик втрати пакетних даних.</div>`;
         }
         
         resultHtml += `
             <div style="margin-top:10px;"><i class="bi bi-diagram-3"></i> <strong>Топологія:</strong></div>
-            <pre style="background:#f3f6fa;border-radius:10px;padding:8px 10px;font-size:0.9em;margin-top:4px;">PSE (${result.withExt.standard.name} ${result.withExt.total_power.toFixed(2)}Вт)`;
+            <pre style="background:#F5FBF6;border-radius:10px;padding:8px 10px;font-size:0.9em;margin-top:4px;border:1px solid #C8E6C9;">PSE (${result.withExt.standard.name} ${result.withExt.total_power.toFixed(2)}Вт)`;
         
         let currentPosition = 0;
         for (let idx = 0; idx < result.withExt.segment_powers.length; idx++) {
@@ -340,7 +340,7 @@ function displayResults(result, pdPower, totalDistance, extenderPositions) {
         resultHtml += `</pre>`;
     } else {
         resultHtml += `
-            <div style="color:#e53935;"><i class="bi bi-x-octagon-fill"></i> ${result.extendersInfo || "Недоступно (перевищені обмеження або недостатня напруга)"}</div>`;
+            <div style="color:#E6704B;"><i class="bi bi-x-octagon-fill" style="color:#E6704B;"></i> ${result.extendersInfo || "Недоступно (перевищені обмеження або недостатня напруга)"}</div>`;
     }
     
     resultDiv.innerHTML = resultHtml;
