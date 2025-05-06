@@ -204,5 +204,6 @@
 }
 #resultContent div {
     padding: 3px 0;
-    color: #5D6D7E;
+    color: #5D6D7E; 
+    /* color: #222; */
 }
