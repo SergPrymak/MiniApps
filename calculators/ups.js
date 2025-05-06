@@ -5,18 +5,18 @@ const capacityTab = document.getElementById('capacityTab');
 const timeTab = document.getElementById('timeTab');
 
 // Set default active tab
-capacityTabBtn.style.background = '#2563eb';
+capacityTabBtn.classList.add('active');
 
 capacityTabBtn.onclick = function() {
-    capacityTabBtn.style.background = '#2563eb';
-    timeTabBtn.style.background = '#3b82f6';
+    capacityTabBtn.classList.add('active');
+    timeTabBtn.classList.remove('active');
     capacityTab.style.display = '';
     timeTab.style.display = 'none';
 };
 
 timeTabBtn.onclick = function() {
-    timeTabBtn.style.background = '#2563eb';
-    capacityTabBtn.style.background = '#3b82f6';
+    timeTabBtn.classList.add('active');
+    capacityTabBtn.classList.remove('active');
     timeTab.style.display = '';
     capacityTab.style.display = 'none';
 };
@@ -27,9 +27,12 @@ const v37Btn = document.getElementById('v37Btn');
 const voltageInput = document.getElementById('voltage');
 const capacityInput = document.getElementById('capacity');
 
+// Додамо клас active для v12Btn за замовчуванням
+v12Btn.classList.add('active');
+
 v12Btn.onclick = function() {
-    v12Btn.style.background = '#2563eb';
-    v37Btn.style.background = '#3b82f6';
+    v12Btn.classList.add('active');
+    v37Btn.classList.remove('active');
     voltageInput.value = '12';
     // Adjust placeholder and default value when switching to 12V (Ah)
     if (capacityInput.value > 1000) {
@@ -38,8 +41,8 @@ v12Btn.onclick = function() {
 };
 
 v37Btn.onclick = function() {
-    v37Btn.style.background = '#2563eb';
-    v12Btn.style.background = '#3b82f6';
+    v37Btn.classList.add('active');
+    v12Btn.classList.remove('active');
     voltageInput.value = '3.7';
     // Adjust placeholder and default value when switching to 3.7V (mAh)
     if (capacityInput.value < 1000) {
