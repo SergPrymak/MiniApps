@@ -15,134 +15,123 @@
             margin-left: auto;
             margin-right: auto;
             color: #222;
+            -webkit-tap-highlight-color: transparent;
         }
         .header {
             text-align: center;
-            margin-bottom: 25px;
-            padding: 0 15px;
+            margin-bottom: 18px;
+            padding: 0 10px;
         }
         .header-icon {
             color: #3b82f6;
-            font-size: 32px;
-            margin-bottom: 5px;
+            font-size: 28px;
+            margin-bottom: 2px;
         }
         .header h1 {
             margin: 5px 0;
-            font-size: 26px;
+            font-size: 22px;
             font-weight: 700;
         }
         .header p {
-            margin: 5px 0 0;
-            color: #777;
-            font-size: 15px;
+            margin: 0 0 0;
+            color: #888;
+            font-size: 13px;
         }
         .menu-list {
-            padding: 0 15px;
+            padding: 0 5px;
             margin: 0;
             list-style: none;
         }
         .menu-item {
             display: flex;
             align-items: center;
-            gap: 15px;
-            background: #e3f2fd;
-            border-radius: 10px;
-            margin-bottom: 18px;
-            padding: 16px 18px;
-            font-size: 18px;
+            gap: 14px;
+            background: #f7fafd;
+            border-radius: 12px;
+            margin-bottom: 14px;
+            padding: 14px 14px;
+            font-size: 17px;
             font-weight: 500;
             color: #222;
             text-decoration: none;
-            transition: background 0.2s;
+            box-shadow: 0 2px 8px 0 rgba(60, 120, 200, 0.06);
+            transition: background 0.15s, box-shadow 0.15s;
         }
-        .menu-item:hover {
-            background: #bbdefb;
+        .menu-item:active, .menu-item:hover {
+            background: #e3f2fd;
+            box-shadow: 0 2px 12px 0 rgba(60, 120, 200, 0.13);
             text-decoration: none;
         }
         .menu-icon {
-            font-size: 28px;
+            font-size: 30px;
             color: #2196f3;
             flex-shrink: 0;
         }
         .menu-desc {
-            font-size: 14px;
+            font-size: 13px;
             color: #666;
             font-weight: 400;
             margin-top: 2px;
-            width: 92%; /* Зменшено на 8% по горизонталі */
+            width: 100%;
         }
-        .tips-section {
-            margin: 30px 15px 0 15px;
-            font-size: 14px;
-            color: #666;
-        }
-        .tips-section strong {
-            color: #2196f3;
-        }
-        
-        /* Спеціальні стилі для пункту меню SolarWizard */
-        .solar-wizard-item {
-            background: #FFF8E6;
-            border: 1px solid #F9A826;
-        }
-        
-        .solar-wizard-item:hover {
-            background: #FFF0CC;
-        }
-        
-        .solar-wizard-item .menu-icon {
-            color: #F9A826;
-        }
-        
-        .solar-wizard-item .menu-desc {
-            color: #5D6D7E;
-        }
-        
-        /* Групування категорій калькуляторів */
         .category-header {
-            font-size: 16px;
-            color: #666;
-            margin: 25px 0 12px 18px;
+            font-size: 13px;
+            color: #aaa;
+            margin: 18px 0 8px 12px;
             font-weight: 500;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
+            letter-spacing: 0.5px;
         }
-        
-        /* Стилі для групи відеоспостереження */
+        /* Спеціальні стилі для SolarWizard */
+        .solar-wizard-item {
+            background: #fffbe9;
+            border: 1px solid #ffe082;
+        }
+        .solar-wizard-item:active, .solar-wizard-item:hover {
+            background: #fff3c0;
+        }
+        .solar-wizard-item .menu-icon {
+            color: #f9a826;
+        }
+        /* Відеоспостереження */
         .video-item {
-            background: #E8F4FD;
-            border: 1px solid #64B5F6;
+            background: #f0f7fd;
+            border: 1px solid #b3e0fc;
         }
-        
-        .video-item:hover {
-            background: #C7E5FC;
+        .video-item:active, .video-item:hover {
+            background: #e0f0fa;
         }
-        
         .video-item .menu-icon {
-            color: #1E88E5;
+            color: #1e88e5;
         }
-        
-        .video-item .menu-desc {
-            color: #455A64;
-        }
-        
-        /* Стилі для групи електроживлення */
+        /* Електроживлення */
         .power-item {
-            background: #E8F5E9;
-            border: 1px solid #66BB6A;
+            background: #f0f9f2;
+            border: 1px solid #b2dfdb;
         }
-        
-        .power-item:hover {
-            background: #C8E6C9;
+        .power-item:active, .power-item:hover {
+            background: #e0f2e9;
         }
-        
         .power-item .menu-icon {
-            color: #43A047;
+            color: #43a047;
         }
-        
-        .power-item .menu-desc {
-            color: #37474F;
+        /* Для кращого вигляду на мобільних */
+        @media (max-width: 430px) {
+            html, body {
+                max-width: 100vw;
+            }
+            .header h1 {
+                font-size: 18px;
+            }
+            .menu-item {
+                font-size: 15px;
+                padding: 12px 10px;
+            }
+            .menu-icon {
+                font-size: 24px;
+            }
         }
     </style>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
@@ -150,8 +139,8 @@
 <body>
     <div class="header">
         <i class="bi bi-calculator header-icon"></i>
-        <h1>Професійні інструменти</h1>
-        <p>для інженерів та монтажників</p>
+        <h1>Інструментарій професіонала</h1>
+        <p>Совєтскоє качество</p>
     </div>
     <ul class="menu-list">
         <!-- Група Відеоспостереження -->
@@ -162,8 +151,8 @@
             <a href="calculators/hdd-calc.html" class="menu-item video-item">
                 <i class="bi bi-hdd-fill menu-icon"></i>
                 <div>
-                    Проектування відеоархіву<br>
-                    <span class="menu-desc">Прорахунок необхідної ємності дискового простору для відеоархіву</span>
+                    Відеоархів<br>
+                    <span class="menu-desc">Планування глибини відеоархіву</span>
                 </div>
             </a>
         </li>
@@ -171,8 +160,8 @@
             <a href="calculators/visionrange.html" class="menu-item video-item">
                 <i class="bi bi-camera-video menu-icon"></i>
                 <div>
-                    Довідник можливостей камери<br>
-                    <span class="menu-desc">Прогнозує деталізацію по DORI, розпізнавання обличчя, номерів, грошей</span>
+                    Можливості камери<br>
+                    <span class="menu-desc">Лабораторний прогноз DORI та розпізнавання</span>
                 </div>
             </a>
         </li>
@@ -180,8 +169,8 @@
             <a href="calculators/pixelwizard.html" class="menu-item video-item">
                 <i class="bi bi-grid-3x3 menu-icon"></i>
                 <div>
-                    Розпізнавання цілі<br>
-                    <span class="menu-desc">Визначення через відстань до цілі піксельної щільності та можливостей розпізнання</span>
+                    Піксельна щільність<br>
+                    <span class="menu-desc">Відстань та розпізнавання</span>
                 </div>
             </a>
         </li>
@@ -189,8 +178,8 @@
             <a href="calculators/zoomwizard.html" class="menu-item video-item">
                 <i class="bi bi-binoculars menu-icon"></i>
                 <div>
-                    Підбір фокусної відстані<br>
-                    <span class="menu-desc">Розрахунок оптимальної оптики за відстанню та щільністю пікселів</span>
+                    Фокусна відстань<br>
+                    <span class="menu-desc">Підбір фокусної віддалі</span>
                 </div>
             </a>
         </li>
@@ -203,8 +192,8 @@
             <a href="calculators/ups.html" class="menu-item power-item">
                 <i class="bi bi-battery-charging menu-icon"></i>
                 <div>
-                    Калькулятор UPS<br>
-                    <span class="menu-desc">Розрахунок ємності та часу автономії для систем відеоспостереження</span>
+                    DC UPS<br>
+                    <span class="menu-desc">Планування ємності та безперебійності</span>
                 </div>
             </a>
         </li>
@@ -212,8 +201,8 @@
             <a href="calculators/poewizard.html" class="menu-item power-item">
                 <i class="bi bi-ethernet menu-icon"></i>
                 <div>
-                    Дальність передачі по PoE<br>
-                    <span class="menu-desc">Розрахунок PoE, падіння напруги, вибір стандарту, Extender'и</span>
+                    PoE Extend<br>
+                    <span class="menu-desc">Прогноз падіння потужності та напруги</span>
                 </div>
             </a>
         </li>
@@ -226,26 +215,28 @@
             <a href="calculators/solarwizard.html" class="menu-item solar-wizard-item">
                 <i class="bi bi-sun menu-icon"></i>
                 <div>
-                    Автономна сонячна система<br>
-                    <span class="menu-desc">Проектування повністю автономної сонячної системи під відеонагляд чи інше обладнання</span>
+                    Автономна СЕС<br>
+                    <span class="menu-desc">Проектування системи</span>
                 </div>
             </a>
         </li>
         <li>
             <a href="calculators/solargenwizard.html" class="menu-item solar-wizard-item">
-                <i class="bi bi-sun menu-icon"></i>
+                <i class="bi би-sun menu-icon"></i>
                 <div>
-                    Розрахунок генерації від сонця<br>
-                    <span class="menu-desc">Прогнозування генерації сонячної системи та економічної вигоди</span>
+                    Генерація сонця<br>
+                    <span class="menu-desc">Прогноз та вигода</span>
                 </div>
             </a>
         </li>
         <!-- Додайте інші калькулятори тут за потреби -->
     </ul>
-    <div class="tips-section">
-        <strong>ℹ️ Порада:</strong> Всі калькулятори працюють офлайн.<br>
-        Для Telegram MiniApp використовуйте ці ж інтерфейси!
+    <div class="tips-section" style="font-size:12px; color:#aaa; margin-top:18px;">
+        ℹ️ Ваш швидкий доступ до професійних інструментів для проєктування <br>  та монтажу систем безпеки та енергетики.
     </div>
+    <footer style="text-align:center; color:#bbb; font-size:12px; margin:15px 0 10px 0;">
+        Ідея та реалізація – Примак Сергій <br> 2025 рік
+    </footer>
     <script src="main.js"></script>
 </body>
 </html>
