@@ -207,3 +207,181 @@
     color: #5D6D7E; 
     /* color: #222; */
 }
+
+/* Додайте ці стилі до існуючого CSS-файлу або в секцію <style> в <head> */
+
+.advanced-params-header {
+    text-align: right;
+    margin: 10px 0;
+    font-size: 0.9em;
+}
+
+.advanced-params-header a {
+    color: #0275d8;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.advanced-params-header a:hover {
+    text-decoration: underline;
+}
+
+#advancedParams {
+    background-color: #f8f9fa;
+    border-radius: 10px;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #e0e0e0;
+}
+
+#advancedParams .form-label {
+    font-size: 0.9em;
+}
+
+#advancedParams .form-input {
+    font-size: 0.9em;
+}
+
+/* Стилі для контейнера з автопідбором потужності */
+.power-input-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 5px;
+}
+
+.power-input-container .form-input {
+    width: 60%; /* Зменшуємо ширину поля вводу */
+    flex-shrink: 1;
+}
+
+.auto-power-checkbox {
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+    margin: 5px 17px 19px 8px;
+    gap: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    color: #444;
+    /* background-color: #f8f9fa; */
+    padding: 4px 3px;
+    border-radius: 5px;
+    /* border: 1px solid #e0e0e0; */
+    flex-shrink: 0;
+}
+
+.auto-power-info {
+    background-color: #FFF8E6; /* Світло-оранжевий фон */
+    border-left: 3px solid #F9A826; /* Оранжева ліва межа */
+    padding: 8px 10px;
+    margin-top: 0;
+    margin-bottom: 15px;
+    border-radius: 4px;
+    font-size: 0.85em;
+    line-height: 1.3;
+    color: #95591E; /* Темно-оранжевий для тексту */
+}
+
+.auto-power-info .bi {
+    color: #F9A826; /* Оранжевий колір для іконки */
+}
+
+/* Видаляємо стилі кнопки автопідбору, що більше не використовується */
+.auto-power-btn {
+    display: none;
+}
+
+/* Стилі для таблиць результатів */
+.result-header {
+    margin-bottom: 10px; /* Зменшено відступ знизу */
+    text-align: center;
+}
+
+.result-title {
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #333;
+}
+
+.result-subtitle {
+    color: #555;
+    margin-top: 3px; /* Зменшено відступ зверху */
+}
+
+.result-profit {
+    background-color: #f1f8e9;
+    padding: 6px 10px; /* Зменшено вертикальні відступи */
+    border-radius: 5px;
+    margin: 10px 0; /* Зменшено вертикальні відступи */
+    text-align: center;
+    color: #2e7d32;
+    font-size: 1.1em;
+}
+
+.result-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 15px; /* Зменшено відступ знизу */
+    font-size: 0.9em;
+}
+
+.result-table caption {
+    font-weight: bold;
+    text-align: left;
+    padding: 5px 0; /* Зменшено вертикальні відступи */
+    color: #F9A826;
+    font-size: 1.1em;
+}
+
+.result-table th, .result-table td {
+    padding: 4px 6px; /* Зменшено відступи комірок */
+    text-align: left;
+    border-bottom: 1px solid #e0e0e0;
+    line-height: 1.2; /* Зменшено висоту рядка */
+}
+
+.result-table th {
+    background-color: #f9f9f9;
+    color: #333;
+}
+
+.result-table tr:nth-child(even) {
+    background-color: #f8f8f8;
+}
+
+.result-table tr:hover {
+    background-color: #f1f1f1;
+}
+
+.consumption-table td:first-child {
+    width: 40%;
+}
+
+.monthly-table {
+    font-size: 0.85em;
+    line-height: 1.1; /* Додатково зменшено висоту рядка для місячної таблиці */
+}
+
+.monthly-table td:first-child {
+    font-weight: bold;
+}
+
+.table-header th {
+    position: sticky;
+    top: 0;
+    background-color: #f8f9fa;
+    z-index: 10;
+}
+
+.result-params {
+    margin-top: 10px; /* Зменшено відступ зверху */
+    color: #777;
+    font-size: 0.85em;
+    border-top: 1px dotted #ddd;
+    padding-top: 6px; /* Зменшено відступ зверху */
+}
