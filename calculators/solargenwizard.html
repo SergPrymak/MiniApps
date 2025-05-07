@@ -11,7 +11,11 @@
 <body>
     <a href="../index.html" class="back-button">← Повернутися до меню</a>
     <div class="header">
-        <i class="bi bi-sun header-icon"></i>
+        <div class="custom-header-icon">
+            <i class="bi bi-grid-3x3 panel-icon"></i>
+            <i class="bi bi-sun sun-icon"></i>
+            <i class="bi bi-graph-up-arrow profit-icon"></i>
+        </div>
         <h1>SolarGenWizard</h1>
         <p>Прогнозування генерації сонячної електростанції та економічної вигоди</p>
     </div>
@@ -41,17 +45,60 @@
             </div>
             
             <div id="advancedParams" style="display: none;">
-                <label class="form-label"><i class="info-icon bi bi-currency-euro"></i>Зелений тариф (€/кВт·год):</label>
-                <input type="number" class="form-input" id="greenTariffInput" min="0.01" step="0.01" value="0.16">
+                <div class="green-tariff-container">
+                    <div class="checkbox-container">
+                        <input type="checkbox" id="useGreenTariffCheckbox" checked>
+                        <label for="useGreenTariffCheckbox">Використовувати зелений тариф</label>
+                    </div>
+                    
+                    <div class="tariff-tax-group">
+                        <div class="tariff-input-wrapper">
+                            <label class="form-label"><i class="info-icon bi bi-currency-euro"></i>Зелений тариф (€/кВт·год):</label>
+                            <input type="number" class="form-input" id="greenTariffInput" min="0.01" step="0.01" value="0.16">
+                        </div>
+                        
+                        <div class="tax-input-wrapper">
+                            <label class="form-label"><i class="info-icon bi bi-percent"></i>Податок (%):</label>
+                            <input type="number" class="form-input" id="taxInput" min="0" max="100" step="1" value="23">
+                        </div>
+                    </div>
+                </div>
                 
-                <label class="form-label"><i class="info-icon bi bi-percent"></i>Податок (%):</label>
-                <input type="number" class="form-input" id="taxInput" min="0" max="100" step="1" value="23">
-                
-                <label class="form-label"><i class="info-icon bi bi-cash-coin"></i>Ціна для домогосподарств (грн/кВт·год):</label>
+                <label class="form-label"><i class="info-icon bi bi-cash-coin"></i>Ціна для споживача з мережі (грн/кВт·год):</label>
                 <input type="number" class="form-input" id="domesticPriceInput" min="0.01" step="0.01" value="4.32">
                 
-                <label class="form-label"><i class="info-icon bi bi-currency-dollar"></i>Вартість обладнання (€/кВт):</label>
-                <input type="number" class="form-input" id="installationCostInput" min="0" step="10" value="800">
+                <div class="exchange-rate-container">
+                    <label class="form-label"><i class="info-icon bi bi-currency-exchange"></i>Курс грн/євро:</label>
+                    <div class="exchange-input-group">
+                        <input type="number" class="form-input" id="euroRateInput" min="1" step="0.01" value="44">
+                        <button type="button" id="updateRateBtn" class="update-rate-btn"><i class="bi bi-arrow-clockwise" style="color: white;"></i></button>
+                    </div>
+                    <div id="rateStatus" class="rate-status"></div>
+                </div>
+                
+                <div class="cost-selection-container">
+                    <label class="form-label"><i class="info-icon bi bi-cash-stack"></i>Вартість системи:</label>
+                    <div class="cost-type-selector">
+                        <div class="radio-option">
+                            <input type="radio" id="costPerKwOption" name="costType" value="perKw" checked>
+                            <label for="costPerKwOption">За кіловат</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="totalCostOption" name="costType" value="total">
+                            <label for="totalCostOption">Загальна вартість</label>
+                        </div>
+                    </div>
+
+                    <div id="costPerKwContainer">
+                        <label class="form-label secondary-label"><i class="info-icon bi bi-currency-dollar"></i>Вартість обладнання (€/кВт):</label>
+                        <input type="number" class="form-input" id="installationCostInput" min="0" step="10" value="800">
+                    </div>
+                    
+                    <div id="totalCostContainer" style="display: none;">
+                        <label class="form-label secondary-label"><i class="info-icon bi bi-currency-dollar"></i>Загальна вартість системи (€):</label>
+                        <input type="number" class="form-input" id="totalSystemCostInput" min="0" step="100">
+                    </div>
+                </div>
             </div>
 
             <button type="submit" class="calc-button"><i class="bi bi-calculator"></i> Розрахувати</button>
@@ -152,6 +199,7 @@
         const domesticPriceInputElement = document.getElementById('domesticPriceInput');
         const toggleAdvancedParamsElement = document.getElementById('toggleAdvancedParams');
         const advancedParamsElement = document.getElementById('advancedParams');
+        const useGreenTariffCheckboxElement = document.getElementById('useGreenTariffCheckbox');
         
         // --- ПЕРЕВІРКА НАЯВНОСТІ ЕЛЕМЕНТІВ ---
         if (!formElement || !regionSelectElement || !powerInputElement || !consumptionInputElement || !resultContentElement || !resultBoxElement) {
@@ -303,6 +351,31 @@
         regionSelectElement.addEventListener('change', updatePowerWithAutoCalculation);
         consumptionInputElement.addEventListener('input', updatePowerWithAutoCalculation);
         
+        // Оновлюємо стан поля "Зелений тариф" та "Податок" на основі вибору чекбоксу
+        useGreenTariffCheckboxElement.addEventListener('change', function() {
+            // Активуємо/деактивуємо обидва поля
+            greenTariffInputElement.disabled = !this.checked;
+            taxInputElement.disabled = !this.checked;
+            
+            // Знаходимо мітки для обох полів
+            const tariffLabel = document.querySelector('.tariff-input-wrapper .form-label');
+            const taxLabel = document.querySelector('.tax-input-wrapper .form-label');
+            
+            if (!this.checked) {
+                // Застосовуємо клас для неактивного стану
+                greenTariffInputElement.classList.add('disabled-field');
+                taxInputElement.classList.add('disabled-field');
+                if (tariffLabel) tariffLabel.classList.add('disabled-field');
+                if (taxLabel) taxLabel.classList.add('disabled-field');
+            } else {
+                // Знімаємо клас неактивного стану
+                greenTariffInputElement.classList.remove('disabled-field');
+                taxInputElement.classList.remove('disabled-field');
+                if (tariffLabel) tariffLabel.classList.remove('disabled-field');
+                if (taxLabel) taxLabel.classList.remove('disabled-field');
+            }
+        });
+        
         // --- ОБРОБКА ФОРМИ ---
         formElement.addEventListener('submit', function(event) {
             event.preventDefault();
@@ -315,7 +388,8 @@
                 const monthlyConsumption = parseFloat(consumptionInputElement.value.replace(',', '.')) || 0;
                 
                 // Отримання значень розширених параметрів (або використання значень за замовчуванням)
-                const greenTariff = parseFloat(greenTariffInputElement.value.replace(',', '.')) || GREEN_TARIFF;
+                const useGreenTariff = useGreenTariffCheckboxElement.checked;
+                const greenTariff = useGreenTariff ? (parseFloat(greenTariffInputElement.value.replace(',', '.')) || GREEN_TARIFF) : 0;
                 const taxPercent = parseFloat(taxInputElement.value.replace(',', '.')) || PDV * 100;
                 const taxRate = taxPercent / 100;
                 const domesticPrice = parseFloat(domesticPriceInputElement.value.replace(',', '.')) || DOMESTIC_PRICE;
@@ -339,7 +413,8 @@
                     displayResult("❌ Власне споживання має бути невід'ємним.");
                     return;
                 }
-                if (greenTariff <= 0) {
+                // Перевіряємо зелений тариф тільки якщо він увімкнений
+                if (useGreenTariff && greenTariff <= 0) {
                     displayResult("❌ Зелений тариф має бути більше 0.");
                     return;
                 }
@@ -373,8 +448,17 @@ if (monthlyConsumption > 0) {
     const remainingProfit = remainingForSale * greenTariff * (1 - taxRate);
     
     // Розрахунок окупності
-    const totalInstallationCost = installationCostPerKW * powerKW;
-    const eurRate = 40; // Приблизний курс євро до гривні
+    const costType = document.querySelector('input[name="costType"]:checked').value;
+    let totalInstallationCost;
+
+    if (costType === 'perKw') {
+        // Розрахунок вартості по €/кВт
+        totalInstallationCost = installationCostPerKW * powerKW;
+    } else {
+        // Використання введеної загальної вартості
+        totalInstallationCost = parseFloat(document.getElementById('totalSystemCostInput').value) || (powerKW * 1000);
+    }
+    const eurRate = parseFloat(document.getElementById('euroRateInput').value) || 44; // Використовуємо введений курс або 44 за замовчуванням
     const savingsEUR = savingsUAH / eurRate;
     const annualProfitEUR = savingsEUR + remainingProfit;
     const paybackPeriod = totalInstallationCost / annualProfitEUR;
@@ -396,11 +480,11 @@ if (monthlyConsumption > 0) {
         </tr>
         <tr>
             <td>🟢 Надлишок для продажу:</td>
-            <td><b>${Math.round(remainingForSale).toLocaleString('uk-UA')}</b> кВт·год</td>
+            <td>${useGreenTariff ? `<b>${Math.round(remainingForSale).toLocaleString('uk-UA')}</b> кВт·год` : `<span class="not-applicable">не враховано</span>`}</td>
         </tr>
         <tr>
             <td>💵 Дохід (після податків):</td>
-            <td><b>${remainingProfit.toLocaleString('uk-UA', {minimumFractionDigits:2, maximumFractionDigits:2})} €</b></td>
+            <td>${useGreenTariff ? `<b>${remainingProfit.toLocaleString('uk-UA', {minimumFractionDigits:2, maximumFractionDigits:2})} €</b>` : `<span class="not-applicable">0.00 €</span>`}</td>
         </tr>
     </table>
     
@@ -446,7 +530,16 @@ if (monthlyConsumption > 0) {
     const profitAfterTax = totalGeneration * greenTariff * (1 - taxRate);
     
     // Розрахунок окупності
-    const totalInstallationCost = installationCostPerKW * powerKW;
+    const costType = document.querySelector('input[name="costType"]:checked').value;
+    let totalInstallationCost;
+
+    if (costType === 'perKw') {
+        // Розрахунок вартості по €/кВт
+        totalInstallationCost = installationCostPerKW * powerKW;
+    } else {
+        // Використання введеної загальної вартості
+        totalInstallationCost = parseFloat(document.getElementById('totalSystemCostInput').value) || (powerKW * 1000);
+    }
     const paybackPeriod = totalInstallationCost / profitAfterTax;
     
     resultHTML += `
@@ -505,8 +598,118 @@ displayResult(resultHTML);
             }
         });
         
+        // Ініціалізація стану полів зеленого тарифу та податку при завантаженні
+        if (useGreenTariffCheckboxElement) {
+            greenTariffInputElement.disabled = !useGreenTariffCheckboxElement.checked;
+            taxInputElement.disabled = !useGreenTariffCheckboxElement.checked;
+            
+            // Знаходимо мітки для обох полів
+            const tariffLabel = document.querySelector('.tariff-input-wrapper .form-label');
+            const taxLabel = document.querySelector('.tax-input-wrapper .form-label');
+            
+            if (!useGreenTariffCheckboxElement.checked) {
+                greenTariffInputElement.classList.add('disabled-field');
+                taxInputElement.classList.add('disabled-field');
+                if (tariffLabel) tariffLabel.classList.add('disabled-field');
+                if (taxLabel) taxLabel.classList.add('disabled-field');
+            } else {
+                greenTariffInputElement.classList.remove('disabled-field');
+                taxInputElement.classList.remove('disabled-field');
+                if (tariffLabel) tariffLabel.classList.remove('disabled-field');
+                if (taxLabel) taxLabel.classList.remove('disabled-field');
+            }
+        }
+        
+        // Додаємо обробник кнопки оновлення курсу
+        document.getElementById('updateRateBtn').addEventListener('click', fetchEuroRate);
+        
+        // Спробуємо отримати курс євро при завантаженні сторінки
+        window.addEventListener('load', function() {
+            // Вже існуюча ініціалізація...
+            
+            // Спроба отримати курс євро
+            fetchEuroRate().catch(err => {
+                console.warn('Не вдалося автоматично отримати курс євро:', err);
+            });
+        });
+        
+        // Додаємо обробник для радіо-кнопок вибору методу розрахунку вартості
+        const costTypeRadios = document.querySelectorAll('input[name="costType"]');
+        const costPerKwContainer = document.getElementById('costPerKwContainer');
+        const totalCostContainer = document.getElementById('totalCostContainer');
+        const totalSystemCostInput = document.getElementById('totalSystemCostInput');
+
+        // Функція для оновлення загальної вартості на основі потужності
+        function updateTotalCost() {
+            const powerKW = parseFloat(powerInputElement.value.replace(',', '.')) || 10;
+            // Значення по-замовчуванню: 1000€ за кВт
+            totalSystemCostInput.value = (powerKW * 1000).toFixed(0);
+        }
+
+        // Обробник зміни типу розрахунку вартості
+        costTypeRadios.forEach(radio => {
+            radio.addEventListener('change', function() {
+                if (this.value === 'perKw') {
+                    costPerKwContainer.style.display = 'block';
+                    totalCostContainer.style.display = 'none';
+                } else {
+                    costPerKwContainer.style.display = 'none';
+                    totalCostContainer.style.display = 'block';
+                    // Оновлюємо загальну вартість при переключенні
+                    updateTotalCost();
+                }
+            });
+        });
+
+        // Оновлюємо загальну вартість при зміні потужності системи
+        powerInputElement.addEventListener('input', function() {
+            if (document.getElementById('totalCostOption').checked) {
+                updateTotalCost();
+            }
+        });
+
+        // Ініціалізація загальної вартості при завантаженні
+        window.addEventListener('load', function() {
+            // Вже існуючий код...
+            
+            // Ініціалізуємо загальну вартість
+            updateTotalCost();
+        });
+
         console.log("Калькулятор ініціалізовано");
     });
+    
+    // Додамо функцію отримання курсу валют із НБУ
+    async function fetchEuroRate() {
+        try {
+            const rateStatus = document.getElementById('rateStatus');
+            rateStatus.innerHTML = '<i class="bi bi-hourglass-split"></i> Отримання курсу...';
+            rateStatus.className = 'rate-status loading';
+            
+            const response = await fetch('https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange?json');
+            if (!response.ok) {
+                throw new Error(`Помилка запиту: ${response.status}`);
+            }
+            
+            const data = await response.json();
+            const euroRate = data.find(curr => curr.cc === 'EUR');
+            
+            if (euroRate && euroRate.rate) {
+                document.getElementById('euroRateInput').value = euroRate.rate.toFixed(2);
+                rateStatus.innerHTML = `<i class="bi bi-check-circle"></i> Оновлено: ${new Date().toLocaleTimeString()}`;
+                rateStatus.className = 'rate-status success';
+                return euroRate.rate;
+            } else {
+                throw new Error('Курс євро не знайдено');
+            }
+        } catch (error) {
+            console.error('Помилка при отриманні курсу євро:', error);
+            const rateStatus = document.getElementById('rateStatus');
+            rateStatus.innerHTML = `<i class="bi bi-exclamation-triangle"></i> Не вдалося оновити курс`;
+            rateStatus.className = 'rate-status error';
+            return null;
+        }
+    }
     </script>
 </body>
 </html>
