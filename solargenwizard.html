@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SolarGenWizard - Прогнозування генерації сонячної системи</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.2/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="miniapps-common.css">
+    <link rel="stylesheet" href="solarwizard-styles.css">
+</head>
+<body>
+    <a href="../index.html" class="back-button">← Повернутися до меню</a>
+    <div class="header">
+        <i class="bi bi-sun header-icon"></i>
+        <h1>SolarGenWizard</h1>
+        <p>Прогнозування генерації сонячної електростанції та економічної вигоди</p>
+    </div>
+
+    <div class="main-content">
+        <form id="solarWizardForm" autocomplete="off">
+            <label class="form-label"><i class="info-icon bi bi-geo-alt"></i>Регіон:</label>
+            <select class="form-input" id="regionSelect">
+                <!-- Буде заповнено динамічно -->
+            </select>
+            
+            <label class="form-label"><i class="info-icon bi bi-lightning-charge"></i>Потужність панелей(кВт):</label>
+            <input type="number" class="form-input" id="powerInput" min="1" step="1" value="10" required>
+            
+            <label class="form-label"><i class="info-icon bi bi-house-door"></i>Власне споживання(кВт·год/міс, необов'язково):</label>
+            <input type="number" class="form-input" id="consumptionInput" min="0" step="1" value="300">
+
+            <button type="submit" class="calc-button"><i class="bi bi-calculator"></i> Розрахувати</button>
+        </form>
+        
+        <div id="resultBox" class="result-box" style="display:none;">
+            <div id="resultContent"></div>
+        </div>
+
+        <div class="tips-section">
+            <p><i class="bi bi-info-circle"></i> <strong>Про SolarGenWizard</strong></p>
+            <p>SolarGenWizard допомагає розрахувати прогнозовану генерацію сонячної електростанції та оцінити фінансові переваги.</p>
+            
+            <p><i class="bi bi-sun"></i> <strong>Розрахунок генерації</strong></p>
+            <p>Базується на:</p>
+            <ul>
+                <li>Потужності встановлених сонячних панелей</li>
+                <li>Місячних показниках сонячної інсоляції для вибраного регіону</li>
+                <li>Кількості днів у кожному місяці</li>
+            </ul>
+            
+            <p><i class="bi bi-cash-coin"></i> <strong>Економічний аналіз</strong></p>
+            <ul>
+                <li>Аналіз власного споживання та економії коштів за тарифами для домогосподарств</li>
+                <li>Розрахунок надлишку електроенергії, що може бути продана за "зеленим" тарифом</li>
+                <li>Оцінка річного прибутку з урахуванням податків</li>
+            </ul>
+            
+            <p><i class="bi bi-lightbulb"></i> <strong>Технічні примітки</strong></p>
+            <ul>
+                <li>ККД системи враховано як 80% від теоретично можливої генерації</li>
+                <li>Зелений тариф: 0,16 €/кВт·год (з урахуванням ПДВ)</li>
+                <li>Ціна для домогосподарств: 2,64 грн/кВт·год</li>
+                <li>Розрахунок виконується помісячно з урахуванням сезонної зміни інсоляції</li>
+            </ul>
+        </div>
+    </div>
+    
+    <script src="solarwizard.js"></script>
+    <script>
+    // Весь код виконуємо тільки після повного завантаження DOM
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log("DOM завантажено, ініціалізуємо калькулятор...");
+        
+        // --- КОНСТАНТИ ТА ДОВІДКОВІ ДАНІ ---
+        const INSOLATION_DATA = {
+            vinn: [1.3,1.9,2.9,3.8,4.5,5.1,5.5,5.1,3.9,2.6,1.4,1.1],
+            dnip: [1.6,2.3,3.5,4.6,5.3,5.9,6.2,5.7,4.2,2.7,1.6,1.3],
+            done: [1.5,2.2,3.3,4.3,5.0,5.7,6.0,5.5,4.0,2.6,1.5,1.2],
+            zhyto: [1.1,1.7,2.7,3.7,4.4,5.0,5.3,4.9,3.7,2.4,1.2,0.9],
+            zapor: [1.7,2.4,3.6,4.7,5.4,6.0,6.3,5.8,4.3,2.8,1.7,1.4],
+            ifra: [1.0,1.6,2.6,3.6,4.3,4.9,5.2,4.8,3.6,2.3,1.1,0.8],
+            kyiv: [1.1,1.7,2.7,3.7,4.4,5.0,5.3,4.9,3.7,2.4,1.2,0.9],
+            krop: [1.4,2.0,3.1,4.1,4.8,5.4,5.7,5.2,3.9,2.5,1.4,1.1],
+            lutsk: [1.0,1.5,2.5,3.5,4.2,4.8,5.1,4.7,3.5,2.2,1.1,0.8],
+            luhan: [1.5,2.2,3.3,4.3,5.0,5.7,6.0,5.5,4.0,2.6,1.5,1.2],
+            lviv: [1.0,1.5,2.5,3.5,4.2,4.8,5.1,4.7,3.5,2.2,1.1,0.8],
+            myko: [1.7,2.4,3.6,4.7,5.4,6.0,6.3,5.8,4.3,2.8,1.7,1.4],
+            odes: [1.7,2.4,3.6,4.7,5.4,6.0,6.3,5.8,4.3,2.8,1.7,1.4],
+            polt: [1.3,1.9,2.9,3.8,4.5,5.1,5.5,5.1,3.9,2.6,1.4,1.1],
+            rivn: [1.0,1.5,2.5,3.5,4.2,4.8,5.1,4.7,3.5,2.2,1.1,0.8],
+            sumy: [1.1,1.7,2.7,3.7,4.4,5.0,5.3,4.9,3.7,2.4,1.2,0.9],
+            symf: [1.8,2.5,3.7,4.8,5.5,6.1,6.4,5.9,4.4,2.9,1.8,1.5],
+            tern: [1.0,1.6,2.6,3.6,4.3,4.9,5.2,4.8,3.6,2.3,1.1,0.8],
+            uzho: [1.0,1.5,2.5,3.5,4.2,4.8,5.1,4.7,3.5,2.2,1.1,0.8],
+            khark: [1.2,1.8,2.8,3.8,4.5,5.1,5.4,5.0,3.8,2.5,1.3,1.0],
+            kher: [1.8,2.5,3.7,4.8,5.5,6.1,6.4,5.9,4.4,2.9,1.8,1.5],
+            kmel: [1.1,1.7,2.7,3.7,4.4,5.0,5.3,4.9,3.7,2.4,1.2,0.9],
+            cher: [1.1,1.7,2.7,3.7,4.4,5.0,5.3,4.9,3.7,2.4,1.2,0.9],
+            chrn: [1.1,1.7,2.7,3.7,4.4,5.0,5.3,4.9,3.7,2.4,1.2,0.9],
+            chrv: [1.2,1.8,2.8,3.8,4.5,5.1,5.4,5.0,3.8,2.5,1.3,1.0]
+        };
+        const REGION_NAMES = {
+            vinn: "Вінниця", dnip: "Дніпро", done: "Донецьк", zhyto: "Житомир", zapor: "Запоріжжя",
+            ifra: "Івано-Франківськ", kyiv: "Київ", krop: "Кропивницький", lutsk: "Луцьк", luhan: "Луганськ",
+            lviv: "Львів", myko: "Миколаїв", odes: "Одеса", polt: "Полтава", rivn: "Рівне", sumy: "Суми",
+            symf: "Сімферополь", tern: "Тернопіль", uzho: "Ужгород", khark: "Харків", kher: "Херсон",
+            kmel: "Хмельницький", cher: "Черкаси", chrn: "Чернігів", chrv: "Чернівці"
+        };
+        const MONTHS_UA = ["Січень","Лютий","Березень","Квітень","Травень","Червень","Липень","Серпень","Вересень","Жовтень","Листопад","Грудень"];
+        const DAYS_IN_MONTH = [31,28,31,30,31,30,31,31,30,31,30,31];
+        const SYSTEM_EFFICIENCY = 0.8; // ККД системи
+        const DOMESTIC_PRICE = 2.64; // грн/кВт·год
+        const GREEN_TARIFF = 0.16; // €/кВт·год
+        const PDV = 0.2; // 20% ПДВ
+        
+        // --- ОТРИМАННЯ ЕЛЕМЕНТІВ ФОРМИ ---
+        const formElement = document.getElementById('solarWizardForm');
+        const regionSelectElement = document.getElementById('regionSelect');
+        const powerInputElement = document.getElementById('powerInput');
+        const consumptionInputElement = document.getElementById('consumptionInput');
+        const resultContentElement = document.getElementById('resultContent');
+        const resultBoxElement = document.getElementById('resultBox');
+        
+        // --- ПЕРЕВІРКА НАЯВНОСТІ ЕЛЕМЕНТІВ ---
+        if (!formElement || !regionSelectElement || !powerInputElement || !consumptionInputElement || !resultContentElement || !resultBoxElement) {
+            console.error("Помилка: не всі елементи знайдені");
+            alert("Критична помилка: не всі елементи форми знайдені. Перезавантажте сторінку.");
+            return;
+        }
+        
+        // --- ЗАПОВНЕННЯ СПИСКУ РЕГІОНІВ ---
+        regionSelectElement.innerHTML = Object.entries(REGION_NAMES)
+            .map(([key, name]) => `<option value="${key}">${name}</option>`)
+            .join('');
+        console.log("Заповнено список регіонів");
+        
+        // --- ФУНКЦІЇ РОЗРАХУНКУ ---
+        function calculateGeneration(region, powerKW) {
+            const monthlyInsolation = INSOLATION_DATA[region];
+            let monthlyGeneration = [];
+            
+            for (let i = 0; i < 12; i++) {
+                const generationForMonth = monthlyInsolation[i] * powerKW * DAYS_IN_MONTH[i] * SYSTEM_EFFICIENCY;
+                monthlyGeneration.push(generationForMonth);
+            }
+            
+            return monthlyGeneration;
+        }
+        
+        function calculateConsumption(monthlyGeneration, monthlyConsumption) {
+            let ownMonthly = []; // Використано власної енергії
+            let gridMonthly = []; // Взято з мережі
+            let remainingMonthly = []; // Залишок для продажу
+            let usedForOwnTotal = 0; // Загалом використано власної
+            let gridTotal = 0; // Загалом взято з мережі
+            
+            for (let i = 0; i < 12; i++) {
+                const ownNeed = monthlyConsumption;
+                const solarGeneration = monthlyGeneration[i];
+                const usedFromSolar = Math.min(solarGeneration, ownNeed);
+                const takenFromGrid = Math.max(0, ownNeed - solarGeneration);
+                const remaining = Math.max(0, solarGeneration - usedFromSolar);
+                
+                ownMonthly.push(usedFromSolar);
+                gridMonthly.push(takenFromGrid);
+                remainingMonthly.push(remaining);
+                usedForOwnTotal += usedFromSolar;
+                gridTotal += takenFromGrid;
+            }
+            
+            return {
+                ownMonthly,
+                gridMonthly,
+                remainingMonthly,
+                usedForOwnTotal,
+                gridTotal
+            };
+        }
+        
+        // --- ФУНКЦІЯ ВИВЕДЕННЯ РЕЗУЛЬТАТУ ---
+        function displayResult(html) {
+            resultContentElement.innerHTML = html;
+            resultBoxElement.style.display = 'block';
+            console.log("Результат виведено");
+        }
+        
+        // --- ОБРОБКА ФОРМИ ---
+        formElement.addEventListener('submit', function(event) {
+            event.preventDefault();
+            console.log("Обробка форми...");
+            
+            try {
+                // Отримання даних з форми
+                const regionCode = regionSelectElement.value;
+                const powerKW = parseFloat(powerInputElement.value.replace(',', '.'));
+                const monthlyConsumption = parseFloat(consumptionInputElement.value.replace(',', '.')) || 0;
+                
+                console.log("Вхідні дані:", { regionCode, powerKW, monthlyConsumption });
+                
+                // Валідація введених даних
+                if (!regionCode || !(regionCode in INSOLATION_DATA)) {
+                    displayResult("❌ Оберіть коректний регіон.");
+                    return;
+                }
+                if (isNaN(powerKW) || powerKW <= 0) {
+                    displayResult("❌ Потужність панелей має бути більше 0.");
+                    return;
+                }
+                if (monthlyConsumption < 0) {
+                    displayResult("❌ Власне споживання має бути невід'ємним.");
+                    return;
+                }
+                
+                // Розрахунок генерації
+                const monthlyGeneration = calculateGeneration(regionCode, powerKW);
+                const totalGeneration = monthlyGeneration.reduce((a, b) => a + b, 0);
+                
+                // Формування результату
+                let resultHTML = `<b>🌍 Регіон:</b> ${REGION_NAMES[regionCode] || regionCode} <b>⚡ Потужність:</b> ${powerKW} кВт<br>`;
+                resultHTML += `<b>🔋 Річна генерація:</b> ${Math.round(totalGeneration).toLocaleString('uk-UA')} кВт·год<br>`;
+                
+                // Розрахунок для власного споживання
+                if (monthlyConsumption > 0) {
+                    const consumption = calculateConsumption(monthlyGeneration, monthlyConsumption);
+                    const annualConsumption = monthlyConsumption * 12;
+                    const coveragePercent = annualConsumption > 0 ? (consumption.usedForOwnTotal / annualConsumption) * 100 : 0;
+                    const savingsUAH = Math.round(consumption.usedForOwnTotal * DOMESTIC_PRICE);
+                    const remainingForSale = Math.max(0, totalGeneration - consumption.usedForOwnTotal);
+                    const remainingProfit = remainingForSale * GREEN_TARIFF * (1 - PDV);
+                    
+                    resultHTML += `<br><b>🏠 Аналіз споживання:</b><br>`;
+                    resultHTML += `• ☀️ Використано сонячної енергії: <b>${Math.round(consumption.usedForOwnTotal).toLocaleString('uk-UA')}</b> кВт·год (${coveragePercent.toFixed(1)}% потреб)<br>`;
+                    resultHTML += `• ⚡ Енергії з мережі: <b>${Math.round(consumption.gridTotal).toLocaleString('uk-UA')}</b> кВт·год<br>`;
+                    resultHTML += `• 💰 Економія: <b>${Math.round(consumption.usedForOwnTotal).toLocaleString('uk-UA')}</b> кВт·год (≈ ${savingsUAH.toLocaleString('uk-UA')} грн)<br>`;
+                    resultHTML += `• 🟢 Надлишок для продажу: <b>${Math.round(remainingForSale).toLocaleString('uk-UA')}</b> кВт·год<br>`;
+                    resultHTML += `• 💵 Дохід (після податків): <b>${remainingProfit.toLocaleString('uk-UA', {minimumFractionDigits:2, maximumFractionDigits:2})} €</b><br>`;
+                    resultHTML += `<br><b>📅 Місячні показники:</b><br>`;
+                    for (let i = 0; i < 12; ++i) {
+                        resultHTML += `${MONTHS_UA[i].slice(0,3)}: ☀️${Math.round(monthlyGeneration[i])} → 🏠${Math.round(consumption.ownMonthly[i])} ⚡${Math.round(consumption.gridMonthly[i])} 🟢${Math.round(consumption.remainingMonthly[i])}<br>`;
+                    }
+                } else {
+                    const profitAfterPDV = totalGeneration * GREEN_TARIFF * (1 - PDV);
+                    resultHTML += `<br>💵 Дохід (після податків): <b>${profitAfterPDV.toLocaleString('uk-UA', {minimumFractionDigits:2, maximumFractionDigits:2})} €</b><br>`;
+                    resultHTML += `<br><b>📅 Місячні показники:</b><br>`;
+                    for (let i = 0; i < 12; ++i) {
+                        resultHTML += `${MONTHS_UA[i].slice(0,3)}: ☀️${Math.round(monthlyGeneration[i])}<br>`;
+                    }
+                }
+                
+                displayResult(resultHTML);
+                
+            } catch (error) {
+                console.error("Помилка при обробці форми:", error);
+                displayResult("❌ Помилка розрахунку: " + error.message);
+            }
+        });
+        
+        console.log("Калькулятор ініціалізовано");
+    });
+    </script>
+</body>
+</html>
