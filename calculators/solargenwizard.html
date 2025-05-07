@@ -212,6 +212,7 @@
         regionSelectElement.innerHTML = Object.entries(REGION_NAMES)
             .map(([key, name]) => `<option value="${key}">${name}</option>`)
             .join('');
+        regionSelectElement.value = 'rivn';
         console.log("Заповнено список регіонів");
         
         // --- ФУНКЦІЇ РОЗРАХУНКУ ---
