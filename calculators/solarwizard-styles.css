@@ -1,611 +1,643 @@
 /* Додаткові стилі для калькулятора SolarWizard */
 
+/* Основні кольори та змінні */
+:root {
+  --primary-color: #F9A826;
+  --primary-hover: #E08E1C;
+  --secondary-color: #0275d8;
+  --success-color: #5cb85c;
+  --warning-color: #FFC107;
+  --danger-color: #d9534f;
+  --text-primary: #34495E;
+  --text-secondary: #5D6D7E;
+  --text-light: #777;
+  --border-color: #C2CFE0;
+  --border-light: #E0E6ED;
+  --bg-light: #FCFCFD;
+  --bg-lighter: #FAFCFF;
+  --bg-accent: #f8f9fa;
+  --bg-info: #FFF8E6;
+  --success-light: #f1f8e9;
+  --radius-sm: 5px;
+  --radius-md: 8px;
+  --radius-lg: 10px;
+  --space-xs: 3px;
+  --space-sm: 5px;
+  --space-md: 10px;
+  --space-lg: 15px;
+}
+
+/* Стилі для рядків пристроїв */
 .device-row {
-    display: flex;
-    gap: 8px;
-    margin-bottom: 8px;
-    align-items: center;
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
+  align-items: center;
 }
 
-.device-quantity {
-    width: 30%;
-}
-
-.device-wattage {
-    width: 60%;
-}
+.device-quantity { width: 30%; }
+.device-wattage { width: 60%; }
 
 .device-input {
-    border: 1px solid #C2CFE0;
-    border-radius: 8px;
-    padding: 10px;
-    font-size: 16px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 10px;
+  font-size: 16px;
 }
 
+/* Кнопки видалення та додавання */
 .remove-device-btn {
-    background-color: #E6704B;
-    color: white;
-    border: none;
-    border-radius: 50%;
-    width: 32px;
-    height: 32px;
-    cursor: pointer;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-shrink: 0;
+  background-color: #E6704B;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
 }
 
 .remove-device-btn:hover {
-    background-color: #D85A3A;
+  background-color: #D85A3A;
 }
 
 .add-button {
-    background-color: #50B83C;
-    color: white;
-    padding: 8px 16px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    margin: 10px 0;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 14px;
+  background-color: #50B83C;
+  color: white;
+  padding: 8px 16px;
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  margin: 10px 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
 }
 
 .add-button:hover {
-    background-color: #429631;
+  background-color: #429631;
 }
 
 .add-device-btn {
-    display: block;
-    width: 100%;
-    background: #FFF8E6;
-    color: #F9A826;
-    border: none;
-    border-radius: 8px;
-    padding: 10px 0;
-    font-size: 15px;
-    margin-top: 5px;
-    margin-bottom: 20px;
-    cursor: pointer;
+  display: block;
+  width: 100%;
+  background: var(--bg-info);
+  color: var(--primary-color);
+  border: none;
+  border-radius: var(--radius-md);
+  padding: 10px 0;
+  font-size: 15px;
+  margin-top: 5px;
+  margin-bottom: 20px;
+  cursor: pointer;
 }
 
 .add-device-btn:hover {
-    background: #FFF0CC;
+  background: #FFF0CC;
 }
 
 .remove-btn {
-    background: none;
-    border: none;
-    color: #E6704B;
-    font-size: 22px;
-    padding: 0;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-}
-
-/* Збереження стилів для результату */
-#resultContent h3, #resultContent h4, #resultContent h5 {
-    color: #F9A826;
-    margin-top: 10px;
-    margin-bottom: 10px;
-}
-
-#resultContent h3 {
-    font-size: 1.3em;
-    border-bottom: 1px solid #C2CFE0;
-    padding-bottom: 5px;
-}
-
-#resultContent h4 {
-    font-size: 1.1em;
-    margin-top: 15px;
-}
-
-#resultContent h5 {
-    font-size: 1em;
-}
-
-#resultContent p {
-    margin: 5px 0;
-    line-height: 1.2;
-    color: #34495E;
+  background: none;
+  border: none;
+  color: #E6704B;
+  font-size: 22px;
+  padding: 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
 }
 
 /* Стилізація блоку результатів */
 #resultBox {
-    background-color: #FAFCFF;
-    border: 1px solid #C2CFE0;
-    border-radius: 10px;
-    padding: 10px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-    line-height: 1;
+  background-color: var(--bg-lighter);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: var(--space-md);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  line-height: 1;
 }
 
-/* Загальні стилі для всіх іконок */
+#resultContent h3, #resultContent h4, #resultContent h5 {
+  color: var(--primary-color);
+  margin: 10px 0;
+}
+
+#resultContent h3 {
+  font-size: 1.3em;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: var(--space-sm);
+}
+
+#resultContent h4 {
+  font-size: 1.1em;
+  margin-top: 15px;
+}
+
+#resultContent h5 {
+  font-size: 1em;
+}
+
+#resultContent p {
+  margin: var(--space-sm) 0;
+  line-height: 1.2;
+  color: var(--text-primary);
+}
+
+#resultContent strong {
+  color: #2196f3;
+}
+
+#resultContent div {
+  padding: var(--space-xs) 0;
+  color: var(--text-secondary);
+}
+
+/* Іконки */
 .bi {
-    color: #F9A826;
-    margin-right: 6px;
+  color: var(--primary-color);
+  margin-right: 6px;
 }
 
-/* Кастомізовані іконки за призначенням */
 .bi-sun-fill, .bi-brightness-high, .bi-brightness-alt-high {
-    color: #F9A826; /* сонячний */
+  color: var(--primary-color);
 }
 
 .bi-lightning-fill {
-    color: #50B83C; /* зелений - енергія */
+  color: #50B83C;
 }
 
 .bi-battery-charging {
-    color: #3498DB; /* блакитний - батарея */
+  color: #3498DB;
 }
 
 .bi-snow {
-    color: #7FB3D5; /* голубий - зима */
+  color: #7FB3D5;
 }
 
 .bi-flower1 {
-    color: #AED581; /* світло-зелений - весна */
+  color: #AED581;
 }
 
 .bi-info-circle {
-    color: #7F8C8D; /* сірий - інформація */
+  color: #7F8C8D;
 }
 
 /* Розділи результатів */
 .result-section {
-    margin-top: 5px;
-    padding-top: 5px;
-    border-top: 1px dashed #E0E6ED;
+  margin-top: var(--space-sm);
+  padding-top: var(--space-sm);
+  border-top: 1px dashed var(--border-light);
 }
 
 /* Кнопки з додатковим стилем */
 #solarWizardForm button[type="submit"] {
-    background-color: #F9A826;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    padding: 10px 20px;
-    font-size: 16px;
-    cursor: pointer;
-    transition: background-color 0.3s;
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: var(--radius-md);
+  padding: 8px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  margin-top: var(--space-sm);
 }
 
 #solarWizardForm button[type="submit"]:hover {
-    background-color: #E08E1C;
+  background-color: var(--primary-hover);
 }
 
-/* Фон форми калькулятора */
+/* Форма калькулятора */
 #solarWizardForm {
-    background-color: #FCFCFD;
-    padding: 15px;
-    border-radius: 10px;
-    border: 1px solid #E0E6ED;
+  background-color: var(--bg-light);
+  padding: var(--space-md);
+  border-radius: var (--radius-lg);
+  border: 1px solid var(--border-light);
 }
 
-/* Стилізація селекта регіону */
-#region {
-    border: 1px solid #C2CFE0;
-    border-radius: 8px;
-    padding: 10px;
-    font-size: 16px;
-    background-color: white;
-    color: #34495E;
+/* Стилізація селектів та інпутів */
+#region, .form-input {
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 6px 10px;
+  font-size: 16px;
+  background-color: white;
+  color: var(--text-primary);
+  margin-bottom: 6px;
 }
 
-/* Заголовки та підзаголовки в результатах */
-#resultContent strong {
-    /* color: #34495E; */
-    color: #2196f3;
-}
-#resultContent div {
-    padding: 3px 0;
-    color: #5D6D7E; 
-    /* color: #222; */
+/* Лейбли форми */
+.form-label {
+  margin-bottom: var(--space-xs);
+  margin-top: 8px;
 }
 
-/* Додайте ці стилі до існуючого CSS-файлу або в секцію <style> в <head> */
-
+/* Розширені параметри */
 .advanced-params-header {
-    text-align: right;
-    margin: 10px 0;
-    font-size: 0.9em;
+  text-align: right;
+  margin: var(--space-md) 0;
+  font-size: 0.9em;
 }
 
 .advanced-params-header a {
-    color: #0275d8;
-    text-decoration: none;
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
+  color: var(--secondary-color);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-sm);
 }
 
 .advanced-params-header a:hover {
-    text-decoration: underline;
+  text-decoration: underline;
 }
 
 #advancedParams {
-    background-color: #f8f9fa;
-    border-radius: 10px;
-    padding: 10px;
-    margin-bottom: 15px;
-    border: 1px solid #e0e0e0;
+  background-color: var(--bg-accent);
+  border-radius: var(--radius-lg);
+  padding: 6px 10px;
+  margin-bottom: var(--space-md);
+  border: 1px solid #e0e0e0;
 }
 
 #advancedParams .form-label {
-    font-size: 0.9em;
+  font-size: 0.9em;
 }
 
 #advancedParams .form-input {
-    font-size: 0.9em;
+  font-size: 0.9em;
 }
 
-/* Стилі для контейнера з автопідбором потужності */
+/* Автопідбір потужності */
 .power-input-container {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 5px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-md);
+  margin-bottom: var(--space-sm);
 }
 
 .power-input-container .form-input {
-    width: 60%; /* Зменшуємо ширину поля вводу */
-    flex-shrink: 1;
+  width: 60%;
+  flex-shrink: 1;
 }
 
 .auto-power-checkbox {
-    display: flex;
-    align-items: center;
-    white-space: nowrap;
-    margin: 5px 17px 19px 8px;
-    gap: 5px;
-    cursor: pointer;
-    font-size: 14px;
-    color: #444;
-    /* background-color: #f8f9fa; */
-    padding: 4px 3px;
-    border-radius: 5px;
-    /* border: 1px solid #e0e0e0; */
-    flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+  margin: 5px 17px 19px 8px;
+  gap: var(--space-sm);
+  cursor: pointer;
+  font-size: 14px;
+  color: #444;
+  padding: 4px 3px;
+  border-radius: var(--radius-sm);
+  flex-shrink: 0;
 }
 
 .auto-power-info {
-    background-color: #FFF8E6; /* Світло-оранжевий фон */
-    border-left: 3px solid #F9A826; /* Оранжева ліва межа */
-    padding: 8px 10px;
-    margin-топ: 0;
-    margin-bottom: 15px;
-    border-radius: 4px;
-    font-size: 0.85em;
-    line-height: 1.3;
-    color: #95591E; /* Темно-оранжевий для тексту */
+  background-color: var(--bg-info);
+  border-left: 3px solid var(--primary-color);
+  padding: 8px 10px;
+  margin-bottom: 15px;
+  border-radius: 4px;
+  font-size: 0.85em;
+  line-height: 1.3;
+  color: #95591E;
 }
 
 .auto-power-info .bi {
-    color: #F9A826; /* Оранжевий колір для іконки */
+  color: var(--primary-color);
 }
 
-/* Видаляємо стилі кнопки автопідбору, що більше не використовується */
-.auto-power-btn {
-    display: none;
-}
-
-/* Стилі для таблиць результатів */
+/* Таблиці результатів */
 .result-header {
-    margin-bottom: 10px; /* Зменшено відступ знизу */
-    text-align: center;
+  margin-bottom: var(--space-md);
+  text-align: center;
 }
 
 .result-title {
-    font-size: 1.2em;
-    font-weight: bold;
-    color: #333;
+  font-size: 1.2em;
+  font-weight: bold;
+  color: #333;
 }
 
 .result-subtitle {
-    color: #555;
-    margin-топ: 3px; /* Зменшено відступ зверху */
+  color: #555;
+  margin-top: var(--space-xs);
 }
 
 .result-profit {
-    background-color: #f1f8e9;
-    padding: 6px 10px; /* Зменшено вертикальні відступи */
-    border-radius: 5px;
-    margin: 10px 0; /* Зменшено вертикальні відступи */
-    text-align: center;
-    color: #2e7d32;
-    font-size: 1.1em;
+  background-color: var(--success-light);
+  padding: 6px 10px;
+  border-radius: var(--radius-sm);
+  margin: var(--space-md) 0;
+  text-align: center;
+  color: #2e7d32;
+  font-size: 1.1em;
 }
 
+/* Загальні стилі таблиць */
 .result-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 15px; /* Зменшено відступ знизу */
-    font-size: 0.9em;
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: var(--space-md);
+  font-size: 0.9em;
 }
 
 .result-table caption {
-    font-weight: bold;
-    text-align: left;
-    padding: 5px 0; /* Зменшено вертикальні відступи */
-    color: #F9A826;
-    font-size: 1.1em;
+  font-weight: bold;
+  text-align: left;
+  padding: var(--space-xs) 0;
+  color: var(--primary-color);
+  font-size: 1.1em;
 }
 
 .result-table th, .result-table td {
-    padding: 4px 6px; /* Зменшено відступи комірок */
-    text-align: left;
-    border-bottom: 1px solid #e0e0e0;
-    line-height: 1.2; /* Зменшено висоту рядка */
+  padding: 2px 6px;
+  text-align: left;
+  border-bottom: 1px solid #e0e0e0;
+  line-height: 1.1;
 }
 
 .result-table th {
-    background-color: #f9f9f9;
-    color: #333;
+  background-color: #f9f9f9;
+  color: #333;
 }
 
 .result-table tr:nth-child(even) {
-    background-color: #f8f8f8;
+  background-color: #f8f8f8;
 }
 
 .result-table tr:hover {
-    background-color: #f1f1f1;
+  background-color: #f1f1f1;
 }
 
-.consumption-table td:first-child {
-    width: 40%;
+/* Специфічні таблиці */
+.consumption-table td:first-child,
+.roi-table td:first-child {
+  width: 40%;
 }
 
 .monthly-table {
-    font-size: 0.85em;
-    line-height: 1.1; /* Додатково зменшено висоту рядка для місячної таблиці */
+  font-size: 0.85em;
+  line-height: 1.1;
 }
 
 .monthly-table td:first-child {
-    font-weight: bold;
+  font-weight: bold;
 }
 
 .table-header th {
-    position: sticky;
-    top: 0;
-    background-color: #f8f9fa;
-    z-index: 10;
-}
-
-.result-params {
-    margin-топ: 10px; /* Зменшено відступ зверху */
-    color: #777;
-    font-size: 0.85em;
-    border-топ: 1px dotted #ddd;
-    padding-топ: 6px; /* Зменшено відступ зверху */
-}
-
-/* Стилі для таблиці окупності */
-.roi-table td:first-child {
-    width: 40%;
+  position: sticky;
+  top: 0;
+  background-color: var(--bg-accent);
+  z-index: 10;
 }
 
 .roi-table tr:last-child {
-    font-weight: bold;
-    color: #2e7d32;
+  font-weight: bold;
+  color: #2e7d32;
 }
 
 .roi-table tr:last-child td {
-    border-топ: 2px solid #4CAF50;
+  border-top: 2px solid #4CAF50;
 }
 
-/* Стилі для унікальної іконки заголовка SolarGenWizard */
+/* Параметри результату */
+.result-params {
+  margin-top: var(--space-md);
+  color: var(--text-light);
+  font-size: 0.85em;
+  border-top: 1px dotted #ddd;
+  padding-top: 6px;
+}
+
+/* Іконка заголовка */
 .custom-header-icon {
-    position: relative;
-    width: 50px;
-    height: 50px;
-    margin: 0 auto 10px;
+  position: relative;
+  width: 50px;
+  height: 50px;
+  margin: 0 auto 10px;
 }
 
-/* Стилізація сонячних панелей (основний базовий елемент) */
 .panel-icon {
-    position: absolute;
-    font-size: 42px;
-    color: #0277BD;
-    top: 0;
-    left: 0;
-    opacity: 0.85;
+  position: absolute;
+  font-size: 42px;
+  color: #0277BD;
+  top: 0;
+  left: 0;
+  opacity: 0.85;
 }
 
-/* Стилізація сонця (елемент зверху) */
 .sun-icon {
-    position: absolute;
-    font-size: 24px;
-    color: #F9A826;
-    top: -7px;
-    right: -7px;
-    transform: rotate(-15deg);
-    filter: drop-shadow(0 0 2px rgba(253, 216, 53, 0.5));
+  position: absolute;
+  font-size: 24px;
+  color: var(--primary-color);
+  top: -7px;
+  right: -7px;
+  transform: rotate(-15deg);
+  filter: drop-shadow(0 0 2px rgba(253, 216, 53, 0.5));
 }
 
-/* Стилізація графіка прибутку (елемент знизу) */
 .profit-icon {
-    position: absolute;
-    font-size: 20px;
-    color: #4CAF50;
-    bottom: -5px;
-    right: -7px;
-    background-color: white;
-    border-radius: 50%;
-    padding: 3px;
-    border: 1px solid #E0E0E0;
-    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+  position: absolute;
+  font-size: 20px;
+  color: #4CAF50;
+  bottom: -5px;
+  right: -7px;
+  background-color: white;
+  border-radius: 50%;
+  padding: 3px;
+  border: 1px solid #E0E0E0;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.1);
 }
 
-/* Приховуємо оригінальну іконку */
 .header-icon {
-    display: none;
+  display: none;
 }
 
-/* Стилі для чекбоксу зеленого тарифу */
-.green-tariff-container {
-    margin-bottom: 0px;
+/* Групи чекбоксів і параметрів */
+.green-tariff-container,
+.consumer-sale-container,
+.cost-selection-container,
+.exchange-rate-container {
+  margin-bottom: 8px;
 }
 
-/* Групування тарифу і податку */
 .tariff-tax-group {
-    display: flex;
-    flex-direction: column;
-    gap: 0px; /* Зменшений відступ між полями */
+  display: flex;
+  flex-direction: column;
+  gap: 0;
 }
 
 .tariff-input-wrapper,
 .tax-input-wrapper {
-    margin-bottom: -13px; /* Зменшена відстань між елементами */
+  margin-bottom: -15px;
 }
 
 .checkbox-container {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 5px; /* Зменшений відступ внизу */
-    font-size: 14px;
-    color: #444;
-    cursor: pointer;
-    padding: 5px;
-    border-radius: 4px;
-    transition: background-color 0.2s;
-    /* Важливо - завжди дозволяємо взаємодію з чекбоксом */
-    pointer-events: auto !important;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 2px;
+  font-size: 14px;
+  color: #444;
+  cursor: pointer;
+  padding: 3px;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+  pointer-events: auto !important;
 }
 
-/* Змінюємо стиль для неактивного поля вводу */
 .disabled-field {
-    opacity: 0.5;
+  opacity: 0.5;
 }
 
-/* Блокуємо події тільки для конкретних елементів, а не для всього контейнера */
 .disabled-field input:not([type="checkbox"]) {
-    pointer-events: none;
+  pointer-events: none;
 }
 
-/* Стилі для інформаційних повідомлень */
+/* Повідомлення */
 .info-message {
-    padding: 10px;
-    border-radius: 5px;
-    margin: 10px 0 15px;
-    font-size: 0.9em;
+  padding: var(--space-md);
+  border-radius: var(--radius-sm);
+  margin: var(--space-md) 0 15px;
+  font-size: 0.9em;
 }
 
 .warning-message {
-    background-color: #FFF3CD;
-    border-left: 3px solid #FFC107;
-    color: #856404;
+  background-color: #FFF3CD;
+  border-left: 3px solid var(--warning-color);
+  color: #856404;
 }
 
 .warning-message .bi {
-    color: #FFC107;
+  color: var(--warning-color);
 }
 
 .error-message {
-    background-color: #F8D7DA;
-    border-left: 3px solid #DC3545;
-    color: #721C24;
+  background-color: #F8D7DA;
+  border-left: 3px solid var(--danger-color);
+  color: #721C24;
 }
 
 .error-message .bi {
-    color: #DC3545;
+  color: var(--danger-color);
 }
 
-/* Стилі для контейнера курсу валют */
-.exchange-rate-container {
-    margin-bottom: 15px;
-}
-
+/* Курс валют */
 .exchange-input-group {
-    display: flex;
-    align-items: center;
-    gap: 10px;
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
 }
 
 .update-rate-btn {
-    background-color: #F9A826;  /* Такий же колір як у кнопки "Розрахувати" */
-    color: white;
-    border: none;
-    border-radius: 5px;
-    padding: 6px 10px 5px 15px;
-    margin: 2px 8px 20px 4px;
-    cursor: pointer;
-    transition: background-color 0.2s;
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: 6px 10px 5px 15px;
+  margin: 2px 8px 15px 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
 }
 
 .update-rate-btn:hover {
-    background-color: #E08E1C;  /* Такий же колір при наведенні як у кнопки "Розрахувати" */
+  background-color: var(--primary-hover);
 }
 
 .rate-status {
-    font-size: 12px;
-    margin-top: -13px;
-    line-height: 1.2;
+  font-size: 12px;
+  margin-top: -13px;
+  line-height: 1.2;
 }
 
-.rate-status.loading {
-    color: #0275d8;
-}
-
-.rate-status.success {
-    color: #5cb85c;
-}
-
-.rate-status.error {
-    color: #d9534f;
-}
+.rate-status.loading { color: var(--secondary-color); }
+.rate-status.success { color: var(--success-color); }
+.rate-status.error { color: var(--danger-color); }
 
 .rate-status i {
-    margin-right: 4px;
+  margin-right: 4px;
 }
 
-/* Стилі для вибору методу розрахунку вартості */
-.cost-selection-container {
-    margin-bottom: 15px;
-}
-
+/* Селектор типу вартості */
 .cost-type-selector {
-    display: flex;
-    gap: 15px;
-    margin-bottom: 10px;
+  display: flex;
+  gap: 15px;
+  margin-bottom: var(--space-md);
 }
 
 .radio-option {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    font-size: 14px;
-    color: #444;
-    cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  font-size: 14px;
+  color: #444;
+  cursor: pointer;
 }
 
-.radio-option input[type="radio"] {
-    cursor: pointer;
+.radio-option input[type="radio"],
+.radio-option label {
+  cursor: pointer;
 }
 
 .radio-option label {
-    cursor: pointer;
-    user-select: none;
+  user-select: none;
 }
 
 .secondary-label {
-    font-size: 0.9em;
-    margin-top: 5px;
+  font-size: 0.9em;
+  margin-top: var(--space-sm);
 }
 
 #costPerKwContainer, #totalCostContainer {
-    margin-top: 5px;
+  margin-top: var(--space-sm);
 }
 
-/* Стиль для неврахованих даних */
+/* Інші стилі */
 .not-applicable {
-    color: #999;
-    font-style: italic;
+  color: #999;
+  font-style: italic;
+}
+
+.consumption-hint {
+  font-size: 12px;
+  color: #666;
+  margin-top: 1px;
+  margin-bottom: var(--space-sm);
+  padding-left: 2px;
+}
+
+.total-profit-row {
+  background-color: var(--success-light);
+  font-weight: bold;
+}
+
+.total-profit-row td:first-child,
+.total-profit-row b {
+  color: #2e7d32;
+}
+
+/* Секція порад */
+.tips-section {
+  margin: 15px 15px 0 15px;
+}
+
+.tips-section p,
+.tips-section ul {
+  margin: var(--space-sm) 0;
+}
+
+.tips-section ul {
+  padding-left: 20px;
+}
+
+.tips-section li {
+  margin: 2px 0;
 }
