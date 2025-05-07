@@ -64,7 +64,25 @@
                     </div>
                 </div>
                 
-                <label class="form-label"><i class="info-icon bi bi-cash-coin"></i>Ціна для споживача з мережі (грн/кВт·год):</label>
+                <!-- Додаємо новий блок для продажу споживачам -->
+                <div class="consumer-sale-container">
+                    <div class="checkbox-container">
+                        <input type="checkbox" id="enableConsumerSale">
+                        <label for="enableConsumerSale">Продаж генерації споживачам</label>
+                    </div>
+                    
+                    <div id="consumerSaleParams" style="display:none;">
+                        <label class="form-label"><i class="info-icon bi bi-people"></i>Потреба споживачів (кВт·год/міс):</label>
+                        <input type="number" class="form-input" id="consumerMaxConsumptionInput" min="0" step="100" value="1000">
+                        <div class="consumption-hint">Максимальна кількість електроенергії, яку споживачі здатні спожити за місяць</div>
+                        
+                        <label class="form-label"><i class="info-icon bi bi-cash-coin"></i>Вартість для споживача (грн/кВт·год):</label>
+                        <input type="number" class="form-input" id="consumerPriceInput" min="0.01" step="0.01" value="7.0">
+                        <div class="consumption-hint">Ціна, за якою ви продаєте електроенергію споживачам</div>
+                    </div>
+                </div>
+                
+                <label class="form-label"><i class="info-icon bi bi-cash-coin"></i>Вартість за кВт·год з мережі:</label>
                 <input type="number" class="form-input" id="domesticPriceInput" min="0.01" step="0.01" value="4.32">
                 
                 <div class="exchange-rate-container">
@@ -200,6 +218,16 @@
         const toggleAdvancedParamsElement = document.getElementById('toggleAdvancedParams');
         const advancedParamsElement = document.getElementById('advancedParams');
         const useGreenTariffCheckboxElement = document.getElementById('useGreenTariffCheckbox');
+        
+        // Додаємо обробник для чекбоксу продажу споживачам
+        const enableConsumerSale = document.getElementById('enableConsumerSale');
+        const consumerSaleParams = document.getElementById('consumerSaleParams');
+        
+        if (enableConsumerSale && consumerSaleParams) {
+            enableConsumerSale.addEventListener('change', function() {
+                consumerSaleParams.style.display = this.checked ? 'block' : 'none';
+            });
+        }
         
         // --- ПЕРЕВІРКА НАЯВНОСТІ ЕЛЕМЕНТІВ ---
         if (!formElement || !regionSelectElement || !powerInputElement || !consumptionInputElement || !resultContentElement || !resultBoxElement) {
@@ -396,9 +424,17 @@
                 const domesticPrice = parseFloat(domesticPriceInputElement.value.replace(',', '.')) || DOMESTIC_PRICE;
                 const installationCostPerKW = parseFloat(document.getElementById('installationCostInput').value.replace(',', '.')) || 800;
                 
+                // Отримуємо параметри для продажу споживачам
+                const consumerSaleEnabled = enableConsumerSale && enableConsumerSale.checked;
+                const consumerMaxConsumption = consumerSaleEnabled ? 
+                    (parseFloat(document.getElementById('consumerMaxConsumptionInput').value) || 1000) : 0;
+                const consumerPrice = consumerSaleEnabled ? 
+                    (parseFloat(document.getElementById('consumerPriceInput').value) || 7.0) : 0;
+                
                 console.log("Вхідні дані:", { 
                     regionCode, powerKW, monthlyConsumption,
-                    greenTariff, taxRate, domesticPrice, installationCostPerKW 
+                    greenTariff, taxRate, domesticPrice, installationCostPerKW,
+                    consumerSaleEnabled, consumerMaxConsumption, consumerPrice
                 });
                 
                 // Валідація введених даних
@@ -432,39 +468,241 @@
                 const monthlyGeneration = calculateGeneration(regionCode, powerKW);
                 const totalGeneration = monthlyGeneration.reduce((a, b) => a + b, 0);
                 
-                // Формування результату
+                // Базовий HTML результату
                 let resultHTML = `
 <div class="result-header">
-    <div class="result-title">${REGION_NAMES[regionCode] || regionCode} - ${powerKW} кВт</div>
+    <div class="result-title">${REGION_NAMES[regionCode] || regionCode} - ${powerKW} кВт по</div>
     <div class="result-subtitle">🔋 Річна генерація: ${Math.round(totalGeneration).toLocaleString('uk-UA')} кВт·год</div>
 </div>`;
 
-// Розрахунок для власного споживання
-if (monthlyConsumption > 0) {
-    const consumption = calculateConsumption(monthlyGeneration, monthlyConsumption);
-    const annualConsumption = monthlyConsumption * 12;
-    const coveragePercent = annualConsumption > 0 ? (consumption.usedForOwnTotal / annualConsumption) * 100 : 0;
-    const savingsUAH = Math.round(consumption.usedForOwnTotal * domesticPrice);
-    const remainingForSale = Math.max(0, totalGeneration - consumption.usedForOwnTotal);
-    const remainingProfit = remainingForSale * greenTariff * (1 - taxRate);
-    
-    // Розрахунок окупності
-    const costType = document.querySelector('input[name="costType"]:checked').value;
-    let totalInstallationCost;
+                // Якщо увімкнено продаж споживачам, використовуємо нову логіку розрахунку
+                if (consumerSaleEnabled) {
+                    // Місячний розрахунок з пріоритетом на споживачів
+                    let consumerUsedMonthly = [];
+                    let ownUsedMonthly = [];
+                    let gridTotalMonthly = [];
+                    let greenTariffMonthly = [];
+                    let unusedMonthly = [];
 
-    if (costType === 'perKw') {
-        // Розрахунок вартості по €/кВт
-        totalInstallationCost = installationCostPerKW * powerKW;
-    } else {
-        // Використання введеної загальної вартості
-        totalInstallationCost = parseFloat(document.getElementById('totalSystemCostInput').value) || (powerKW * 1000);
-    }
-    const eurRate = parseFloat(document.getElementById('euroRateInput').value) || 44; // Використовуємо введений курс або 44 за замовчуванням
-    const savingsEUR = savingsUAH / eurRate;
-    const annualProfitEUR = savingsEUR + remainingProfit;
-    const paybackPeriod = totalInstallationCost / annualProfitEUR;
-    
-    resultHTML += `
+                    let totalConsumerUsed = 0;
+                    let totalOwnUsed = 0;
+                    let totalGridFromNetwork = 0;
+                    let totalGridForConsumer = 0; // Додаємо змінну для обрахунку доходу від перепродажу
+                    let totalGridForOwn = 0; // Додаємо змінну для внутрішнього обрахунку
+                    let totalGreenTariff = 0;
+                    let totalUnused = 0;
+
+                    for (let i = 0; i < 12; i++) {
+                        let solarAvailable = monthlyGeneration[i];
+                        
+                        // 1. Спочатку забезпечуємо споживачів
+                        const consumerNeeds = consumerMaxConsumption;
+                        const consumerUsed = Math.min(solarAvailable, consumerNeeds);
+                        solarAvailable -= consumerUsed;
+                        
+                        // 2. Енергія з мережі, яка потрібна споживачам, якщо генерації не вистачає
+                        const gridForConsumer = Math.max(0, consumerNeeds - consumerUsed);
+                        
+                        // 3. Залишок сонячної енергії йде на власні потреби
+                        const ownNeeds = monthlyConsumption;
+                        const ownUsed = Math.min(solarAvailable, ownNeeds);
+                        solarAvailable -= ownUsed;
+                        
+                        // 4. Якщо і для власних потреб не вистачає - беремо з мережі
+                        const gridForOwn = Math.max(0, ownNeeds - ownUsed);
+                        
+                        // 5. Загальне споживання з мережі (об'єднане)
+                        const gridTotal = gridForConsumer + gridForOwn;
+                        
+                        // 6. Що залишилось - на зелений тариф або невикористано
+                        const greenTariff = useGreenTariff ? solarAvailable : 0;
+                        const unused = useGreenTariff ? 0 : solarAvailable;
+                        
+                        // Зберігаємо місячні показники
+                        consumerUsedMonthly.push(consumerUsed);
+                        ownUsedMonthly.push(ownUsed);
+                        gridTotalMonthly.push(gridTotal);
+                        greenTariffMonthly.push(greenTariff);
+                        unusedMonthly.push(unused);
+                        
+                        // Сумуємо річні показники
+                        totalConsumerUsed += consumerUsed;
+                        totalOwnUsed += ownUsed;
+                        totalGridFromNetwork += gridTotal;
+                        totalGridForConsumer += gridForConsumer; // Додаємо для розрахунку доходу від перепродажу
+                        totalGridForOwn += gridForOwn;
+                        totalGreenTariff += greenTariff;
+                        totalUnused += unused;
+                    }
+                    
+                    // Фінансові показники
+                    const eurRate = parseFloat(document.getElementById('euroRateInput').value) || 44;
+                    
+                    // 1. Економія на власному споживанні
+                    const savingsUAH = totalOwnUsed * domesticPrice;
+                    
+                    // 2. Дохід від продажу споживачам
+                    const incomeFromConsumerSolar = totalConsumerUsed * consumerPrice;
+                    
+                    // 3. Прибуток від перепродажу (споживачам з мережі)
+                    const resellMargin = consumerPrice - domesticPrice;
+                    const incomeFromResell = totalGridForConsumer * resellMargin;
+                    
+                    // 4. Дохід по зеленому тарифу
+                    const greenTariffIncome = totalGreenTariff * greenTariff * (1 - taxRate);
+                    
+                    // 5. Загальний річний дохід
+                    const totalProfitUAH = savingsUAH + incomeFromConsumerSolar + incomeFromResell;
+                    const totalProfitEUR = totalProfitUAH / eurRate + greenTariffIncome;
+                    
+                    // 6. Розрахунок окупності
+                    const costType = document.querySelector('input[name="costType"]:checked').value;
+                    let totalInstallationCost;
+                    if (costType === 'perKw') {
+                        totalInstallationCost = installationCostPerKW * powerKW;
+                    } else {
+                        totalInstallationCost = parseFloat(document.getElementById('totalSystemCostInput').value) || (powerKW * 1000);
+                    }
+                    const paybackPeriod = totalProfitEUR > 0 ? totalInstallationCost / totalProfitEUR : Infinity;
+                    
+                    // Формуємо таблицю розподілу електроенергії
+                    resultHTML += `
+    <table class="result-table consumption-table">
+        <caption>🔌 Розподіл генерації</caption>
+        <tr>
+            <td>👥 Продано споживачам:</td>
+            <td><b>${Math.round(totalConsumerUsed).toLocaleString('uk-UA')}</b> кВт·год</td>
+        </tr>
+        <tr>
+            <td>🏠 Використано для себе:</td>
+            <td><b>${Math.round(totalOwnUsed).toLocaleString('uk-UA')}</b> кВт·год</td>
+        </tr>
+        <tr>
+            <td>🟢 Продано по зеленому тарифу:</td>
+            <td><b>${Math.round(totalGreenTariff).toLocaleString('uk-UA')}</b> кВт·год</td>
+        </tr>
+        <tr>
+            <td>⚡ Взято з мережі (загалом):</td>
+            <td><b>${Math.round(totalGridFromNetwork).toLocaleString('uk-UA')}</b> кВт·год</td>
+        </tr>
+        <tr>
+            <td>⛔ Невикористано:</td>
+            <td><b>${Math.round(totalUnused).toLocaleString('uk-UA')}</b> кВт·год</td>
+        </tr>
+    </table>`;
+                    
+                    // Формуємо таблицю фінансових показників
+                    resultHTML += `
+    <table class="result-table profit-table">
+        <caption>💰 Фінансові статті</caption>
+        <tr>
+            <td>🏠 Економія (власне споживання):</td>
+            <td><b>${Math.round(savingsUAH).toLocaleString('uk-UA')}</b> грн</td>
+        </tr>
+        <tr>
+            <td>👥 Дохід від продажу споживачам (генерація):</td>
+            <td><b>${Math.round(incomeFromConsumerSolar).toLocaleString('uk-UA')}</b> грн</td>
+        </tr>
+        <tr>
+            <td>🔄 Дохід від перепродажу (маржа):</td>
+            <td><b>${Math.round(incomeFromResell).toLocaleString('uk-UA')}</b> грн</td>
+        </tr>
+        <tr>
+            <td>🟢 Дохід по зеленому тарифу (після податків):</td>
+            <td><b>${greenTariffIncome.toLocaleString('uk-UA', {minimumFractionDigits:2, maximumFractionDigits:2})}</b> €</td>
+        </tr>
+        <tr class="total-profit-row">
+            <td>📈 Сукупний річний дохід:</td>
+            <td><b>${Math.round(totalProfitUAH).toLocaleString('uk-UA')}</b> грн + <b>${greenTariffIncome.toLocaleString('uk-UA', {minimumFractionDigits:2, maximumFractionDigits:2})}</b> €</td>
+        </tr>
+    </table>`;
+                    
+                    // Формуємо таблицю окупності
+                    resultHTML += `
+    <table class="result-table roi-table">
+        <caption>📈 Окупність інвестицій</caption>
+        <tr>
+            <td>💼 Вартість системи:</td>
+            <td><b>${totalInstallationCost.toLocaleString('uk-UA')}</b> €</td>
+        </tr>
+        <tr>
+            <td>💶 Річний дохід:</td>
+            <td><b>${totalProfitEUR.toLocaleString('uk-UA', {minimumFractionDigits:2, maximumFractionDigits:2})}</b> €</td>
+        </tr>
+        <tr>
+            <td>⏱️ Термін окупності:</td>
+            <td><b>${paybackPeriod === Infinity ? '∞' : paybackPeriod.toFixed(1)}</b> років</td>
+        </tr>
+    </table>`;
+                    
+                    // Формуємо місячну таблицю
+                    resultHTML += `
+    <table class="result-table monthly-table">
+        <caption>📅 Місячні показники</caption>
+        <tr class="table-header">
+            <th>Міс</th>
+            <th>Генерація</th>
+            <th>Продаж</th>
+            <th>Власне</th>
+            <th>Зелений тариф</th>
+            <th>З мережі</th>
+        </tr>`;
+                    
+                    for (let i = 0; i < 12; ++i) {
+                        resultHTML += `
+        <tr>
+            <td>${MONTHS_UA[i].slice(0,3)}</td>
+            <td>☀️ ${Math.round(monthlyGeneration[i])}</td>
+            <td>👥 ${Math.round(consumerUsedMonthly[i])}</td>
+            <td>🏠 ${Math.round(ownUsedMonthly[i])}</td>
+            <td>🟢 ${Math.round(greenTariffMonthly[i])}</td>
+            <td>⚡ ${Math.round(gridTotalMonthly[i])}</td>
+        </tr>`;
+                    }
+                    
+                    resultHTML += `</table>`;
+                    
+                    // Додаємо використані фінансові параметри
+                    resultHTML += `
+    <div class="result-params">
+        <small><b>Використані фінансові параметри:</b> 
+        Зелений тариф: ${greenTariff.toFixed(2)} €/кВт·год, 
+        Податок: ${taxPercent}%, 
+        Тариф з мережі: ${domesticPrice.toFixed(2)} грн/кВт·год,
+        Тариф для споживача: ${consumerPrice.toFixed(2)} грн/кВт·год</small>
+    </div>`;
+                    
+                    displayResult(resultHTML);
+                    return;
+                }
+                
+                // Стандартна логіка, якщо продаж споживачам вимкнено
+                // Розрахунок для власного споживання
+                if (monthlyConsumption > 0) {
+                    const consumption = calculateConsumption(monthlyGeneration, monthlyConsumption);
+                    const annualConsumption = monthlyConsumption * 12;
+                    const coveragePercent = annualConsumption > 0 ? (consumption.usedForOwnTotal / annualConsumption) * 100 : 0;
+                    const savingsUAH = Math.round(consumption.usedForOwnTotal * domesticPrice);
+                    const remainingForSale = Math.max(0, totalGeneration - consumption.usedForOwnTotal);
+                    const remainingProfit = remainingForSale * greenTariff * (1 - taxRate);
+                    
+                    // Розрахунок окупності
+                    const costType = document.querySelector('input[name="costType"]:checked').value;
+                    let totalInstallationCost;
+
+                    if (costType === 'perKw') {
+                        // Розрахунок вартості по €/кВт
+                        totalInstallationCost = installationCostPerKW * powerKW;
+                    } else {
+                        // Використання введеної загальної вартості
+                        totalInstallationCost = parseFloat(document.getElementById('totalSystemCostInput').value) || (powerKW * 1000);
+                    }
+                    const eurRate = parseFloat(document.getElementById('euroRateInput').value) || 44; // Використовуємо введений курс або 44 за замовчуванням
+                    const savingsEUR = savingsUAH / eurRate;
+                    const annualProfitEUR = savingsEUR + remainingProfit;
+                    const paybackPeriod = totalInstallationCost / annualProfitEUR;
+                    
+                    resultHTML += `
     <table class="result-table consumption-table">
         <caption>🏠 Аналіз споживання</caption>
         <tr>
@@ -514,9 +752,9 @@ if (monthlyConsumption > 0) {
             <th>З мережі</th>
             <th>На продаж</th>
         </tr>`;
-        
-    for (let i = 0; i < 12; ++i) {
-        resultHTML += `
+                    
+                    for (let i = 0; i < 12; ++i) {
+                        resultHTML += `
         <tr>
             <td>${MONTHS_UA[i].slice(0,3)}</td>
             <td>☀️ ${Math.round(monthlyGeneration[i])}</td>
@@ -524,26 +762,26 @@ if (monthlyConsumption > 0) {
             <td>⚡ ${Math.round(consumption.gridMonthly[i])}</td>
             <td>🟢 ${Math.round(consumption.remainingMonthly[i])}</td>
         </tr>`;
-    }
-    
-    resultHTML += `</table>`;
-} else {
-    const profitAfterTax = totalGeneration * greenTariff * (1 - taxRate);
-    
-    // Розрахунок окупності
-    const costType = document.querySelector('input[name="costType"]:checked').value;
-    let totalInstallationCost;
+                    }
+                    
+                    resultHTML += `</table>`;
+                } else {
+                    const profitAfterTax = totalGeneration * greenTariff * (1 - taxRate);
+                    
+                    // Розрахунок окупності
+                    const costType = document.querySelector('input[name="costType"]:checked').value;
+                    let totalInstallationCost;
 
-    if (costType === 'perKw') {
-        // Розрахунок вартості по €/кВт
-        totalInstallationCost = installationCostPerKW * powerKW;
-    } else {
-        // Використання введеної загальної вартості
-        totalInstallationCost = parseFloat(document.getElementById('totalSystemCostInput').value) || (powerKW * 1000);
-    }
-    const paybackPeriod = totalInstallationCost / profitAfterTax;
-    
-    resultHTML += `
+                    if (costType === 'perKw') {
+                        // Розрахунок вартості по €/кВт
+                        totalInstallationCost = installationCostPerKW * powerKW;
+                    } else {
+                        // Використання введеної загальної вартості
+                        totalInstallationCost = parseFloat(document.getElementById('totalSystemCostInput').value) || (powerKW * 1000);
+                    }
+                    const paybackPeriod = totalInstallationCost / profitAfterTax;
+                    
+                    resultHTML += `
     <div class="result-profit">
         <div>💵 Дохід (після податків): <b>${profitAfterTax.toLocaleString('uk-UA', {minimumFractionDigits:2, maximumFractionDigits:2})} €</b></div>
     </div>
@@ -570,20 +808,20 @@ if (monthlyConsumption > 0) {
             <th>Місяць</th>
             <th>Генерація</th>
         </tr>`;
-        
-    for (let i = 0; i < 12; ++i) {
-        resultHTML += `
+                    
+                    for (let i = 0; i < 12; ++i) {
+                        resultHTML += `
         <tr>
             <td>${MONTHS_UA[i].slice(0,3)}</td>
             <td>☀️ ${Math.round(monthlyGeneration[i])}</td>
         </tr>`;
-    }
-    
-    resultHTML += `</table>`;
-}
-
-// Додаємо використані економічні параметри
-resultHTML += `
+                    }
+                    
+                    resultHTML += `</table>`;
+                }
+                
+                // Додаємо використані економічні параметри
+                resultHTML += `
 <div class="result-params">
     <small><b>Використані фінансові параметри:</b> 
     Зелений тариф: ${greenTariff.toFixed(2)} €/кВт·год, 
@@ -591,7 +829,7 @@ resultHTML += `
     Тариф для домогосподарств: ${domesticPrice.toFixed(2)} грн/кВт·год</small>
 </div>`;
 
-displayResult(resultHTML);
+                displayResult(resultHTML);
                 
             } catch (error) {
                 console.error("Помилка при обробці форми:", error);
