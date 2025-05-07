@@ -63,9 +63,9 @@ const MONTHS_UA = [
 ];
 
 // Технічні коефіцієнти системи
-const SYSTEM_EFFICIENCY = 0.8;      // ефективність системи (20% втрат)
+const SYSTEM_EFFICIENCY = 0.85;      // ефективність системи (15% втрат)
 const CHARGE_EFFICIENCY = 0.95;     // ефективність зарядки (5% втрат)
-const SAFETY_MARGIN = 1.2;          // запас потужності (20%)
+const SAFETY_MARGIN = 1.1;          // запас потужності (10%)
 
 // Ініціалізація сторінки
 document.addEventListener('DOMContentLoaded', function() {
@@ -273,10 +273,10 @@ function calculateSolarSystem(event) {
                     <td>Повне заряджання за 1 день</td>
                 </tr>
                 <tr>
-                    <td>Враховано втрати: 20% (система) + 5% (зарядка)</td>
+                    <td>Враховано втрати: 15% (система) + 5% (зарядка)</td>
                 </tr>
                 <tr>
-                    <td>Запас потужності: 20%</td>
+                    <td>Запас потужності: 10%</td>
                 </tr>
                 <tr>
                     <td>Дані інсоляції для регіону ${REGION_NAMES[region]}</td>
