@@ -207,35 +207,81 @@ function calculateSolarSystem(event) {
         // Формування результату
         const resultContent = document.getElementById('resultContent');
         resultContent.innerHTML = `
-            <div><i class="bi bi-sun-fill"></i> <strong>Сонячна автономна система ${REGION_NAMES[region]}</strong></div>
+            <div class="result-header">
+                <div class="result-title"><i class="bi bi-sun-fill"></i> Сонячна автономна система ${REGION_NAMES[region]}</div>
+            </div>
+
+            <table class="result-table consumption-table">
+                <caption><i class="bi bi-lightning-fill"></i> Енергетичний аналіз</caption>
+                <tr>
+                    <td>Пристрої:</td>
+                    <td>${devicesInfo.join(' + ')}</td>
+                </tr>
+                <tr>
+                    <td>Сумарне навантаження:</td>
+                    <td><b>${totalPowerConsumption.toFixed(1)} Вт</b></td>
+                </tr>
+                <tr>
+                    <td>Добова потреба:</td>
+                    <td><b>${dailyConsumptionWh.toFixed(1)} Вт·год</b></td>
+                </tr>
+            </table>
             
-            <div style="margin-top:0px;"><i class="bi bi-lightning-fill"></i> <strong>Енергетичний аналіз:</strong></div>
-            <div>- Пристрої: ${devicesInfo.join(' + ')}</div>
-            <div>- Сумарне навантаження: <strong>${totalPowerConsumption.toFixed(1)} Вт</strong></div>
-            <div>- Добова потреба: <strong>${dailyConsumptionWh.toFixed(1)} Вт·год</strong></div>
+            <table class="result-table consumption-table">
+                <caption><i class="bi bi-battery-charging"></i> Акумуляторний банк</caption>
+                <tr>
+                    <td>Ємність:</td>
+                    <td><b>${batteryCapacityWh.toFixed(1)} Вт·год</b></td>
+                </tr>
+                <tr>
+                    <td>Автономія:</td>
+                    <td>${cloudyDays} дні(-в) без сонця</td>
+                </tr>
+                <tr>
+                    <td>Глибина розряду:</td>
+                    <td>${maxDischargePercent}%</td>
+                </tr>
+            </table>
             
-            <div class="result-section"><i class="bi bi-battery-charging"></i> <strong>Акумуляторний банк:</strong></div>
-            <div>- Ємність: <strong>${batteryCapacityWh.toFixed(1)} Вт·год</strong></div>
-            <div>- Автономія: ${cloudyDays} дні(-в) без сонця</div>
-            <div>- Глибина розряду: ${maxDischargePercent}%</div>
-            <div class="result-section"><i class="bi bi-brightness-high"></i> <strong>Сонячні панелі:</strong></div>
-            <div class="result-section"><i class="bi bi-snow"></i> <strong>Зимовий режим</strong></div>
-            <div>- Потужність: <strong>${Math.round(solarPanelsPowerWinter)} Вт</strong></div>
-            <div>- Інсоляція: ${minInsolWinter} кВт·год/м²</div>
+            <table class="result-table solar-panels-table">
+                <caption><i class="bi bi-brightness-high"></i> Сонячні панелі</caption>
+                <tr class="table-header">
+                    <th>Режим</th>
+                    <th>Потужність</th>
+                    <th>Інсоляція</th>
+                </tr>
+                <tr>
+                    <td><i class="bi bi-snow"></i> Зимовий</td>
+                    <td><b>${Math.round(solarPanelsPowerWinter)} Вт</b></td>
+                    <td>${minInsolWinter} кВт·год/м²</td>
+                </tr>
+                <tr>
+                    <td><i class="bi bi-flower1"></i> Міжсезоння</td>
+                    <td><b>${Math.round(solarPanelsPowerSpring)} Вт</b></td>
+                    <td>${minInsolSpring} кВт·год/м²</td>
+                </tr>
+                <tr>
+                    <td><i class="bi bi-brightness-alt-high"></i> Літній</td>
+                    <td><b>${Math.round(solarPanelsPowerSummer)} Вт</b></td>
+                    <td>${minInsolSummer} кВт·год/м²</td>
+                </tr>
+            </table>
             
-            <div class="result-section"><i class="bi bi-flower1"></i> <strong>Міжсезоння</strong></div>
-            <div>- Потужність: <strong>${Math.round(solarPanelsPowerSpring)} Вт</strong></div>
-            <div>- Інсоляція: ${minInsolSpring} кВт·год/м²</div>
-            
-            <div class="result-section"><i class="bi bi-brightness-alt-high"></i> <strong>Літній режим</strong></div>
-            <div>- Потужність: <strong>${Math.round(solarPanelsPowerSummer)} Вт</strong></div>
-            <div>- Інсоляція: ${minInsolSummer} кВт·год/м²</div>
-            
-            <div class="result-section"><i class="bi bi-info-circle"></i> <strong>Технічні примітки:</strong></div>
-            <div>- Повне заряджання за 1 день</div>
-            <div>- Враховано втрати: 20% (система) + 5% (зарядка)</div>
-            <div>- Запас потужності: 20%</div>
-            <div>- Дані інсоляції для регіону ${REGION_NAMES[region]}</div>
+            <table class="result-table tech-notes-table">
+                <caption><i class="bi bi-info-circle"></i> Технічні примітки</caption>
+                <tr>
+                    <td>Повне заряджання за 1 день</td>
+                </tr>
+                <tr>
+                    <td>Враховано втрати: 20% (система) + 5% (зарядка)</td>
+                </tr>
+                <tr>
+                    <td>Запас потужності: 20%</td>
+                </tr>
+                <tr>
+                    <td>Дані інсоляції для регіону ${REGION_NAMES[region]}</td>
+                </tr>
+            </table>
         `;
         
         // Показуємо результат
