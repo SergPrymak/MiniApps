@@ -279,7 +279,7 @@
     background-color: #FFF8E6; /* Світло-оранжевий фон */
     border-left: 3px solid #F9A826; /* Оранжева ліва межа */
     padding: 8px 10px;
-    margin-top: 0;
+    margin-топ: 0;
     margin-bottom: 15px;
     border-radius: 4px;
     font-size: 0.85em;
@@ -310,7 +310,7 @@
 
 .result-subtitle {
     color: #555;
-    margin-top: 3px; /* Зменшено відступ зверху */
+    margin-топ: 3px; /* Зменшено відступ зверху */
 }
 
 .result-profit {
@@ -379,11 +379,11 @@
 }
 
 .result-params {
-    margin-top: 10px; /* Зменшено відступ зверху */
+    margin-топ: 10px; /* Зменшено відступ зверху */
     color: #777;
     font-size: 0.85em;
-    border-top: 1px dotted #ddd;
-    padding-top: 6px; /* Зменшено відступ зверху */
+    border-топ: 1px dotted #ddd;
+    padding-топ: 6px; /* Зменшено відступ зверху */
 }
 
 /* Стилі для таблиці окупності */
@@ -397,5 +397,215 @@
 }
 
 .roi-table tr:last-child td {
-    border-top: 2px solid #4CAF50;
+    border-топ: 2px solid #4CAF50;
+}
+
+/* Стилі для унікальної іконки заголовка SolarGenWizard */
+.custom-header-icon {
+    position: relative;
+    width: 50px;
+    height: 50px;
+    margin: 0 auto 10px;
+}
+
+/* Стилізація сонячних панелей (основний базовий елемент) */
+.panel-icon {
+    position: absolute;
+    font-size: 42px;
+    color: #0277BD;
+    top: 0;
+    left: 0;
+    opacity: 0.85;
+}
+
+/* Стилізація сонця (елемент зверху) */
+.sun-icon {
+    position: absolute;
+    font-size: 24px;
+    color: #F9A826;
+    top: -7px;
+    right: -7px;
+    transform: rotate(-15deg);
+    filter: drop-shadow(0 0 2px rgba(253, 216, 53, 0.5));
+}
+
+/* Стилізація графіка прибутку (елемент знизу) */
+.profit-icon {
+    position: absolute;
+    font-size: 20px;
+    color: #4CAF50;
+    bottom: -5px;
+    right: -7px;
+    background-color: white;
+    border-radius: 50%;
+    padding: 3px;
+    border: 1px solid #E0E0E0;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+}
+
+/* Приховуємо оригінальну іконку */
+.header-icon {
+    display: none;
+}
+
+/* Стилі для чекбоксу зеленого тарифу */
+.green-tariff-container {
+    margin-bottom: 0px;
+}
+
+/* Групування тарифу і податку */
+.tariff-tax-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0px; /* Зменшений відступ між полями */
+}
+
+.tariff-input-wrapper,
+.tax-input-wrapper {
+    margin-bottom: -13px; /* Зменшена відстань між елементами */
+}
+
+.checkbox-container {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 5px; /* Зменшений відступ внизу */
+    font-size: 14px;
+    color: #444;
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+    /* Важливо - завжди дозволяємо взаємодію з чекбоксом */
+    pointer-events: auto !important;
+}
+
+/* Змінюємо стиль для неактивного поля вводу */
+.disabled-field {
+    opacity: 0.5;
+}
+
+/* Блокуємо події тільки для конкретних елементів, а не для всього контейнера */
+.disabled-field input:not([type="checkbox"]) {
+    pointer-events: none;
+}
+
+/* Стилі для інформаційних повідомлень */
+.info-message {
+    padding: 10px;
+    border-radius: 5px;
+    margin: 10px 0 15px;
+    font-size: 0.9em;
+}
+
+.warning-message {
+    background-color: #FFF3CD;
+    border-left: 3px solid #FFC107;
+    color: #856404;
+}
+
+.warning-message .bi {
+    color: #FFC107;
+}
+
+.error-message {
+    background-color: #F8D7DA;
+    border-left: 3px solid #DC3545;
+    color: #721C24;
+}
+
+.error-message .bi {
+    color: #DC3545;
+}
+
+/* Стилі для контейнера курсу валют */
+.exchange-rate-container {
+    margin-bottom: 15px;
+}
+
+.exchange-input-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.update-rate-btn {
+    background-color: #F9A826;  /* Такий же колір як у кнопки "Розрахувати" */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 6px 10px 5px 15px;
+    margin: 2px 8px 20px 4px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.update-rate-btn:hover {
+    background-color: #E08E1C;  /* Такий же колір при наведенні як у кнопки "Розрахувати" */
+}
+
+.rate-status {
+    font-size: 12px;
+    margin-top: -13px;
+    line-height: 1.2;
+}
+
+.rate-status.loading {
+    color: #0275d8;
+}
+
+.rate-status.success {
+    color: #5cb85c;
+}
+
+.rate-status.error {
+    color: #d9534f;
+}
+
+.rate-status i {
+    margin-right: 4px;
+}
+
+/* Стилі для вибору методу розрахунку вартості */
+.cost-selection-container {
+    margin-bottom: 15px;
+}
+
+.cost-type-selector {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 10px;
+}
+
+.radio-option {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 14px;
+    color: #444;
+    cursor: pointer;
+}
+
+.radio-option input[type="radio"] {
+    cursor: pointer;
+}
+
+.radio-option label {
+    cursor: pointer;
+    user-select: none;
+}
+
+.secondary-label {
+    font-size: 0.9em;
+    margin-top: 5px;
+}
+
+#costPerKwContainer, #totalCostContainer {
+    margin-top: 5px;
+}
+
+/* Стиль для неврахованих даних */
+.not-applicable {
+    color: #999;
+    font-style: italic;
 }
