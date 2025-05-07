@@ -49,6 +49,9 @@
                 
                 <label class="form-label"><i class="info-icon bi bi-cash-coin"></i>Ціна для домогосподарств (грн/кВт·год):</label>
                 <input type="number" class="form-input" id="domesticPriceInput" min="0.01" step="0.01" value="4.32">
+                
+                <label class="form-label"><i class="info-icon bi bi-currency-dollar"></i>Вартість обладнання (€/кВт):</label>
+                <input type="number" class="form-input" id="installationCostInput" min="0" step="10" value="800">
             </div>
 
             <button type="submit" class="calc-button"><i class="bi bi-calculator"></i> Розрахувати</button>
@@ -316,10 +319,11 @@
                 const taxPercent = parseFloat(taxInputElement.value.replace(',', '.')) || PDV * 100;
                 const taxRate = taxPercent / 100;
                 const domesticPrice = parseFloat(domesticPriceInputElement.value.replace(',', '.')) || DOMESTIC_PRICE;
+                const installationCostPerKW = parseFloat(document.getElementById('installationCostInput').value.replace(',', '.')) || 800;
                 
                 console.log("Вхідні дані:", { 
                     regionCode, powerKW, monthlyConsumption,
-                    greenTariff, taxRate, domesticPrice 
+                    greenTariff, taxRate, domesticPrice, installationCostPerKW 
                 });
                 
                 // Валідація введених даних
@@ -368,6 +372,13 @@ if (monthlyConsumption > 0) {
     const remainingForSale = Math.max(0, totalGeneration - consumption.usedForOwnTotal);
     const remainingProfit = remainingForSale * greenTariff * (1 - taxRate);
     
+    // Розрахунок окупності
+    const totalInstallationCost = installationCostPerKW * powerKW;
+    const eurRate = 40; // Приблизний курс євро до гривні
+    const savingsEUR = savingsUAH / eurRate;
+    const annualProfitEUR = savingsEUR + remainingProfit;
+    const paybackPeriod = totalInstallationCost / annualProfitEUR;
+    
     resultHTML += `
     <table class="result-table consumption-table">
         <caption>🏠 Аналіз споживання</caption>
@@ -390,6 +401,22 @@ if (monthlyConsumption > 0) {
         <tr>
             <td>💵 Дохід (після податків):</td>
             <td><b>${remainingProfit.toLocaleString('uk-UA', {minimumFractionDigits:2, maximumFractionDigits:2})} €</b></td>
+        </tr>
+    </table>
+    
+    <table class="result-table roi-table">
+        <caption>📈 Окупність інвестицій</caption>
+        <tr>
+            <td>💼 Вартість системи:</td>
+            <td><b>${totalInstallationCost.toLocaleString('uk-UA')}</b> €</td>
+        </tr>
+        <tr>
+            <td>💶 Річний дохід:</td>
+            <td><b>${annualProfitEUR.toLocaleString('uk-UA', {minimumFractionDigits:2, maximumFractionDigits:2})}</b> €</td>
+        </tr>
+        <tr>
+            <td>⏱️ Термін окупності:</td>
+            <td><b>${paybackPeriod.toFixed(1)}</b> років</td>
         </tr>
     </table>
     
@@ -417,10 +444,31 @@ if (monthlyConsumption > 0) {
     resultHTML += `</table>`;
 } else {
     const profitAfterTax = totalGeneration * greenTariff * (1 - taxRate);
+    
+    // Розрахунок окупності
+    const totalInstallationCost = installationCostPerKW * powerKW;
+    const paybackPeriod = totalInstallationCost / profitAfterTax;
+    
     resultHTML += `
     <div class="result-profit">
         <div>💵 Дохід (після податків): <b>${profitAfterTax.toLocaleString('uk-UA', {minimumFractionDigits:2, maximumFractionDigits:2})} €</b></div>
     </div>
+    
+    <table class="result-table roi-table">
+        <caption>📈 Окупність інвестицій</caption>
+        <tr>
+            <td>💼 Вартість системи:</td>
+            <td><b>${totalInstallationCost.toLocaleString('uk-UA')}</b> €</td>
+        </tr>
+        <tr>
+            <td>💶 Річний дохід:</td>
+            <td><b>${profitAfterTax.toLocaleString('uk-UA', {minimumFractionDigits:2, maximumFractionDigits:2})}</b> €</td>
+        </tr>
+        <tr>
+            <td>⏱️ Термін окупності:</td>
+            <td><b>${paybackPeriod.toFixed(1)}</b> років</td>
+        </tr>
+    </table>
     
     <table class="result-table monthly-table">
         <caption>📅 Місячні показники</caption>
