@@ -49,8 +49,7 @@ const SPECIAL_PIXEL_DENSITY = {
 
 // Отримання ширини в пікселях для заданої роздільної здатності
 function getWidthInPixels(mp) {
-    const resolution = RESOLUTION_MAP[mp];
-    return parseInt(resolution.split('x')[0]);
+    return RESOLUTION_MAP[mp];
 }
 
 // Розрахунок фокусної відстані
