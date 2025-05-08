@@ -115,6 +115,22 @@
                 <div class="radio-button" data-value="aluminum">Алюміній (Al)</div>
             </div>
             <input type="hidden" id="metalType" value="copper">
+            
+            <label class="form-label"><i class="info-icon bi bi-diagram-3"></i>Тип кабелю:</label>
+            <div class="radio-group">
+                <div class="radio-button active" data-value="standard">Звичайний</div>
+                <div class="radio-button" data-value="twisted">Вита пара</div>
+            </div>
+            <input type="hidden" id="cableType" value="standard">
+            
+            <div id="pairModeGroup" style="display:none;">
+                <label class="form-label"><i class="info-icon bi bi-distribute-vertical"></i>Передача живлення:</label>
+                <div class="radio-group">
+                    <div class="radio-button active" data-value="single">По одній парі</div>
+                    <div class="radio-button" data-value="double">По двом парам</div>
+                </div>
+                <input type="hidden" id="pairMode" value="single">
+            </div>
 
             <label class="form-label"><i class="info-icon bi bi-lightning"></i>Тип напруги:</label>
             <div class="radio-group">
@@ -267,6 +283,15 @@
                                 document.getElementById('diameterInputGroup').style.display = 'block';
                             }
                         }
+                        
+                        // Додаємо логіку для типу кабелю
+                        if (hiddenInput.id === 'cableType') {
+                            if (button.dataset.value === 'twisted') {
+                                document.getElementById('pairModeGroup').style.display = 'block';
+                            } else {
+                                document.getElementById('pairModeGroup').style.display = 'none';
+                            }
+                        }
                     });
                 });
             });
@@ -314,7 +339,24 @@
                 
                 // Розрахунок опору кабелю
                 const resistivity = metalType === 'copper' ? resistivityCopper : resistivityAluminum;
-                const resistance = (resistivity * cableLength * 2) / section; // *2 для обох жил (туди і назад)
+                
+                // Коефіцієнт множення для довжини кабелю
+                let lengthMultiplier = 2; // Стандартно 2 для туди і назад
+                
+                // Коефіцієнт для врахування кількості пар
+                let pairFactor = 1;
+                
+                // Перевіряємо тип кабелю та режим передачі живлення
+                const cableType = document.getElementById('cableType').value;
+                if (cableType === 'twisted') {
+                    const pairMode = document.getElementById('pairMode').value;
+                    if (pairMode === 'double') {
+                        // При використанні двох пар, опір зменшується вдвічі (паралельне з'єднання)
+                        pairFactor = 0.5;
+                    }
+                }
+                
+                const resistance = (resistivity * cableLength * lengthMultiplier) / section * pairFactor; 
                 
                 // Розрахунок втрат з урахуванням AC/DC
                 const voltageLoss = current * resistance;
@@ -334,22 +376,269 @@
                     document.getElementById('currentResult').textContent += ` (при cos φ = ${cosPhi})`;
                 }
                 
+                // Розрахунок напруги на навантаженні
+                const loadVoltage = voltage - voltageLoss;
+                
+                // Додаємо рядок з напругою на навантаженні до таблиці результатів, якщо його ще немає
+                let loadVoltageRow = document.getElementById('loadVoltageRow');
+                if (!loadVoltageRow) {
+                    const resultTable = document.getElementById('cableLossTable').getElementsByTagName('tbody')[0];
+                    loadVoltageRow = resultTable.insertRow();
+                    loadVoltageRow.id = 'loadVoltageRow';
+                    const cell1 = loadVoltageRow.insertCell(0);
+                    const cell2 = loadVoltageRow.insertCell(1);
+                    cell1.textContent = 'Напруга на навантаженні';
+                    cell2.id = 'loadVoltageResult';
+                }
+                
+                // Оновлюємо значення напруги на навантаженні
+                const voltageLossPercent = (voltageLoss / voltage) * 100;
+                document.getElementById('loadVoltageResult').textContent = `${loadVoltage.toFixed(2)} В (${(100 - voltageLossPercent).toFixed(1)}% від вхідної)`;
+                
+                // Перевірка на некоректні значення
+                let hasWarnings = false;
+                let resultSummary = `<div class="result-summary">`;
+                resultSummary += `<h3><i class="bi bi-info-circle"></i> Результат розрахунку</h3>`;
+                
+                // Створюємо список перевірок
+                resultSummary += `<div class="result-checks">`;
+                
+                // Перевірка втрат потужності
+                if (powerLossPercent > 10) {
+                    hasWarnings = true;
+                    resultSummary += `<div class="check-item danger">
+                        <i class="bi bi-exclamation-triangle-fill"></i>
+                        <div class="check-text">
+                            <strong>Критичні втрати потужності: ${powerLossPercent.toFixed(1)}%</strong>
+                            <span>Необхідно значно збільшити переріз кабелю або зменшити його довжину</span>
+                        </div>
+                    </div>`;
+                } else if (powerLossPercent > 5) {
+                    hasWarnings = true;
+                    resultSummary += `<div class="check-item warning">
+                        <i class="bi bi-exclamation-triangle"></i>
+                        <div class="check-text">
+                            <strong>Підвищені втрати потужності: ${powerLossPercent.toFixed(1)}%</strong>
+                            <span>Рекомендується збільшити переріз кабелю</span>
+                        </div>
+                    </div>`;
+                } else {
+                    resultSummary += `<div class="check-item success">
+                        <i class="bi bi-check-circle"></i>
+                        <div class="check-text">
+                            <strong>Втрати потужності в нормі: ${powerLossPercent.toFixed(1)}%</strong>
+                            <span>Менше 5% від загальної потужності</span>
+                        </div>
+                    </div>`;
+                }
+                
+                // Перевірка падіння напруги
+                if (voltageLossPercent > 15) {
+                    hasWarnings = true;
+                    resultSummary += `<div class="check-item danger">
+                        <i class="bi bi-exclamation-triangle-fill"></i>
+                        <div class="check-text">
+                            <strong>Критичне падіння напруги: ${voltageLossPercent.toFixed(1)}%</strong>
+                            <span>Напруга на навантаженні: ${loadVoltage.toFixed(2)} В, що може призвести до некоректної роботи обладнання</span>
+                        </div>
+                    </div>`;
+                } else if (voltageLossPercent > 5) {
+                    hasWarnings = true;
+                    resultSummary += `<div class="check-item warning">
+                        <i class="bi bi-exclamation-triangle"></i>
+                        <div class="check-text">
+                            <strong>Значне падіння напруги: ${voltageLossPercent.toFixed(1)}%</strong>
+                            <span>Напруга на навантаженні: ${loadVoltage.toFixed(2)} В</span>
+                        </div>
+                    </div>`;
+                } else {
+                    resultSummary += `<div class="check-item success">
+                        <i class="bi bi-check-circle"></i>
+                        <div class="check-text">
+                            <strong>Падіння напруги в нормі: ${voltageLossPercent.toFixed(1)}%</strong>
+                            <span>Напруга на навантаженні: ${loadVoltage.toFixed(2)} В</span>
+                        </div>
+                    </div>`;
+                }
+                
+                // Перевірка опору кабелю для безпеки
+                const maxSafeResistance = 100; // Ом
+                if (resistance > maxSafeResistance) {
+                    hasWarnings = true;
+                    resultSummary += `<div class="check-item warning">
+                        <i class="bi bi-exclamation-triangle"></i>
+                        <div class="check-text">
+                            <strong>Високий опір кабелю: ${resistance.toFixed(1)} Ом</strong>
+                            <span>Може призвести до нестабільності роботи навантаження</span>
+                        </div>
+                    </div>`;
+                }
+                
+                // Перевірка струму для безпеки кабелю 
+                const maxCurrentMap = {
+                    "0.5": 2, // мм²: A
+                    "0.75": 4,
+                    "1.0": 6,
+                    "1.5": 10,
+                    "2.5": 16,
+                    "4.0": 25,
+                    "6.0": 32,
+                    "10.0": 50,
+                    "16.0": 80
+                };
+                
+                // Знайдемо найближчий менший переріз з таблиці
+                let maxCurrent = 1; // A
+                for (const [sectionStr, currentVal] of Object.entries(maxCurrentMap)) {
+                    const sectionVal = parseFloat(sectionStr);
+                    if (section >= sectionVal) {
+                        maxCurrent = currentVal;
+                    } else {
+                        break;
+                    }
+                }
+                
+                if (current > maxCurrent * 1.5) {
+                    hasWarnings = true;
+                    resultSummary += `<div class="check-item danger">
+                        <i class="bi bi-exclamation-triangle-fill"></i>
+                        <div class="check-text">
+                            <strong>Небезпечно високий струм: ${current.toFixed(1)} A</strong>
+                            <span>Перевищує безпечне значення для перерізу ${section} мм². Ризик перегріву та пожежі!</span>
+                        </div>
+                    </div>`;
+                } else if (current > maxCurrent) {
+                    hasWarnings = true;
+                    resultSummary += `<div class="check-item warning">
+                        <i class="bi bi-exclamation-triangle"></i>
+                        <div class="check-text">
+                            <strong>Підвищений струм: ${current.toFixed(1)} A</strong>
+                            <span>Рекомендований максимум для перерізу ${section} мм² становить ${maxCurrent} A</span>
+                        </div>
+                    </div>`;
+                }
+                
+                // Рекомендація щодо перерізу
+                let recommendedSection = section;
+                if (hasWarnings) {
+                    for (const [sectionStr, currentVal] of Object.entries(maxCurrentMap)) {
+                        const sectionVal = parseFloat(sectionStr);
+                        if (currentVal >= current * 1.25) {
+                            recommendedSection = sectionVal;
+                            break;
+                        }
+                    }
+                    
+                    if (recommendedSection > section) {
+                        resultSummary += `<div class="check-item info">
+                            <i class="bi bi-lightbulb"></i>
+                            <div class="check-text">
+                                <strong>Рекомендований переріз: ${recommendedSection} мм²</strong>
+                                <span>Для поточного навантаження і довжини кабелю</span>
+                            </div>
+                        </div>`;
+                    }
+                } else {
+                    resultSummary += `<div class="check-item success">
+                        <i class="bi bi-check-circle"></i>
+                        <div class="check-text">
+                            <strong>Переріз кабелю відповідає навантаженню</strong>
+                            <span>Поточний переріз ${section} мм² є достатнім</span>
+                        </div>
+                    </div>`;
+                }
+                
+                resultSummary += `</div>`; // Закриваємо .result-checks
+                resultSummary += `</div>`; // Закриваємо .result-summary
+                
+                // Додаємо CSS стилі для результатів
+                if (!document.getElementById('result-styles')) {
+                    const styleElement = document.createElement('style');
+                    styleElement.id = 'result-styles';
+                    styleElement.textContent = `
+                        .result-summary {
+                            border-radius: 8px;
+                            background-color: #f8fbff;
+                            padding: 15px;
+                            margin-bottom: 20px;
+                            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+                        }
+                        .result-summary h3 {
+                            margin-top: 0;
+                            color: #37474F;
+                            font-size: 18px;
+                            margin-bottom: 15px;
+                        }
+                        .result-checks {
+                            display: flex;
+                            flex-direction: column;
+                            gap: 10px;
+                        }
+                        .check-item {
+                            display: flex;
+                            padding: 12px;
+                            border-radius: 6px;
+                            align-items: flex-start;
+                        }
+                        .check-item i {
+                            font-size: 20px;
+                            margin-right: 12px;
+                            margin-top: 2px;
+                        }
+                        .check-text {
+                            display: flex;
+                            flex-direction: column;
+                        }
+                        .check-text strong {
+                            margin-bottom: 4px;
+                        }
+                        .check-text span {
+                            font-size: 14px;
+                            opacity: 0.9;
+                        }
+                        .check-item.success {
+                            background-color: #E8F5E9;
+                            color: #2E7D32;
+                        }
+                        .check-item.success i {
+                            color: #2E7D32;
+                        }
+                        .check-item.warning {
+                            background-color: #FFF8E1;
+                            color: #F57F17;
+                        }
+                        .check-item.warning i {
+                            color: #F57F17;
+                        }
+                        .check-item.danger {
+                            background-color: #FFEBEE;
+                            color: #C62828;
+                        }
+                        .check-item.danger i {
+                            color: #C62828;
+                        }
+                        .check-item.info {
+                            background-color: #E3F2FD;
+                            color: #1565C0;
+                        }
+                        .check-item.info i {
+                            color: #1565C0;
+                        }
+                        .result-table {
+                            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+                        }
+                        .result-table th, .result-table td {
+                            padding: 12px 15px;
+                        }
+                        .result-table tr:nth-child(even) {
+                            background-color: #f9f9f9;
+                        }
+                    `;
+                    document.head.appendChild(styleElement);
+                }
+                
                 // Відображення результатів
                 document.getElementById('cableLossResult').style.display = 'block';
-                
-                // Додаткова інформація залежно від значень
-                let resultSummary = `<p><i class="bi bi-info-circle"></i> <strong>Результат розрахунку:</strong></p>`;
-                
-                if (powerLossPercent > 5) {
-                    resultSummary += `<p><i class="bi bi-exclamation-triangle" style="color: #E6704B;"></i> <strong style="color: #E6704B;">Втрати потужності перевищують 5%!</strong> Рекомендується збільшити переріз кабелю.</p>`;
-                } else {
-                    resultSummary += `<p><i class="bi bi-check-circle" style="color: #43A047;"></i> <strong style="color: #43A047;">Втрати потужності в межах норми.</strong></p>`;
-                }
-                
-                if ((voltage - voltageLoss) < voltage * 0.9) {
-                    resultSummary += `<p><i class="bi bi-exclamation-triangle" style="color: #E6704B;"></i> <strong style="color: #E6704B;">Значне падіння напруги!</strong> На кінці кабелю напруга становитиме ${(voltage - voltageLoss).toFixed(2)} В.</p>`;
-                }
-                
                 document.getElementById('cableLossResultContent').innerHTML = resultSummary;
             });
         });
