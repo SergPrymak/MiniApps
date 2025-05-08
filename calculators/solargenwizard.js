@@ -474,7 +474,7 @@ document.addEventListener('DOMContentLoaded', function() {
     <caption>📅 Місячні показники</caption>
     <tr class="table-header">
         <th>Міс</th>
-        <th>Генерація</th>
+        <th>Сонце </th>
         <th>Продаж</th>
         <th>Власне</th>
         <th>Зелений тариф</th>
