@@ -304,7 +304,7 @@ document.addEventListener('DOMContentLoaded', function() {
             // Базовий HTML результату
             let resultHTML = `
 <div class="result-header">
-<div class="result-title">${REGION_NAMES[regionCode] || regionCode} - ${powerKW} кВт по</div>
+<div class="result-title">${REGION_NAMES[regionCode] || regionCode} - ${powerKW} кВт по панелям</div>
 <div class="result-subtitle">🔋 Річна генерація: ${Math.round(totalGeneration).toLocaleString('uk-UA')} кВт·год</div>
 </div>`;
 
