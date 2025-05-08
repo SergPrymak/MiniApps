@@ -7,14 +7,19 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.2/font/bootstrap-icons.css">
     <link rel="stylesheet" href="miniapps-common.css">
     <link rel="stylesheet" href="solarwizard-styles.css">
+    <style>
+        /* Приведення розміру іконок до такого ж як в index.html */
+        .header .menu-icon {
+            font-size: 30px;
+        }
+    </style>
 </head>
 <body>
     <a href="../index.html" class="back-button">← Повернутися до меню</a>
     <div class="header">
-        <div class="custom-header-icon">
-            <i class="bi bi-grid-3x3 panel-icon"></i>
-            <i class="bi bi-sun sun-icon"></i>
-            <i class="bi bi-graph-up-arrow profit-icon"></i>
+        <div class="menu-item solar-wizard-item">
+            <i class="bi bi-graph-up-arrow menu-icon"></i>
+            <!-- Інші іконки видалено для акценту на основній іконці -->
         </div>
         <h1>SolarGenWizard</h1>
         <p>Прогнозування генерації сонячної електростанції та економічної вигоди</p>
