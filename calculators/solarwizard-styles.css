@@ -25,6 +25,8 @@
   --space-sm: 5px;
   --space-md: 10px;
   --space-lg: 15px;
+  --section-border: #EAEDF2;
+  --section-bg: #FBFCFD;
 }
 
 /* Стилі для рядків пристроїв */
@@ -311,7 +313,7 @@
 }
 
 .auto-power-info .bi {
-  color: var(--primary-color);
+  color: var (--primary-color);
 }
 
 /* Таблиці результатів */
@@ -473,6 +475,8 @@
   display: flex;
   flex-direction: column;
   gap: 0;
+  margin-top: 5px;
+  margin-left: 5px;
 }
 
 .tariff-input-wrapper,
@@ -492,6 +496,7 @@
   border-radius: 4px;
   transition: background-color 0.2s;
   pointer-events: auto !important;
+  margin-bottom: 10px;
 }
 
 .disabled-field {
@@ -571,6 +576,7 @@
   display: flex;
   gap: 15px;
   margin-bottom: var(--space-md);
+  margin-bottom: 10px;
 }
 
 .radio-option {
@@ -640,4 +646,67 @@
 
 .tips-section li {
   margin: 2px 0;
+}
+
+/* Стандартизація форми */
+.form-group {
+  margin-bottom: 0px;
+  position: relative;
+}
+
+.form-group .form-label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: 500;
+  color: var(--text-primary);
+  font-size: 14px;
+}
+
+.input-flex-row {
+  display: flex;
+  gap: 15px;
+  margin-top: 10px;
+}
+
+.half-width {
+  width: 48%;
+}
+
+/* Стилі секцій опцій */
+.options-section {
+  margin-bottom: 10px;
+  padding: 12px;
+  border-radius: var(--radius-md);
+  background-color: var(--section-bg);
+  border: 1px solid var(--section-border);
+}
+
+.green-tariff-section {
+  border-left: 3px solid var(--primary-color);
+}
+
+.consumer-sale-section {
+  border-left: 3px solid var(--secondary-color);
+}
+
+/* Розділення блоків в розширених параметрах */
+#advancedParams > .form-group {
+  margin-top: 0px;
+}
+
+.calc-button {
+  margin-top: 20px;
+  width: 100%;
+  padding: 12px;
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.calc-button:hover {
+  background-color: var(--primary-hover);
 }
