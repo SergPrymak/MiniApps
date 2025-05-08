@@ -179,7 +179,7 @@
 
             <div id="diameterInputGroup" style="display:none;">
                 <label class="form-label"><i class="info-icon bi bi-arrows-angle-expand"></i>Діаметр кабелю (мм):</label>
-                <input type="number" class="form-input" id="diameter" min="0.5" step="0.1" value="1.8" required>
+                <input type="number" class="form-input" id="diameter" min="0.5" step="0.01" value="1.8" required>
             </div>
 
             <label class="form-label"><i class="info-icon bi bi-rulers"></i>Довжина кабелю (м):</label>
@@ -274,7 +274,54 @@
                             }
                         }
                         
+                        // Додаємо логіку для типу кабелю
+                        if (hiddenInput.id === 'cableType') {
+                            if (button.dataset.value === 'twisted') {
+                                document.getElementById('pairModeGroup').style.display = 'block';
+                                
+                                // Для витої пари автоматично вибираємо введення діаметру жили
+                                document.getElementById('sectionInputGroup').style.display = 'none';
+                                document.getElementById('diameterInputGroup').style.display = 'block';
+                                
+                                // Змінюємо значення діаметру за замовчуванням на 0.5 мм
+                                document.getElementById('diameter').value = 0.5;
+                                
+                                // Встановлюємо відповідне значення прихованого поля
+                                document.getElementById('sectionType').value = 'diameter';
+                                
+                                // Також робимо активною відповідну радіо-кнопку
+                                document.querySelectorAll('[data-value="diameter"]').forEach(btn => {
+                                    btn.classList.add('active');
+                                    btn.closest('.radio-group').querySelectorAll('.radio-button').forEach(otherBtn => {
+                                        if (otherBtn !== btn) otherBtn.classList.remove('active');
+                                    });
+                                });
+                            } else {
+                                document.getElementById('pairModeGroup').style.display = 'none';
+                                
+                                // Для стандартного кабелю залишаємо поточний вибір користувача
+                                const sectionType = document.getElementById('sectionType').value;
+                                if (sectionType === 'section') {
+                                    document.getElementById('sectionInputGroup').style.display = 'block';
+                                    document.getElementById('diameterInputGroup').style.display = 'none';
+                                } else {
+                                    document.getElementById('sectionInputGroup').style.display = 'none';
+                                    document.getElementById('diameterInputGroup').style.display = 'block';
+                                }
+                            }
+                        }
+                        
                         if (hiddenInput.id === 'sectionType') {
+                            const cableType = document.getElementById('cableType').value;
+                            
+                            // Якщо вибрана вита пара, завжди використовуємо діаметр жили
+                            if (cableType === 'twisted') {
+                                document.getElementById('sectionInputGroup').style.display = 'none';
+                                document.getElementById('diameterInputGroup').style.display = 'block';
+                                return;
+                            }
+                            
+                            // Для звичайних кабелів - стандартна логіка
                             if (button.dataset.value === 'section') {
                                 document.getElementById('sectionInputGroup').style.display = 'block';
                                 document.getElementById('diameterInputGroup').style.display = 'none';
@@ -283,18 +330,26 @@
                                 document.getElementById('diameterInputGroup').style.display = 'block';
                             }
                         }
-                        
-                        // Додаємо логіку для типу кабелю
-                        if (hiddenInput.id === 'cableType') {
-                            if (button.dataset.value === 'twisted') {
-                                document.getElementById('pairModeGroup').style.display = 'block';
-                            } else {
-                                document.getElementById('pairModeGroup').style.display = 'none';
-                            }
-                        }
                     });
                 });
             });
+            
+            // Додамо перевірку початкового стану типу кабелю
+            if (document.getElementById('cableType').value === 'twisted') {
+                document.getElementById('pairModeGroup').style.display = 'block';
+                document.getElementById('sectionInputGroup').style.display = 'none';
+                document.getElementById('diameterInputGroup').style.display = 'block';
+                document.getElementById('diameter').value = 0.5;
+                document.getElementById('sectionType').value = 'diameter';
+                
+                // Робимо активною відповідну радіо-кнопку
+                document.querySelectorAll('[data-value="diameter"]').forEach(btn => {
+                    btn.classList.add('active');
+                    btn.closest('.radio-group').querySelectorAll('.radio-button').forEach(otherBtn => {
+                        if (otherBtn !== btn) otherBtn.classList.remove('active');
+                    });
+                });
+            }
             
             // Обробник форми калькулятора втрат у кабелі
             document.getElementById('cableLossCalcForm').addEventListener('submit', function(e) {
