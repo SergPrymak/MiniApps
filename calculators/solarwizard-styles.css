@@ -460,7 +460,11 @@
 }
 
 .header-icon {
-  display: none;
+  font-size: 2rem;
+  color: #FFA500; /* або інший колір, що відповідає стилю додатку */
+  margin-bottom: 10px;
+  display: block;
+  text-align: center;
 }
 
 /* Групи чекбоксів і параметрів */
@@ -709,4 +713,10 @@
 
 .calc-button:hover {
   background-color: var(--primary-hover);
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 20px;
+  padding: 10px;
 }
