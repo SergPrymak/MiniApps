@@ -22,30 +22,37 @@
 
     <div class="main-content">
         <form id="solarWizardForm" autocomplete="off">
-            <label class="form-label"><i class="info-icon bi bi-geo-alt"></i>Регіон:</label>
-            <select class="form-input" id="regionSelect">
-                <!-- Буде заповнено динамічно -->
-            </select>
-            
-            <label class="form-label"><i class="info-icon bi bi-lightning-charge"></i>Потужність панелей(кВт):</label>
-            <div class="power-input-container">
-                <input type="number" class="form-input" id="powerInput" min="1" step="0.1" value="10" required>
-                <div class="auto-power-checkbox">
-                    <input type="checkbox" id="autoPowerCheckbox">
-                    <label for="autoPowerCheckbox">Автопідбір</label>
-                </div>
+            <div class="form-group">
+                <label class="form-label"><i class="info-icon bi bi-geo-alt"></i>Регіон:</label>
+                <select class="form-input" id="regionSelect">
+                    <!-- Буде заповнено динамічно -->
+                </select>
             </div>
-            <div id="powerAutoInfo" class="auto-power-info" style="display: none;"></div>
             
-            <label class="form-label"><i class="info-icon bi bi-house-door"></i>Власне споживання(кВт·год/міс, необов'язково):</label>
-            <input type="number" class="form-input" id="consumptionInput" min="0" step="1" value="300">
+            <div class="form-group">
+                <label class="form-label"><i class="info-icon bi bi-lightning-charge"></i>Потужність панелей(кВт):</label>
+                <div class="power-input-container">
+                    <input type="number" class="form-input" id="powerInput" min="1" step="0.1" value="10" required>
+                    <div class="auto-power-checkbox">
+                        <input type="checkbox" id="autoPowerCheckbox">
+                        <label for="autoPowerCheckbox">Автопідбір</label>
+                    </div>
+                </div>
+                <div id="powerAutoInfo" class="auto-power-info" style="display: none;"></div>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label"><i class="info-icon bi bi-house-door"></i>Власне споживання(кВт·год/міс, необов'язково):</label>
+                <input type="number" class="form-input" id="consumptionInput" min="0" step="1" value="300">
+            </div>
             
             <div class="advanced-params-header">
                 <a href="#" id="toggleAdvancedParams"><i class="bi bi-gear"></i> Розширені параметри</a>
             </div>
             
             <div id="advancedParams" style="display: none;">
-                <div class="green-tariff-container">
+                <!-- Зелений тариф секція -->
+                <div class="options-section green-tariff-section">
                     <div class="checkbox-container">
                         <input type="checkbox" id="useGreenTariffCheckbox" checked>
                         <label for="useGreenTariffCheckbox">Продаж по "Зеленому тарифу"</label>
@@ -53,12 +60,12 @@
                     
                     <div class="tariff-tax-group">
                         <div class="input-flex-row">
-                            <div class="tariff-input-wrapper">
-                                <label class="form-label"><i class="info-icon bi bi-currency-euro"></i>Зелений тариф (€/кВт·год):</label>
+                            <div class="form-group half-width">
+                                <label class="form-label"><i class="info-icon bi bi-currency-euro"></i>Тариф в €:</label>
                                 <input type="number" class="form-input" id="greenTariffInput" min="0.01" step="0.01" value="0.16">
                             </div>
                             
-                            <div class="tax-input-wrapper">
+                            <div class="form-group half-width">
                                 <label class="form-label"><i class="info-icon bi bi-percent"></i>Податок (%):</label>
                                 <input type="number" class="form-input" id="taxInput" min="0" max="100" step="1" value="23">
                             </div>
@@ -66,28 +73,34 @@
                     </div>
                 </div>
                 
-                <!-- Додаємо новий блок для продажу споживачам -->
-                <div class="consumer-sale-container">
+                <!-- Продаж споживачам секція -->
+                <div class="options-section consumer-sale-section">
                     <div class="checkbox-container">
                         <input type="checkbox" id="enableConsumerSale">
                         <label for="enableConsumerSale">Продаж генерації споживачам</label>
                     </div>
                     
                     <div id="consumerSaleParams" style="display:none;">
-                        <label class="form-label"><i class="info-icon bi bi-people"></i>Потреба споживачів (кВт·год/міс):</label>
-                        <input type="number" class="form-input" id="consumerMaxConsumptionInput" min="0" step="100" value="1000">
-                        <div class="consumption-hint">Максимальна кількість електроенергії, яку споживачі здатні спожити за місяць</div>
+                        <div class="form-group">
+                            <label class="form-label"><i class="info-icon bi bi-people"></i>Потреба споживачів (кВт·год/міс):</label>
+                            <input type="number" class="form-input" id="consumerMaxConsumptionInput" min="0" step="100" value="1000">
+                            <div class="consumption-hint">Максимальна кількість електроенергії, яку споживачі здатні спожити за місяць</div>
+                        </div>
                         
-                        <label class="form-label"><i class="info-icon bi bi-cash-coin"></i>Вартість для споживача (грн/кВт·год):</label>
-                        <input type="number" class="form-input" id="consumerPriceInput" min="0.01" step="0.01" value="7.0">
-                        <div class="consumption-hint">Ціна, за якою ви продаєте електроенергію споживачам</div>
+                        <div class="form-group">
+                            <label class="form-label"><i class="info-icon bi bi-cash-coin"></i>Вартість для споживача (грн/кВт·год):</label>
+                            <input type="number" class="form-input" id="consumerPriceInput" min="0.01" step="0.01" value="10.5">
+                            <div class="consumption-hint">Ціна, за якою ви продаєте електроенергію споживачам</div>
+                        </div>
                     </div>
                 </div>
                 
-                <label class="form-label"><i class="info-icon bi bi-cash-coin"></i>Вартість за кВт·год з мережі:</label>
-                <input type="number" class="form-input" id="domesticPriceInput" min="0.01" step="0.01" value="4.32">
+                <div class="form-group">
+                    <label class="form-label"><i class="info-icon bi bi-cash-coin"></i>Вартість за кВт·год з мережі:</label>
+                    <input type="number" class="form-input" id="domesticPriceInput" min="0.01" step="0.01" value="4.32">
+                </div>
                 
-                <div class="exchange-rate-container">
+                <div class="form-group">
                     <label class="form-label"><i class="info-icon bi bi-currency-exchange"></i>Курс грн/євро:</label>
                     <div class="exchange-input-group">
                         <input type="number" class="form-input" id="euroRateInput" min="1" step="0.01" value="44">
@@ -96,7 +109,7 @@
                     <div id="rateStatus" class="rate-status"></div>
                 </div>
                 
-                <div class="cost-selection-container">
+                <div class="form-group">
                     <label class="form-label"><i class="info-icon bi bi-cash-stack"></i>Вартість системи:</label>
                     <div class="cost-type-selector">
                         <div class="radio-option">
@@ -111,7 +124,7 @@
 
                     <div id="costPerKwContainer">
                         <label class="form-label secondary-label"><i class="info-icon bi bi-currency-dollar"></i>Вартість обладнання (€/кВт):</label>
-                        <input type="number" class="form-input" id="installationCostInput" min="0" step="10" value="800">
+                        <input type="number" class="form-input" id="installationCostInput" min="0" step="10" value="650">
                     </div>
                     
                     <div id="totalCostContainer" style="display: none;">
