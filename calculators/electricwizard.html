@@ -3,76 +3,51 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>UPS - Калькулятор безперебійного живлення</title>
+    <title>Калькулятор втрат електроенергії у кабелі</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.2/font/bootstrap-icons.css">
     <!-- Link to common styles -->
     <link rel="stylesheet" href="miniapps-common.css">
     <style>
-        /* Styles specific to UPS calculator */
-        .tab-buttons {
+        /* Styles specific to cable loss calculator */
+        .radio-group {
             display: flex;
-            margin-bottom: 20px;
             gap: 8px;
+            margin-bottom: 15px;
         }
-        .tab-button {
+        .radio-button {
             flex: 1;
-            background: #66BB6A; /* Зелений фон відповідно до категорії живлення */
-            color: white;
-            border: none;
-            border-radius: 8px;
-            padding: 10px 0;
-            font-size: 16px;
-            font-weight: 500;
-            cursor: pointer;
-        }
-        .tab-button:active, .tab-button.active {
-            background: #43A047; /* Темніший зелений для активного стану */
-        }
-        .device-row {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 8px;
-        }
-        .device-input {
-            border: 1px solid #C2CFE0;
-            border-radius: 8px;
-            padding: 10px;
-            font-size: 16px;
-        }
-        .add-device-btn {
-            display: block;
-            width: 100%;
-            background: #E8F5E9; /* Світло-зелений фон як у .power-item */
-            color: #43A047; /* Зелений колір як у .power-item .menu-icon */
+            background: #E8F5E9;
+            color: #43A047;
             border: 1px solid #66BB6A;
             border-radius: 8px;
             padding: 10px 0;
             font-size: 15px;
-            margin-top: 5px;
-            margin-bottom: 20px;
+            text-align: center;
             cursor: pointer;
         }
-        .add-device-btn:hover {
-            background: #C8E6C9; /* Як у .power-item:hover */
+        .radio-button.active {
+            background: #66BB6A;
+            color: white;
         }
-        .remove-btn {
-            background: none;
-            border: none;
-            color: #E6704B; /* Як у SolarWizard */
-            font-size: 22px;
-            padding: 0;
+        /* Стилі для випадаючих списків */
+        .form-select {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #C2CFE0;
+            border-radius: 8px;
+            background-color: #FFFFFF;
+            margin-bottom: 15px;
+            color: #37474F;
             cursor: pointer;
-            display: flex;
-            align-items: center;
         }
-        .remove-btn:hover {
-            color: #D85A3A;
+        .form-select:focus {
+            border-color: #66BB6A;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(102, 187, 106, 0.2);
         }
-        /* Specific styles for voltage buttons */
-        #v12Btn, #v37Btn {
-             padding: 8px 0;
-        }
-        /* Стилі для результатів */
+        /* Решта стилів */
         .result-box {
             background-color: #FAFCFF;
             border: 1px solid #C2CFE0;
@@ -80,14 +55,29 @@
             padding: 15px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
         }
+        .result-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        .result-table th, .result-table td {
+            border: 1px solid #C2CFE0;
+            padding: 10px;
+            text-align: left;
+        }
+        .result-table th {
+            background-color: #E8F5E9;
+            color: #43A047;
+            font-weight: 500;
+        }
         /* Загальні іконки */
         .bi {
-            color: #43A047; /* Зелений відповідно до категорії */
+            color: #43A047;
             margin-right: 6px;
         }
         /* Кнопка розрахунку */
         .calc-button {
-            background-color: #43A047; /* Зелений відповідно до категорії */
+            background-color: #43A047;
             color: white;
             border: none;
             border-radius: 8px;
@@ -98,21 +88,6 @@
         }
         .calc-button:hover {
             background-color: #2E7D32;
-        }
-        /* Бейджик для типових пристроїв */
-        .camera-badge {
-            display: inline-block;
-            background: #E8F5E9;
-            color: #37474F;
-            padding: 5px 8px;
-            border-radius: 5px;
-            font-size: 13px;
-            margin: 2px 0;
-            border: 1px solid #66BB6A;
-        }
-        .camera-badge .bi {
-            color: #43A047;
-            margin-right: 4px;
         }
         /* Заголовок та подзаголовок */
         .header-icon {
@@ -125,105 +100,259 @@
     </style>
 </head>
 <body>
-    <a href="../index.html" class="back-link">← Повернутися до меню</a> <!-- Changed class to back-link -->
+    <a href="../index.html" class="back-link">← Повернутися до меню</a>
     <div class="header">
-        <i class="bi bi-battery-charging header-icon"></i>
-        <h1>Калькулятор UPS</h1>
-        <p>Планування безперебійного живлення для систем відеоспостереження</p>
+        <i class="bi bi-lightning header-icon"></i>
+        <h1>Калькулятор втрат у кабелі</h1>
+        <p>Розрахунок падіння напруги та втрат потужності в електричних кабелях</p>
     </div>
 
     <div class="main-content">
-        <div class="tab-buttons">
-            <button class="tab-button" id="capacityTabBtn"><i class="bi bi-battery-full"></i> Розрахувати ємність АКБ</button>
-            <button class="tab-button" id="timeTabBtn"><i class="bi bi-clock"></i> Розрахувати час автономії</button>
-        </div>
-
-        <!-- Battery Capacity Tab -->
-        <div id="capacityTab">
-            <form id="capacityCalcForm" autocomplete="off">
-                <label class="form-label"><i class="info-icon bi bi-clock"></i>Час автономної роботи (год):</label>
-                <input type="number" class="form-input" id="hours" min="0.1" step="0.1" value="24" required>
-
-                <label class="form-label"><i class="info-icon bi bi-pc-display"></i>Обладнання:</label>
-                <div id="devicesCapacity">
-                    <div class="device-row">
-                        <input type="number" class="device-input device-count" min="1" value="1" required placeholder="К-сть" style="width: 80px;">
-                        <input type="number" class="device-input" min="1" value="4" required placeholder="Споживання (Вт)" style="flex-grow: 1;">
-                        <button type="button" class="remove-btn" tabindex="-1" aria-label="Видалити"><i class="bi bi-x-circle"></i></button>
-                    </div>
-                </div>
-                <button type="button" id="addDeviceCapacity" class="add-device-btn"><i class="bi bi-plus-circle"></i> Додати пристрій</button>
-
-                <button type="submit" class="calc-button"><i class="bi bi-calculator"></i> Розрахувати</button>
-            </form>
-
-            <div id="capacityResult" class="result-box" style="display:none;">
-                <div id="capacityResultContent"></div>
+        <form id="cableLossCalcForm" autocomplete="off">
+            <label class="form-label"><i class="info-icon bi bi-tools"></i>Матеріал провідника:</label>
+            <div class="radio-group">
+                <div class="radio-button active" data-value="copper">Мідь (Cu)</div>
+                <div class="radio-button" data-value="aluminum">Алюміній (Al)</div>
             </div>
-        </div>
+            <input type="hidden" id="metalType" value="copper">
 
-        <!-- Battery Time Calculator Tab -->
-        <div id="timeTab" style="display:none;">
-            <form id="timeCalcForm" autocomplete="off">
-                <label class="form-label"><i class="info-icon bi bi-battery-full"></i>Ємність АКБ:</label>
-                <input type="number" class="form-input" id="capacity" min="1" step="1" value="100" required>
-
-                <label class="form-label"><i class="info-icon bi bi-lightning"></i>Напруга АКБ (V):</label>
-                <div style="display: flex; gap: 8px; margin-bottom: 15px;">
-                    <!-- Using tab-button style for consistency, specific styles applied inline or via ID -->
-                    <button type="button" id="v12Btn" class="tab-button">12V</button>
-                    <button type="button" id="v37Btn" class="tab-button">3.7V</button>
-                </div>
-                <input type="hidden" id="voltage" value="3.7">
-
-                <label class="form-label"><i class="info-icon bi bi-pc-display"></i>Обладнання:</label>
-                <div id="devicesTime">
-                    <div class="device-row">
-                        <input type="number" class="device-input device-count" min="1" value="1" required placeholder="К-сть" style="width: 80px;">
-                        <input type="number" class="device-input" min="1" value="4" required placeholder="Споживання (Вт)" style="flex-grow: 1;">
-                        <button type="button" class="remove-btn" tabindex="-1" aria-label="Видалити"><i class="bi bi-x-circle"></i></button>
-                    </div>
-                </div>
-                <button type="button" id="addDeviceTime" class="add-device-btn"><i class="bi bi-plus-circle"></i> Додати пристрій</button>
-
-                <button type="submit" class="calc-button"><i class="bi bi-calculator"></i> Розрахувати</button>
-            </form>
-
-            <div id="timeResult" class="result-box" style="display:none;">
-                <div id="timeResultContent"></div>
+            <label class="form-label"><i class="info-icon bi bi-lightning"></i>Тип напруги:</label>
+            <div class="radio-group">
+                <div class="radio-button active" data-value="dc">Постійна (DC)</div>
+                <div class="radio-button" data-value="ac">Змінна (AC)</div>
             </div>
+            <input type="hidden" id="voltageType" value="dc">
+
+            <!-- Додаємо поле для cos φ, яке з'являтиметься тільки для AC -->
+            <div id="cosPhiGroup" style="display:none;">
+                <label class="form-label"><i class="info-icon bi bi-lightning-charge"></i>Коефіцієнт потужності (cos φ):</label>
+                <input type="number" class="form-input" id="cosPhi" min="0.1" max="1" step="0.01" value="0.95" required>
+            </div>
+
+            <label class="form-label"><i class="info-icon bi bi-lightning-charge"></i>Напруга (В):</label>
+            <input type="number" class="form-input" id="voltage" min="1" step="0.1" value="12" required>
+
+            <label class="form-label"><i class="info-icon bi bi-lightning-fill"></i>Виберіть параметр:</label>
+            <div class="radio-group">
+                <div class="radio-button active" data-value="power">Потужність (Вт)</div>
+                <div class="radio-button" data-value="current">Струм (А)</div>
+            </div>
+            <input type="hidden" id="paramType" value="power">
+
+            <div id="powerInputGroup">
+                <label class="form-label"><i class="info-icon bi bi-lightning-fill"></i>Потужність (Вт):</label>
+                <input type="number" class="form-input" id="power" min="1" step="0.1" value="100" required>
+            </div>
+
+            <div id="currentInputGroup" style="display:none;">
+                <label class="form-label"><i class="info-icon bi bi-lightning-fill"></i>Струм (А):</label>
+                <input type="number" class="form-input" id="current" min="0.1" step="0.1" value="8.3" required>
+            </div>
+
+            <label class="form-label"><i class="info-icon bi bi-arrows-angle-expand"></i>Визначення перерізу:</label>
+            <div class="radio-group">
+                <div class="radio-button active" data-value="section">Переріз (мм²)</div>
+                <div class="radio-button" data-value="diameter">Діаметр (мм)</div>
+            </div>
+            <input type="hidden" id="sectionType" value="section">
+
+            <div id="sectionInputGroup">
+                <label class="form-label"><i class="info-icon bi bi-arrows-angle-expand"></i>Переріз кабелю (мм²):</label>
+                <input type="number" class="form-input" id="section" min="0.5" step="0.5" value="2.5" required>
+            </div>
+
+            <div id="diameterInputGroup" style="display:none;">
+                <label class="form-label"><i class="info-icon bi bi-arrows-angle-expand"></i>Діаметр кабелю (мм):</label>
+                <input type="number" class="form-input" id="diameter" min="0.5" step="0.1" value="1.8" required>
+            </div>
+
+            <label class="form-label"><i class="info-icon bi bi-rulers"></i>Довжина кабелю (м):</label>
+            <input type="number" class="form-input" id="cableLength" min="1" step="1" value="50" required>
+
+            <button type="submit" class="calc-button"><i class="bi bi-calculator"></i> Розрахувати</button>
+        </form>
+
+        <div id="cableLossResult" class="result-box" style="display:none;">
+            <div id="cableLossResultContent"></div>
+            <table class="result-table" id="cableLossTable">
+                <thead>
+                    <tr>
+                        <th>Параметр</th>
+                        <th>Значення</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>Опір кабелю</td><td id="resistanceResult">-</td></tr>
+                    <tr><td>Падіння напруги</td><td id="voltageLossResult">-</td></tr>
+                    <tr><td>Втрати потужності (Вт)</td><td id="powerLossResult">-</td></tr>
+                    <tr><td>Втрати потужності (%)</td><td id="powerLossPercentResult">-</td></tr>
+                    <tr><td>Струм у колі</td><td id="currentResult">-</td></tr>
+                </tbody>
+            </table>
         </div>
 
         <div class="tips-section">
-            <p><i class="bi bi-info-circle"></i> <strong>Як використовувати калькулятор?</strong></p>
-            <p>Споживання - енергоспоживання пристрою в ватах (Вт).</p>
-            <p>Типове споживання обладнання для відеоспостереження:</p>
-            <div style="display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 10px;">
-                <span class="camera-badge"><i class="bi bi-camera-video"></i> Камера Dahua: 4 Вт</span>
-                <span class="camera-badge"><i class="bi bi-camera-video"></i> Камера Hikvision: 6 Вт</span>
-                <span class="camera-badge"><i class="bi bi-router"></i> Світч: 2 Вт</span>
-                <span class="camera-badge"><i class="bi bi-hdd-fill"></i> NVR з 1 HDD: 10 Вт</span>
-                <span class="camera-badge"><i class="bi bi-modem"></i> ONU: 4 Вт</span>
-                <span class="camera-badge"><i class="bi bi-wifi"></i> Роутер 2.4G: 2 Вт</span>
-                <span class="camera-badge"><i class="bi bi-wifi"></i> Роутер 2.4G+5G: 7 Вт</span>
-            </div>
-
-            <p><i class="bi bi-gear"></i> <strong>Технічні деталі розрахунків:</strong></p>
+            <p><i class="bi bi-info-circle"></i> <strong>Про розрахунок втрат у кабелі</strong></p>
+            <p>Довжина кабелю та переріз жили є ключовими факторами, що впливають на втрати.</p>
+            
+            <p><i class="bi bi-lightning"></i> <strong>Важлива інформація:</strong></p>
             <ul>
-                <li>Для 12V систем ємність вказується в Ah (ампер-годинах)</li>
-                <li>Для 3.7V систем (Li-Ion) ємність вказується в mAh (міліампер-годинах)</li>
-                <li>Загальна енергія розраховується як Напруга × Ємність</li>
-                <li>Реальний час автономії може бути меншим через втрати та розряд АКБ</li>
+                <li>Мідь має менший опір (1.68×10⁻⁸ Ом·м) ніж алюміній (2.65×10⁻⁸ Ом·м)</li>
+                <li>Для систем змінного струму (AC) важливо враховувати коефіцієнт потужності (cos φ)</li>
+                <li>Рекомендований мінімальний переріз для електропроводки:
+                    <ul>
+                        <li>1.5 мм² - до 50м для навантаження до 15A</li>
+                        <li>2.5 мм² - до 100м для навантаження до 20A</li>
+                        <li>4.0 мм² - для більших відстаней або навантажень</li>
+                    </ul>
+                </li>
+                <li>Рекомендовані втрати: не більше 5% від номінальної напруги</li>
+                <li>Врахуйте, що розрахунок дає теоретичні значення. На практиці втрати можуть бути більшими через:
+                    <ul>
+                        <li>Підвищення температури кабелю</li>
+                        <li>Якість з'єднань</li>
+                        <li>Вплив зовнішніх факторів</li>
+                    </ul>
+                </li>
             </ul>
 
-            <p><i class="bi bi-lightbulb"></i> <strong>Приклади використання:</strong></p>
+            <p><i class="bi bi-lightbulb"></i> <strong>Типові застосування:</strong></p>
             <ul>
-                <li>9 камер по 4 Вт + 2 світча по 2 Вт + 1 NVR на 10 Вт = <strong>~ 52 Ah при 12V</strong></li>
-                <li>Акумулятор 100 Ah 12V з навантаженням 15 Вт = <strong>~ 80 годин автономії</strong></li>
+                <li>Системи відеоспостереження (12В, 24В, 48В)</li>
+                <li>Електропроводка будинку (220В)</li>
+                <li>Системи сонячної енергетики (12В, 24В, 48В)</li>
+                <li>PoE підключення (48В)</li>
             </ul>
         </div>
     </div>
-    <!-- Підключення JS-файлу -->
-    <script src="ups.js"></script>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Ініціалізація радіо-кнопок для калькулятора втрат у кабелі
+            document.querySelectorAll('.radio-group').forEach(group => {
+                const radioButtons = group.querySelectorAll('.radio-button');
+                const hiddenInput = group.nextElementSibling;
+                
+                radioButtons.forEach(button => {
+                    button.addEventListener('click', () => {
+                        radioButtons.forEach(btn => btn.classList.remove('active'));
+                        button.classList.add('active');
+                        hiddenInput.value = button.dataset.value;
+                        
+                        // Додаткова логіка для перемикання полів введення
+                        if (hiddenInput.id === 'voltageType') {
+                            if (button.dataset.value === 'ac') {
+                                document.getElementById('cosPhiGroup').style.display = 'block';
+                            } else {
+                                document.getElementById('cosPhiGroup').style.display = 'none';
+                            }
+                        }
+                        
+                        if (hiddenInput.id === 'paramType') {
+                            if (button.dataset.value === 'power') {
+                                document.getElementById('powerInputGroup').style.display = 'block';
+                                document.getElementById('currentInputGroup').style.display = 'none';
+                            } else {
+                                document.getElementById('powerInputGroup').style.display = 'none';
+                                document.getElementById('currentInputGroup').style.display = 'block';
+                            }
+                        }
+                        
+                        if (hiddenInput.id === 'sectionType') {
+                            if (button.dataset.value === 'section') {
+                                document.getElementById('sectionInputGroup').style.display = 'block';
+                                document.getElementById('diameterInputGroup').style.display = 'none';
+                            } else {
+                                document.getElementById('sectionInputGroup').style.display = 'none';
+                                document.getElementById('diameterInputGroup').style.display = 'block';
+                            }
+                        }
+                    });
+                });
+            });
+            
+            // Обробник форми калькулятора втрат у кабелі
+            document.getElementById('cableLossCalcForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Отримання введених значень
+                const metalType = document.getElementById('metalType').value;
+                const voltageType = document.getElementById('voltageType').value;
+                const voltage = parseFloat(document.getElementById('voltage').value);
+                const paramType = document.getElementById('paramType').value;
+                const sectionType = document.getElementById('sectionType').value;
+                const cableLength = parseFloat(document.getElementById('cableLength').value);
+                
+                // Отримання коефіцієнта потужності для AC
+                const cosPhi = voltageType === 'ac' ? 
+                    parseFloat(document.getElementById('cosPhi').value) : 1.0;
+                
+                let current, power, section;
+                
+                // Отримання струму або потужності залежно від вибору користувача
+                if (paramType === 'power') {
+                    power = parseFloat(document.getElementById('power').value);
+                    // Для AC враховуємо cos φ при розрахунку струму
+                    current = voltageType === 'ac' ? power / (voltage * cosPhi) : power / voltage;
+                } else {
+                    current = parseFloat(document.getElementById('current').value);
+                    // Для AC враховуємо cos φ при розрахунку потужності
+                    power = voltageType === 'ac' ? voltage * current * cosPhi : voltage * current;
+                }
+                
+                // Отримання перерізу кабелю залежно від вибору користувача
+                if (sectionType === 'section') {
+                    section = parseFloat(document.getElementById('section').value);
+                } else {
+                    const diameter = parseFloat(document.getElementById('diameter').value);
+                    section = Math.PI * (diameter / 2) * (diameter / 2);
+                }
+                
+                // Константи для обчислення опору
+                const resistivityCopper = 0.0168; // Ом*мм²/м
+                const resistivityAluminum = 0.0265; // Ом*мм²/м
+                
+                // Розрахунок опору кабелю
+                const resistivity = metalType === 'copper' ? resistivityCopper : resistivityAluminum;
+                const resistance = (resistivity * cableLength * 2) / section; // *2 для обох жил (туди і назад)
+                
+                // Розрахунок втрат з урахуванням AC/DC
+                const voltageLoss = current * resistance;
+                const powerLoss = current * current * resistance;
+                const powerLossPercent = (powerLoss / power) * 100;
+                
+                // Виведення результатів
+                document.getElementById('resistanceResult').textContent = resistance.toFixed(3) + ' Ом';
+                document.getElementById('voltageLossResult').textContent = voltageLoss.toFixed(2) + ' В (' + 
+                    ((voltageLoss / voltage) * 100).toFixed(1) + '%)';
+                document.getElementById('powerLossResult').textContent = powerLoss.toFixed(2) + ' Вт';
+                document.getElementById('powerLossPercentResult').textContent = powerLossPercent.toFixed(2) + '%';
+                document.getElementById('currentResult').textContent = current.toFixed(2) + ' А';
+                
+                // Додаємо інформацію про cos φ для AC
+                if (voltageType === 'ac') {
+                    document.getElementById('currentResult').textContent += ` (при cos φ = ${cosPhi})`;
+                }
+                
+                // Відображення результатів
+                document.getElementById('cableLossResult').style.display = 'block';
+                
+                // Додаткова інформація залежно від значень
+                let resultSummary = `<p><i class="bi bi-info-circle"></i> <strong>Результат розрахунку:</strong></p>`;
+                
+                if (powerLossPercent > 5) {
+                    resultSummary += `<p><i class="bi bi-exclamation-triangle" style="color: #E6704B;"></i> <strong style="color: #E6704B;">Втрати потужності перевищують 5%!</strong> Рекомендується збільшити переріз кабелю.</p>`;
+                } else {
+                    resultSummary += `<p><i class="bi bi-check-circle" style="color: #43A047;"></i> <strong style="color: #43A047;">Втрати потужності в межах норми.</strong></p>`;
+                }
+                
+                if ((voltage - voltageLoss) < voltage * 0.9) {
+                    resultSummary += `<p><i class="bi bi-exclamation-triangle" style="color: #E6704B;"></i> <strong style="color: #E6704B;">Значне падіння напруги!</strong> На кінці кабелю напруга становитиме ${(voltage - voltageLoss).toFixed(2)} В.</p>`;
+                }
+                
+                document.getElementById('cableLossResultContent').innerHTML = resultSummary;
+            });
+        });
+    </script>
 </body>
 </html>
