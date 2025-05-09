@@ -1,0 +1,312 @@
+/* Загальні стилі для всіх калькуляторів */
+
+/* Групи радіокнопок */
+.radio-group {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 15px;
+}
+.radio-button {
+    flex: 1;
+    background: #E8F5E9;
+    color: #43A047;
+    border: 1px solid #66BB6A;
+    border-radius: 8px;
+    padding: 10px 0;
+    font-size: 15px;
+    text-align: center;
+    cursor: pointer;
+}
+.radio-button.active {
+    background: #66BB6A;
+    color: white;
+}
+
+/* Випадаючі списки */
+.form-select {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #C2CFE0;
+    border-radius: 8px;
+    background-color: #FFFFFF;
+    margin-bottom: 15px;
+    color: #37474F;
+    cursor: pointer;
+}
+.form-select:focus {
+    border-color: #66BB6A;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(102, 187, 106, 0.2);
+}
+
+/* Результати та таблиці */
+.result-box {
+    background-color: #FAFCFF;
+    border: 1px solid #C2CFE0;
+    border-radius: 10px;
+    padding: 15px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+.result-header {
+    margin-bottom: 8px;
+}
+.result-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #43A047;
+    margin-bottom: 3px;
+    line-height: 1.1;
+}
+.result-title .bi {
+    color: #43A047; 
+    font-size: 18px;
+}
+.result-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 8px;
+    border: 1px solid #C2CFE0;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+.result-table caption {
+    background-color: #E8F5E9;
+    color: #43A047;
+    font-weight: 600;
+    padding: 5px 10px;
+    text-align: left;
+    caption-side: top;
+    border-bottom: 1px solid #C2CFE0;
+    font-size: 14px;
+    line-height: 1.2;
+}
+.result-table caption .bi {
+    color: #43A047;
+    font-size: 14px;
+}
+.result-table th, .result-table td {
+    border: none;
+    border-bottom: 1px solid #E9EDF2;
+    padding: 2px 10px;
+    text-align: left;
+    font-size: 14px;
+    line-height: 1.2;
+}
+.result-table tr:last-child td {
+    border-bottom: none;
+}
+.result-table th {
+    background-color: #F5F8FA;
+    font-weight: 500;
+    color: #37474F;
+}
+.result-table td:first-child {
+    color: #546E7A;
+    width: 45%;
+}
+.result-table td b {
+    color: #37474F;
+    font-weight: 600;
+    font-size: 14px;
+}
+.result-table tr:nth-child(even) {
+    background-color: #F9FBFD;
+}
+.result-table tr.table-header th {
+    background-color: #F5F8FA;
+    font-weight: 500;
+    color: #37474F;
+    font-size: 13px;
+}
+
+/* Іконки */
+.bi {
+    color: #43A047;
+    margin-right: 6px;
+}
+.header-icon {
+    color: #43A047;
+}
+.info-icon {
+    color: #43A047;
+}
+
+/* Кнопки */
+.calc-button {
+    background-color: #43A047;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+.calc-button:hover {
+    background-color: #2E7D32;
+}
+
+/* Перевірки та рекомендації */
+.result-checks {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: 2px 0;
+}
+.check-item {
+    display: flex;
+    padding: 4px 8px;
+    border-radius: 6px;
+    align-items: flex-start;
+    margin-bottom: 1px;
+}
+.check-item:last-child {
+    margin-bottom: 0;
+}
+.check-item i.bi {
+    font-size: 18px;
+    margin-right: 8px;
+    margin-top: 0;
+}
+.check-text {
+    display: flex;
+    flex-direction: column;
+}
+.check-text strong {
+    margin-bottom: 0;
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1.1;
+}
+.check-text span {
+    font-size: 12px;
+    opacity: 0.9;
+    line-height: 1.1;
+}
+.check-text span .bi {
+    font-size: 1em;
+    margin-right: 4px;
+}
+.check-item.success { background-color: #E8F5E9; color: #2E7D32; }
+.check-item.success i.bi { color: #2E7D32; }
+.check-item.warning { background-color: #FFF8E1; color: #F57F17; }
+.check-item.warning i.bi { color: #F57F17; }
+.check-item.danger { background-color: #FFEBEE; color: #C62828; }
+.check-item.danger i.bi { color: #C62828; }
+.check-item.info { background-color: #E3F2FD; color: #1565C0; }
+.check-item.info i.bi { color: #1565C0; }
+
+/* Рядки з пристроями - для POE і UPS */
+.device-row, .extender-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+.device-input, .extender-position {
+    border: 1px solid #C2CFE0;
+    border-radius: 8px;
+    padding: 10px;
+    font-size: 16px;
+}
+.add-device-btn {
+    display: block;
+    width: 100%;
+    background: #E8F5E9;
+    color: #43A047;
+    border: 1px solid #66BB6A;
+    border-radius: 8px;
+    padding: 10px 0;
+    font-size: 15px;
+    margin-top: 5px;
+    margin-bottom: 20px;
+    cursor: pointer;
+}
+.add-device-btn:hover {
+    background: #C8E6C9;
+}
+.remove-btn, .remove-extender {
+    background: none;
+    border: none;
+    color: #E6704B;
+    font-size: 22px;
+    padding: 0;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+.remove-btn:hover, .remove-extender:hover {
+    color: #D85A3A;
+}
+.remove-extender {
+    font-size: 20px;
+    padding: 0 10px;
+}
+
+/* Бейджики для типових пристроїв - UPS і POE */
+.camera-badge {
+    display: inline-block;
+    background: #E8F5E9;
+    color: #37474F;
+    padding: 5px 8px;
+    border-radius: 5px;
+    font-size: 13px;
+    margin: 2px 0;
+    border: 1px solid #66BB6A;
+}
+.camera-badge .bi {
+    color: #43A047;
+    margin-right: 4px;
+}
+
+/* Табуляція для UPS */
+.tab-buttons {
+    display: flex;
+    margin-bottom: 20px;
+    gap: 8px;
+}
+.tab-button {
+    flex: 1;
+    background: #66BB6A;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 0;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+}
+.tab-button:active, .tab-button.active {
+    background: #43A047;
+}
+#v12Btn, #v37Btn {
+     padding: 8px 0;
+}
+
+/* POE специфічні */
+.result-variant {
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid #C8E6C9;
+}
+.result-variant h3 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    font-size: 16px;
+    color: #43A047;
+}
+pre {
+    font-family: monospace;
+    background: #F5FBF6;
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 12px;
+    overflow-x: auto;
+    white-space: pre-wrap;
+}
+.warning {
+    color: #E6704B;
+    font-weight: bold;
+}
