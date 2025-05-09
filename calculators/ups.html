@@ -5,127 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>UPS - Калькулятор безперебійного живлення</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.2/font/bootstrap-icons.css">
-    <!-- Link to common styles -->
+    <!-- Загальні стилі для всіх міні-додатків -->
     <link rel="stylesheet" href="miniapps-common.css">
-    <style>
-        /* Styles specific to UPS calculator */
-        .tab-buttons {
-            display: flex;
-            margin-bottom: 20px;
-            gap: 8px;
-        }
-        .tab-button {
-            flex: 1;
-            background: #66BB6A; /* Зелений фон відповідно до категорії живлення */
-            color: white;
-            border: none;
-            border-radius: 8px;
-            padding: 10px 0;
-            font-size: 16px;
-            font-weight: 500;
-            cursor: pointer;
-        }
-        .tab-button:active, .tab-button.active {
-            background: #43A047; /* Темніший зелений для активного стану */
-        }
-        .device-row {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 8px;
-        }
-        .device-input {
-            border: 1px solid #C2CFE0;
-            border-radius: 8px;
-            padding: 10px;
-            font-size: 16px;
-        }
-        .add-device-btn {
-            display: block;
-            width: 100%;
-            background: #E8F5E9; /* Світло-зелений фон як у .power-item */
-            color: #43A047; /* Зелений колір як у .power-item .menu-icon */
-            border: 1px solid #66BB6A;
-            border-radius: 8px;
-            padding: 10px 0;
-            font-size: 15px;
-            margin-top: 5px;
-            margin-bottom: 20px;
-            cursor: pointer;
-        }
-        .add-device-btn:hover {
-            background: #C8E6C9; /* Як у .power-item:hover */
-        }
-        .remove-btn {
-            background: none;
-            border: none;
-            color: #E6704B; /* Як у SolarWizard */
-            font-size: 22px;
-            padding: 0;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-        }
-        .remove-btn:hover {
-            color: #D85A3A;
-        }
-        /* Specific styles for voltage buttons */
-        #v12Btn, #v37Btn {
-             padding: 8px 0;
-        }
-        /* Стилі для результатів */
-        .result-box {
-            background-color: #FAFCFF;
-            border: 1px solid #C2CFE0;
-            border-radius: 10px;
-            padding: 15px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-        }
-        /* Загальні іконки */
-        .bi {
-            color: #43A047; /* Зелений відповідно до категорії */
-            margin-right: 6px;
-        }
-        /* Кнопка розрахунку */
-        .calc-button {
-            background-color: #43A047; /* Зелений відповідно до категорії */
-            color: white;
-            border: none;
-            border-radius: 8px;
-            padding: 10px 20px;
-            font-size: 16px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-        .calc-button:hover {
-            background-color: #2E7D32;
-        }
-        /* Бейджик для типових пристроїв */
-        .camera-badge {
-            display: inline-block;
-            background: #E8F5E9;
-            color: #37474F;
-            padding: 5px 8px;
-            border-radius: 5px;
-            font-size: 13px;
-            margin: 2px 0;
-            border: 1px solid #66BB6A;
-        }
-        .camera-badge .bi {
-            color: #43A047;
-            margin-right: 4px;
-        }
-        /* Заголовок та подзаголовок */
-        .header-icon {
-            color: #43A047;
-        }
-        /* Інформаційні іконки */
-        .info-icon {
-            color: #43A047;
-        }
-    </style>
+    <!-- Спільні стилі для калькуляторів -->
+    <link rel="stylesheet" href="calculators-common.css">
 </head>
 <body>
-    <a href="../index.html" class="back-link">← Повернутися до меню</a> <!-- Changed class to back-link -->
+    <a href="../index.html" class="back-link">← Повернутися до меню</a>
     <div class="header">
         <i class="bi bi-battery-charging header-icon"></i>
         <h1>DC UPS</h1>
