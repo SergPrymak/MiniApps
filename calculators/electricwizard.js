@@ -244,33 +244,33 @@ document.addEventListener('DOMContentLoaded', function() {
         
         let resultContentHtml = `
             <div class="result-header"><i class="bi bi-bar-chart-fill"></i> <strong>Результати розрахунку:</strong></div>
-            <table class="result-table">
-                <tr style="background:none;"><td><i class="bi bi-diagram-3"></i> Тип кабелю:</td><td>${cableTypeText}${pairModeText}</td></tr>
-                <tr style="background:none;"><td><i class="bi bi-tools"></i> Матеріал:</td><td>${metalTypeText}</td></tr>
-                <tr style="background:none;"><td><i class="bi bi-arrows-angle-expand"></i> Переріз:</td><td><strong>${sectionValue.toFixed(2)} мм²</strong></td></tr>
-                <tr style="background:none;"><td><i class="bi bi-rulers"></i> Довжина:</td><td><strong>${cableLength} м</strong></td></tr>
-                <tr style="background:none;"><td><i class="bi bi-activity"></i> Опір:</td><td><strong>${resistance.toFixed(3)} Ом</strong></td></tr>
-                <tr style="background:none;"><td><i class="bi bi-toggles"></i> Тип напруги:</td><td>${voltageTypeText}</td></tr>`;
+            <table class="result-table zebra-table">
+                <tr"><td><i class="bi bi-diagram-3"></i> Тип кабелю:</td><td>${cableTypeText}${pairModeText}</td></tr>
+                <tr"><td><i class="bi bi-tools"></i> Матеріал:</td><td>${metalTypeText}</td></tr>
+                <tr"><td><i class="bi bi-arrows-angle-expand"></i> Переріз:</td><td><strong>${sectionValue.toFixed(2)} мм²</strong></td></tr>
+                <tr"><td><i class="bi bi-rulers"></i> Довжина:</td><td><strong>${cableLength} м</strong></td></tr>
+                <tr"><td><i class="bi bi-activity"></i> Опір:</td><td><strong>${resistance.toFixed(3)} Ом</strong></td></tr>
+                <tr"><td><i class="bi bi-toggles"></i> Тип напруги:</td><td>${voltageTypeText}</td></tr>`;
         if (voltageType === 'ac') {
-            resultContentHtml += `<tr style="background:none;"><td><i class="bi bi-percent"></i> cos φ:</td><td><strong>${cosPhi.toFixed(2)}</strong></td></tr>`;
+            resultContentHtml += `<tr"><td><i class="bi bi-percent"></i> cos φ:</td><td><strong>${cosPhi.toFixed(2)}</strong></td></tr>`;
         }
         resultContentHtml += `
-                <tr style="background:none;"><td><i class="bi bi-lightning"></i> Напруга:</td><td><strong>${voltage.toFixed(1)} В</strong></td></tr>
-                <tr style="background:none;"><td><i class="bi bi-lightning-fill"></i> Струм:</td><td><strong>${current.toFixed(2)} А</strong></td></tr>
-                <tr style="background:none;"><td><i class="bi bi-battery-half"></i> Потужність:</td><td><strong>${power.toFixed(2)} Вт</strong></td></tr>
+                <tr"><td><i class="bi bi-lightning"></i> Напруга:</td><td><strong>${voltage.toFixed(1)} В</strong></td></tr>
+                <tr"><td><i class="bi bi-lightning-fill"></i> Струм:</td><td><strong>${current.toFixed(2)} А</strong></td></tr>
+                <tr"><td><i class="bi bi-battery-half"></i> Потужність:</td><td><strong>${power.toFixed(2)} Вт</strong></td></tr>
             </table>
             
-            <table class="result-table">
+            <table class="result-table zebra-table">
                 <caption"><i class="bi bi-graph-down-arrow"></i> <strong>Втрати та ефективність</strong></caption>
-                <tr style="background:none;"><td><i class="bi bi-plug"></i> Вихідна напруга:</td><td><strong>${voltageLoss >= voltage ? "відсутня" : loadVoltage.toFixed(2) + " В"}</strong> ${voltageLoss >= voltage ? "" : `(<strong>${(100 - voltageLossPercent).toFixed(1)}%</strong>)`}</td></tr>
-                <tr style="background:none;"><td><i class="bi bi-lightbulb"></i> Вихідна потужність:</td><td><strong>${voltageLoss >= voltage ? "відсутня" : loadPower.toFixed(2) + " Вт"}</strong> ${voltageLoss >= voltage ? "" : `(<strong>${(100 - calculatedPowerLossPercent).toFixed(1)}%</strong>)`}</td></tr>
-                <tr style="background:none;"><td><i class="bi bi-lightning-charge"></i> Падіння напруги:</td><td><strong>${voltageLoss.toFixed(2)} В</strong> (<strong>${voltageLossPercent.toFixed(1)}%</strong>)</td></tr>
-                <tr style="background:none;"><td><i class="bi bi-fire"></i> Втрати потужності:</td><td><strong>${powerLoss.toFixed(2)} Вт</strong> (<strong>${calculatedPowerLossPercent.toFixed(1)}%</strong>)</td></tr>
+                <tr"><td><i class="bi bi-plug"></i> Вихідна напруга:</td><td><strong>${voltageLoss >= voltage ? "відсутня" : loadVoltage.toFixed(2) + " В"}</strong> ${voltageLoss >= voltage ? "" : `(<strong>${(100 - voltageLossPercent).toFixed(1)}%</strong>)`}</td></tr>
+                <tr"><td><i class="bi bi-lightbulb"></i> Вихідна потужність:</td><td><strong>${voltageLoss >= voltage ? "відсутня" : loadPower.toFixed(2) + " Вт"}</strong> ${voltageLoss >= voltage ? "" : `(<strong>${(100 - calculatedPowerLossPercent).toFixed(1)}%</strong>)`}</td></tr>
+                <tr"><td><i class="bi bi-lightning-charge"></i> Падіння напруги:</td><td><strong>${voltageLoss.toFixed(2)} В</strong> (<strong>${voltageLossPercent.toFixed(1)}%</strong>)</td></tr>
+                <tr"><td><i class="bi bi-fire"></i> Втрати потужності:</td><td><strong>${powerLoss.toFixed(2)} Вт</strong> (<strong>${calculatedPowerLossPercent.toFixed(1)}%</strong>)</td></tr>
             </table>
             
             <table class="result-table">
                 <caption><i class="bi bi-shield-check"></i> Оцінка та рекомендації</caption>
-                <tr style="background:none;"><td colspan="2" style="padding: 1px 0;"><div class="result-checks">
+                <tr"><td colspan="2" style="padding: 1px 0;"><div class="result-checks">
                     <div class="check-item ${statusClass}">
                         <i class="bi ${statusIcon}"></i>
                         <div class="check-text">
