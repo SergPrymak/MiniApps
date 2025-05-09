@@ -310,3 +310,11 @@ pre {
     color: #E6704B;
     font-weight: bold;
 }
+
+.result-table.zebra-table tr:nth-child(even) {
+    background: #f7fafd;
+}
+.result-table.zebra-table tr:nth-child(odd) {
+    background: #f5f9f5;
+}
+
