@@ -270,7 +270,7 @@ function displayResults(result, pdPower, totalDistance, extenderPositions) {
     
     let resultHtml = `
         <div class="result-header"><i class="bi bi-bar-chart-fill"></i> <strong>Результати розрахунку:</strong></div>
-        <table class="result-table">
+        <table class="result-table zebra-table">
             <tr>
                 <td><i class="bi bi-lightning"></i> Споживання:</td>
                 <td>${pdPower} Вт</td>
@@ -285,7 +285,7 @@ function displayResults(result, pdPower, totalDistance, extenderPositions) {
     
     if (result.noExt) {
         resultHtml += `
-        <table class="result-table">
+        <table class="result-table zebra-table">
             <tr>
                 <td><i class="bi bi-diagram-2"></i> Стандарт:</td>
                 <td><strong>${result.noExt.name}</strong></td>
