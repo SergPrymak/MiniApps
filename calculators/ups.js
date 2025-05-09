@@ -116,17 +116,43 @@ document.getElementById('capacityCalcForm').onsubmit = function(e) {
         // Для 3.7V системи (mAh)
         const mah_37v = (total_wh / 3.7) * 1000;
         document.getElementById('capacityResultContent').innerHTML = `
-            <div><i class="bi bi-bar-chart-fill"></i> <strong>Результати розрахунку:</strong></div>
-            <div style="margin-top:10px;"><i class="bi bi-clock"></i> Час автономії: <strong>${hours} годин</strong></div>
-            <div><i class="bi bi-pc-display"></i> Всього пристроїв: <strong>${total_devices}</strong></div>
-            <div><i class="bi bi-list-check"></i> Конфігурація пристроїв:</div>
-            <ul style="margin:4px 0 8px 20px;padding:0;">
-                ${device_details.map(d => `<li>${d}</li>`).join('')}
-            </ul>
-            <div><i class="bi bi-lightning"></i> Загальне споживання: <strong>${total_power} Вт</strong></div>
-            <div><i class="bi bi-plug"></i> Загальна потреба в енергії: <strong>${total_wh.toFixed(2)} Wh</strong></div>
-            <div style="margin-top:10px;font-weight:500;"><i class="bi bi-battery-full"></i> Для 12V системи: <strong>${ah_12v.toFixed(2)} Ah</strong></div>
-            <div style="margin-top:5px;font-weight:500;"><i class="bi bi-battery-half"></i> Для 3.7V (Li-Ion): <strong>${Math.round(mah_37v)} mAh</strong></div>
+            <div class="result-header"><i class="bi bi-bar-chart-fill"></i> <strong>Результати розрахунку:</strong></div>
+            <table class="result-table">
+                <tr>
+                    <td><i class="bi bi-clock"></i> Час автономії:</td>
+                    <td><strong>${hours} годин</strong></td>
+                </tr>
+                <tr>
+                    <td><i class="bi bi-pc-display"></i> Всього пристроїв:</td>
+                    <td><strong>${total_devices}</strong></td>
+                </tr>
+                <tr>
+                    <td colspan="2"><i class="bi bi-list-check"></i> Конфігурація пристроїв:</td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <ul style="margin:4px 0 8px 20px;padding:0;">
+                            ${device_details.map(d => `<li>${d}</li>`).join('')}
+                        </ul>
+                    </td>
+                </tr>
+                <tr>
+                    <td><i class="bi bi-lightning"></i> Загальне споживання:</td>
+                    <td><strong>${total_power} Вт</strong></td>
+                </tr>
+                <tr>
+                    <td><i class="bi bi-plug"></i> Загальна потреба в енергії:</td>
+                    <td><strong>${total_wh.toFixed(2)} Wh</strong></td>
+                </tr>
+                <tr class="highlight-row">
+                    <td><i class="bi bi-battery-full"></i> Для 12V системи:</td>
+                    <td><strong>${ah_12v.toFixed(2)} Ah</strong></td>
+                </tr>
+                <tr class="highlight-row">
+                    <td><i class="bi bi-battery-half"></i> Для 3.7V (Li-Ion):</td>
+                    <td><strong>${Math.round(mah_37v)} mAh</strong></td>
+                </tr>
+            </table>
         `;
         document.getElementById('capacityResult').style.display = '';
     } catch (err) {
@@ -154,17 +180,42 @@ document.getElementById('timeCalcForm').onsubmit = function(e) {
         const minutes = Math.round((hours - hours_int) * 60);
         const capacity_unit = (voltage <= 4) ? 'mAh' : 'Ah';
         document.getElementById('timeResultContent').innerHTML = `
-            <div><i class="bi bi-bar-chart-fill"></i> <strong>Результати розрахунку:</strong></div>
-            <div style="margin-top:10px;"><i class="bi bi-battery-full"></i> Ємність акумулятора: <strong>${capacity} ${capacity_unit} / ${voltage}V</strong></div>
-            <div><i class="bi bi-pc-display"></i> Всього пристроїв: <strong>${total_devices}</strong></div>
-            <div><i class="bi bi-list-check"></i> Конфігурація пристроїв:</div>
-            <ul style="margin:4px 0 8px 20px;padding:0;">
-                ${device_details.map(d => `<li>${d}</li>`).join('')}
-            </ul>
-            <div><i class="bi bi-lightning"></i> Загальне споживання: <strong>${total_power} Вт</strong></div>
-            <div><i class="bi bi-plug"></i> Доступна енергія: <strong>${energy_wh.toFixed(2)} Wh</strong></div>
-            <div style="margin-top:10px;font-weight:500;"><i class="bi bi-clock"></i> Тривалість роботи: <strong>${hours_int} год ${minutes} хв</strong></div>
-            <div style="margin-top:5px;font-size:13px;color:#777;"><i class="bi bi-exclamation-circle"></i> Реальний час може бути меншим через втрати та спрацювання АКБ</div>
+            <div class="result-header"><i class="bi bi-bar-chart-fill"></i> <strong>Результати розрахунку:</strong></div>
+            <table class="result-table">
+                <tr>
+                    <td><i class="bi bi-battery-full"></i> Ємність акумулятора:</td>
+                    <td><strong>${capacity} ${capacity_unit} / ${voltage}V</strong></td>
+                </tr>
+                <tr>
+                    <td><i class="bi bi-pc-display"></i> Всього пристроїв:</td>
+                    <td><strong>${total_devices}</strong></td>
+                </tr>
+                <tr>
+                    <td colspan="2"><i class="bi bi-list-check"></i> Конфігурація пристроїв:</td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <ul style="margin:4px 0 8px 20px;padding:0;">
+                            ${device_details.map(d => `<li>${d}</li>`).join('')}
+                        </ul>
+                    </td>
+                </tr>
+                <tr>
+                    <td><i class="bi bi-lightning"></i> Загальне споживання:</td>
+                    <td><strong>${total_power} Вт</strong></td>
+                </tr>
+                <tr>
+                    <td><i class="bi bi-plug"></i> Доступна енергія:</td>
+                    <td><strong>${energy_wh.toFixed(2)} Wh</strong></td>
+                </tr>
+                <tr class="highlight-row">
+                    <td><i class="bi bi-clock"></i> Тривалість роботи:</td>
+                    <td><strong>${hours_int} год ${minutes} хв</strong></td>
+                </tr>
+                <tr class="note-row">
+                    <td colspan="2"><i class="bi bi-exclamation-circle"></i> Реальний час може бути меншим через втрати та спрацювання АКБ</td>
+                </tr>
+            </table>
         `;
         document.getElementById('timeResult').style.display = '';
     } catch (err) {
