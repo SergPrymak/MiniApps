@@ -92,15 +92,33 @@ document.getElementById('hddCalcForm').onsubmit = function(e) {
         const total_tb = total_bits / 8 / 1024 / 1024 / 1024;
         
         document.getElementById('hddResultContent').innerHTML = `
-            <div><i class="bi bi-bar-chart-fill"></i> <strong>Результати розрахунку:</strong></div>
-            <div style="margin-top:10px;"><i class="bi bi-calendar3"></i> Глибина архіву: <strong>${days} днів</strong></div>
-            <div><i class="bi bi-camera-video"></i> Камер загалом: <strong>${total_cameras}</strong></div>
-            <div><i class="bi bi-list-check"></i> Конфігурація камер:</div>
-            <ul style="margin:4px 0 8px 20px;padding:0;">
-                ${camera_details.map(d => `<li>${d}</li>`).join('')}
-            </ul>
-            <div><i class="bi bi-speedometer2"></i> Сумарний бітрейт: <strong>${total_bitrate} Kbps</strong> (${(total_bitrate/1024).toFixed(1)} Mbps)</div>
-            <div style="margin-top:10px;font-weight:500;"><i class="bi bi-hdd-fill"></i> Номінальна ємність: <strong>${(total_tb / 0.909).toFixed(2)} TB (реал. ${total_tb.toFixed(2)} TB)  </strong></div>
+            <div><i class="bi bi-bar-chart-fill result-icon"></i> <strong>Результати розрахунку:</strong></div>
+            <table class="result-table zebra-table">
+                <tr>
+                    <td class="lable"><i class="bi bi-calendar3"></i> Глибина архіву:</td>
+                    <td class="value">${days} днів</td>
+                </tr>
+                <tr>
+                    <td class="lable"><i class="bi bi-camera-video"></i> Камер загалом:</td>
+                    <td class="value"><strong>${total_cameras}</strong></td>
+                </tr>
+                <tr>
+                    <td class="lable"><i class="bi bi-list-check"></i> Конфігурація камер:</td>
+                    <td class="value">
+                        <ul style="margin:0; padding-left:20px; line-height:1.1;">
+                            <strong> ${camera_details.map(d => `<li>${d}</li>`).join('')}</strong>
+                        </ul>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="lable"><i class="bi bi-speedometer2"></i> Сумарний бітрейт:</td>
+                    <td class="value"><strong>${total_bitrate} Kbps (${(total_bitrate/1024).toFixed(1)} Mbps)</strong></td>
+                </tr>
+                <tr>
+                    <td class="lable"><i class="bi bi-hdd-fill"></i> Номінальна ємність:</td>
+                    <td class="value"><strong>${(total_tb / 0.909).toFixed(2)} TB (реал. ${total_tb.toFixed(2)} TB)</strong></td>
+                </tr>
+            </table>
         `;
         document.getElementById('hddResult').style.display = '';
     } catch (err) {
@@ -126,17 +144,37 @@ document.getElementById('daysCalcForm').onsubmit = function(e) {
         const total_days = hdd_bits / (total_bits_per_second * 24 * 60 * 60) * 0.909;
         
         document.getElementById('daysResultContent').innerHTML = `
-            <div><i class="bi bi-bar-chart-fill"></i> <strong>Результати розрахунку:</strong></div>
-            <div style="margin-top:10px;"><i class="bi bi-hdd-fill"></i> Доступна ємність: <strong>${hdd_tb} TB</strong></div>
-            <div><i class="bi bi-camera-video"></i> Камер загалом: <strong>${total_cameras}</strong></div>
-            <div><i class="bi bi-list-check"></i> Конфігурація камер:</div>
-            <ul style="margin:4px 0 8px 20px;padding:0;">
-                ${camera_details.map(d => `<li>${d}</li>`).join('')}
-            </ul>
-            <div><i class="bi bi-speedometer2"></i> Сумарний бітрейт: <strong>${total_bitrate} Kbps</strong> (${(total_bitrate/1024).toFixed(1)} Mbps)</div>
-            <div style="margin-top:10px;font-weight:500;"><i class="bi bi-calendar3"></i> Глибина архіву: <strong>${total_days.toFixed(1)} днів</strong></div>
-        `;
-        document.getElementById('daysResult').style.display = '';
+    <div class="result-header"><i class="bi bi-bar-chart-fill result-icon"></i> <strong>Результати розрахунку:</strong></div>
+    <table class="result-table zebra-table">
+        <tr>
+            <td class="label"><i class="bi bi-hdd-fill"></i> Доступна ємність:</td>
+            <td class="value">${hdd_tb} TB</td>
+        </tr>
+        <tr>
+            <td class="label"><i class="bi bi-camera-video"></i> Камер загалом:</td>
+            <td class="value"><strong>${total_cameras}</strong></td>
+        </tr>
+        <tr>
+            <td class="label"><i class="bi bi-list-check"></i> Конфігурація камер:</td>
+            <td class="value">
+                <ul class="camera-list">
+                    <strong>
+                        ${camera_details.map(d => `<li>${d}</li>`).join('')}
+                    </strong>
+                </ul>
+            </td>
+        </tr>
+        <tr>
+            <td class="label"><i class="bi bi-speedometer2"></i> Сумарний бітрейт:</td>
+            <td class="value"><strong>${total_bitrate} Kbps (${(total_bitrate/1024).toFixed(1)} Mbps)</strong></td>
+        </tr>
+        <tr>
+            <td class="label"><i class="bi bi-calendar3"></i> Глибина архіву:</td>
+            <td class="value"><strong>${total_days.toFixed(1)} днів</strong></td>
+        </tr>
+    </table>
+`;
+document.getElementById('daysResult').style.display = '';
     } catch (err) {
         alert("Помилка: " + err.message);
     }
