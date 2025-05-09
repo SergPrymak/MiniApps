@@ -117,7 +117,7 @@ document.getElementById('capacityCalcForm').onsubmit = function(e) {
         const mah_37v = (total_wh / 3.7) * 1000;
         document.getElementById('capacityResultContent').innerHTML = `
             <div class="result-header"><i class="bi bi-bar-chart-fill"></i> <strong>Результати розрахунку:</strong></div>
-            <table class="result-table">
+            <table class="result-table zebra-table">
                 <tr>
                     <td><i class="bi bi-clock"></i> Час автономії:</td>
                     <td><strong>${hours} годин</strong></td>
@@ -181,7 +181,7 @@ document.getElementById('timeCalcForm').onsubmit = function(e) {
         const capacity_unit = (voltage <= 4) ? 'mAh' : 'Ah';
         document.getElementById('timeResultContent').innerHTML = `
             <div class="result-header"><i class="bi bi-bar-chart-fill"></i> <strong>Результати розрахунку:</strong></div>
-            <table class="result-table">
+            <table class="result-table zebra-table">
                 <tr>
                     <td><i class="bi bi-battery-full"></i> Ємність акумулятора:</td>
                     <td><strong>${capacity} ${capacity_unit} / ${voltage}V</strong></td>
