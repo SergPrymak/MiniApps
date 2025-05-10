@@ -27,7 +27,7 @@ function addCameraItem(containerId) {
     const row = document.createElement('div');
     row.className = 'device-row';
     row.innerHTML = `
-        <input type="number" class="device-input camera-count" min="1" value="1" required placeholder="К-сть" style="width: 80px;">
+        <input type="number" class="device-input camera-count" min="1" value="1" required placeholder="К-сть" style="width: 110px;">
         <input type="number" class="device-input" min="128" value="2048" required placeholder="Бітрейт (Kbps)" style="flex-grow: 1;">
         <button type="button" class="remove-btn" tabindex="-1" aria-label="Видалити"><i class="bi bi-x-circle"></i></button>
     `;
