@@ -66,8 +66,8 @@
     <a href="../index.html" class="back-button">← Повернутися до меню</a>
     <div class="header">
         <i class="bi bi-hdd-fill header-icon"></i>
-        <h1>Калькулятор відеоархіву</h1>
-        <p>Планування ємності для систем відеоспостереження</p>
+        <h1>Планування відеоархіву</h1>
+        <p>Розрахунок об'єму пам'яті для систем відеонагляду</p>
     </div>
 
     <div class="main-content">
@@ -82,10 +82,16 @@
                 <label class="form-label"><i class="info-icon bi bi-calendar-week"></i>Глибина архіву (днів):</label>
                 <input type="number" class="form-input" id="days" min="1" value="30" required>
                 
-                <label class="form-label"><i class="info-icon bi bi-camera-video"></i>Відеокамери:</label>
+                <!-- <label class="form-label"><i class="info-icon bi bi-camera-video"></i>Відеокамери:</label> -->
+                <div class="device-row" style="margin-bottom: 5px;">
+                    <label class="form-label" style="width: 135px;"><i class="info-icon bi bi-camera-video"></i>Камери:</label>
+                    <label class="form-label" style="flex-grow: 1;"><i class="info-icon bi bi-speedometer2"></i>Бітрейт (Kbps):</label>
+                    <div style="width: 28px;"></div> <!-- Пропуск для кнопки видалення -->
+                </div>
+                
                 <div id="camerasHdd">
                     <div class="device-row">
-                        <input type="number" class="device-input camera-count" min="1" value="1" required placeholder="К-сть" style="width: 80px;">
+                        <input type="number" class="device-input camera-count" min="1" value="1" required placeholder="К-сть" style="width:110px;">
                         <input type="number" class="device-input" min="128" value="2048" required placeholder="Бітрейт (Kbps)" style="flex-grow: 1;">
                         <button type="button" class="remove-btn" tabindex="-1" aria-label="Видалити"><i class="bi bi-x-circle"></i></button>
                     </div>
@@ -105,11 +111,15 @@
             <form id="daysCalcForm" autocomplete="off">
                 <label class="form-label"><i class="info-icon bi bi-hdd-fill"></i>Доступний об'єм диска:</label>
                 <input type="number" class="form-input" id="hddSize" min="0.1" step="0.1" value="4" required>
+                <div class="device-row" style="margin-bottom: 5px;">
+                    <label class="form-label" style="width: 135px;"><i class="info-icon bi bi-camera-video"></i>Камери:</label>
+                    <label class="form-label" style="flex-grow: 1;"><i class="info-icon bi bi-speedometer2"></i>Бітрейт (Kbps):</label>
+                    <div style="width: 28px;"></div> <!-- Пропуск для кнопки видалення -->
+                </div>
                 
-                <label class="form-label"><i class="info-icon bi bi-camera-video"></i>Відеокамери:</label>
                 <div id="camerasDays">
                     <div class="device-row">
-                        <input type="number" class="device-input camera-count" min="1" value="1" required placeholder="К-сть" style="width: 80px;">
+                        <input type="number" class="device-input camera-count" min="1" value="1" required placeholder="К-сть" style="width: 110px;">
                         <input type="number" class="device-input" min="128" value="2048" required placeholder="Бітрейт (Kbps)" style="flex-grow: 1;">
                         <button type="button" class="remove-btn" tabindex="-1" aria-label="Видалити"><i class="bi bi-x-circle"></i></button>
                     </div>
@@ -125,27 +135,26 @@
         </div>
 
         <div class="tips-section">
-            <p><i class="bi bi-info-circle"></i> <strong>Як використовувати калькулятор?</strong></p>
+            <p><i class="bi bi-info-circle"></i> <strong>Як використовувати?</strong></p>
             <p>Бітрейт - середній обсяг даних, що передається камерою за секунду.</p>
             <p>Типові значення бітрейту:</p>
             <div style="display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 10px;">
-                <span class="camera-badge"><i class="bi bi-camera-video"></i> 1 Мп: 1024-2048 Kbps</span>
-                <span class="camera-badge"><i class="bi bi-camera-video"></i> 2 Мп: 2048-4096 Kbps</span>
-                <span class="camera-badge"><i class="bi bi-camera-video"></i> 4 Мп: 4096-8192 Kbps</span>
+                <span class="camera-badge"><i class="bi bi-camera-video"></i> 2 Мп: 1024-2048 Kbps</span>
+                <span class="camera-badge"><i class="bi bi-camera-video"></i> 4 Мп: 2048-4096 Kbps</span>
+                <span class="camera-badge"><i class="bi bi-camera-video"></i> 8 Мп: 4096-8192 Kbps</span>
             </div>
             
             <p><i class="bi bi-gear"></i> <strong>Технічні деталі розрахунків:</strong></p>
             <ul>
                 <li>1 Mbps = 1024 Kbps</li>
                 <li>Розрахунок включає конвертацію бітів у байти (÷8)</li>
-                <li>Для обчислення днів застосовується коефіцієнт форматування (0.909)</li>
                 <li>Результат показує необхідну ємність для цілодобового запису</li>
             </ul>
             
             <p><i class="bi bi-lightbulb"></i> <strong>Приклади використання:</strong></p>
             <ul>
                 <li>2 камери по 2048 Kbps + 4 камери по 4096 Kbps на 30 днів = <strong>~6.2 TB</strong></li>
-                <li>Диск 10TB з 5 камерами (1024 Kbps) + 3 камерами (8192 Kbps) = <strong>~60 днів</strong></li>
+                <li>Диск 10TB з 5 камерами (1024 Kbps) + 3 камерами (8192 Kbps) = <strong>~30 днів</strong></li>
             </ul>
         </div>
     </div>
