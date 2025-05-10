@@ -75,7 +75,7 @@ a:hover {
 .calc-button:active {
     background: #2563eb;
 }
-.result-box {
+.result-cctvbox {
     font-size: 15px;
     background-color: #FAFCFF;
     border: 1px solid #C2CFE0;
@@ -86,7 +86,12 @@ a:hover {
 .result-box strong {
     color: #2196f3;
 }
-.result-section {
+
+.result-cctvbox strong {
+    color: #2196f3;
+}
+
+.result-cctvsection {
     margin-top: 12px;
     padding-top: 10px;
     border-top: 1px solid #d1e7fc;
@@ -118,48 +123,42 @@ a:hover {
     margin-right: 5px;
 }
 
-.result-table {
+.result-cctvtable {
     border-collapse: collapse;
     width: 100%;
-    margin-top: 5px;
+    margin-top: 10px;
     margin-left: 15px;
 }
 
-.result-table td.label {
+.result-cctvtable td.label {
     padding: 5px 5px 2px 5px;
 }
 
-.result-table td.value {
+.result-cctvtable td.value {
     padding: 5px 0px 2px 5px;
 }
 
-.result-table ul.camera-list {
+.result-cctvtable ul.camera-list {
     margin: 0px;
     padding-left: 20px;
     line-height: 1.1;
 }
 
-.result-header {
-    margin-bottom: 5px;
+.result-cctvheader {
+    margin-bottom: 15px;
 }
 
-.result-table.zebra-table tr:nth-child(even) {
+.result-cctvtable.zebra-table tr:nth-child(even) {
     background: #f7fafd;
 }
-.result-table.zebra-table tr:nth-child(odd) {
+.result-cctvtable.zebra-table tr:nth-child(odd) {
     background: #edf3f7;
 }
 
-.result-table i.bi {
-    color: #2196f3;
-  }
-
-.result-icon {
-    color: #2196f3; /* Світло-синій колір */
+/* Додаю стилі для іконок у таблицях результатів */
+.result-cctvtable i.bi,
+.result-cctvicon,
+.result-cctvheader i.bi {
+    color: #3b82f6;
 }
 
-/* Consider adding common button styles if needed */
-/*
-.button-primary { ... }
-.button-secondary { ... }
-*/
