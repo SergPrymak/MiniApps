@@ -113,8 +113,7 @@ function calculateVisionRange(e) {
         const widthPx = RESOLUTION_MAP[closestMp];
         
         // Calculate field of view
-        // const fovDegrees = (2 * Math.atan(sensorWidthMm / (2 * focalLength)) * 180 / Math.PI) * 1.085;
-        const fovDegrees = 2 * Math.atan(sensorWidthMm / (2 * focalLength)) * (180 / Math.PI) * 1.13; //corection koef 1.13
+        const fovDegrees = (2 * Math.atan(sensorWidthMm / (2 * focalLength)) * 180 / Math.PI);
         
         // Create a working copy of OTHER_FEATURES without banknote recognition if height is specified
         let workingOtherFeatures = {...OTHER_FEATURES};
