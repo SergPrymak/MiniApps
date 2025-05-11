@@ -127,16 +127,21 @@ a:hover {
     border-collapse: collapse;
     width: 100%;
     margin-top: 10px;
-    margin-left: 15px;
+    margin-left: 8px;
 }
 
 .result-cctvtable td.label {
     padding: 5px 5px 2px 5px;
 }
 
-.result-cctvtable td.value {
-    padding: 5px 0px 2px 5px;
+.result-cctvtable td.value2 {
+    padding: 5px 5px 2px 5px;
 }
+
+/* .result-cctvtable td.value {
+    padding: 5px 0px 2px 5px;
+    font: normal;
+} */
 
 .result-cctvtable ul.camera-list {
     margin: 0px;
@@ -160,5 +165,68 @@ a:hover {
 .result-cctvicon,
 .result-cctvheader i.bi {
     color: #3b82f6;
+}
+
+/* Додаємо стилі для таблиць результатів і повзунків */
+
+/* Стилі для таблиці результатів */
+.result-cctvheader {
+    margin-bottom: 10px;
+}
+.result-cctvicon {
+    margin-right: 5px;
+    color: #2196f3;
+}
+.result-cctvtable {
+    width: 100%;
+    border-collapse: collapse;
+    line-height: 1.1;
+}
+.result-cctvtable td {
+    padding: 2px 3px;
+    vertical-align: top;
+}
+.zebra-table tr:nth-child(even) {
+    background-color: rgba(0, 0, 0, 0.02);
+}
+.result-cctvtable .label {
+    width: 40%;
+    color: #555;
+}
+.result-cctvtable .value {
+    font-weight: 500;
+    font: normal;
+}
+.camera-list {
+    margin: 0;
+    padding-left: 20px;
+    line-height: 1.0;
+}
+.camera-list li {
+    margin: 0;
+}
+
+/* Стилі для повзунків і полів вводу */
+.slider-container {
+    margin-bottom: 15px;
+}
+.slider-input {
+    width: 100%;
+    margin: 8px 0;
+}
+.input-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 5px;
+}
+.input-group .form-input {
+    width: 70px;
+    margin-bottom: 0;
+    text-align: center;
+}
+.input-label {
+    font-size: 14px;
+    color: #666;
 }
 
