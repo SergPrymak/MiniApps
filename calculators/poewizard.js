@@ -269,123 +269,58 @@ function displayResults(result, pdPower, totalDistance, extenderPositions) {
     const resultDiv = document.getElementById('result');
     
     let resultHtml = `
-        <div class="result-header"><i class="bi bi-bar-chart-fill"></i> <strong>Результати розрахунку:</strong></div>
-        <table class="result-table zebra-table">
-            <tr>
-                <td><i class="bi bi-lightning"></i> Споживання:</td>
-                <td>${pdPower} Вт</td>
-            </tr>
-            <tr>
-                <td><i class="bi би-arrows-angle-expand"></i> Відстань:</td>
-                <td>${totalDistance} м</td>
-            </tr>
-        </table>
+        <div><i class="bi bi-bar-chart-fill"></i> <strong>Результати розрахунку:</strong></div>
         
-        <div class="section-header"><i class="bi bi-hdd-network"></i> <strong>Варіант 1: Тільки POE Світч</strong></div>`;
+        <div style="margin-top:10px;"><i class="bi bi-lightning"></i> Споживання: <strong>${pdPower} Вт</strong></div>
+        <div><i class="bi bi-arrows-angle-expand"></i> Відстань: <strong>${totalDistance} м</strong></div>
+        
+        <div style="margin-top:10px;"><i class="bi bi-hdd-network"></i> <strong>Варіант 1:</strong> <strong>Тільки POE Світч</strong></div>`;
     
     if (result.noExt) {
         resultHtml += `
-        <table class="result-table zebra-table">
-            <tr>
-                <td><i class="bi bi-diagram-2"></i> Стандарт:</td>
-                <td><strong>${result.noExt.name}</strong></td>
-            </tr>
-            <tr>
-                <td><i class="bi bi-lightning"></i> Портова потужність:</td>
-                <td><strong>${result.noExt.port_power.toFixed(2)} Вт</strong></td>
-            </tr>
-            <tr>
-                <td><i class="bi bi-arrow-down"></i> Падіння напруги:</td>
-                <td><strong>${result.noExt.v_drop.toFixed(2)} В</strong></td>
-            </tr>
-            <tr>
-                <td><i class="bi bi-battery-half"></i> Напруга на PD:</td>
-                <td><strong>${result.noExt.voltage_at_pd.toFixed(2)} В</strong></td>
-            </tr>
-            <tr>
-                <td><i class="bi bi-speedometer"></i> Швидкість:</td>
-                <td><strong>${result.noExt.speed}</strong></td>
-            </tr>`;
+            <div><i class="bi bi-diagram-2"></i> Стандарт: <strong>${result.noExt.name}</strong></div>
+            <div><i class="bi bi-lightning"></i> Портова потужність: <strong>${result.noExt.port_power.toFixed(2)} Вт</strong></div>
+            <div><i class="bi bi-arrow-down"></i> Падіння напруги: <strong>${result.noExt.v_drop.toFixed(2)} В</strong></div>
+            <div><i class="bi bi-battery-half"></i> Напруга на PD: <strong>${result.noExt.voltage_at_pd.toFixed(2)} В</strong></div>
+            <div><i class="bi bi-speedometer"></i> Швидкість: <strong>${result.noExt.speed}</strong></div>`;
         
         if (totalDistance > 250 || result.noExt.voltage_at_pd < 37) {
             resultHtml += `
-            <tr class="warning-row">
-                <td colspan="2">
-                    <i class="bi bi-exclamation-triangle-fill"></i> Перевищено максимальну відстань або недостатня напруга на PD!
-                </td>
-            </tr>`;
+                <div style="color:#E6704B;"><i class="bi bi-exclamation-triangle-fill" style="color:#E6704B;"></i> Перевищено максимальну відстань або недостатня напруга на PD!</div>`;
         }
-        
-        resultHtml += `</table>`;
     } else {
         resultHtml += `
-        <table class="result-table">
-            <tr class="warning-row">
-                <td colspan="2">
-                    <i class="bi bi-x-octagon-fill"></i> Недоступно (перевищення потужності або недостатня напруга)
-                </td>
-            </tr>
-        </table>`;
+            <div style="color:#E6704B;"><i class="bi bi-x-octagon-fill" style="color:#E6704B;"></i> Недоступно (перевищення потужності або недостатня напруга)</div>`;
     }
     
-    resultHtml += `<div class="section-header"><i class="bi bi-hdd-stack"></i> <strong>Варіант 2: З Extender'ами</strong></div>`;
+    resultHtml += `<div style="margin-top:10px;"><i class="bi bi-hdd-stack"></i> <strong>Варіант 2: З Extender'ами</strong></div>`;
     
     if (result.withExt) {
         resultHtml += `
-        <table class="result-table">
-            <tr>
-                <td><i class="bi bi-boxes"></i> Extender'ів:</td>
-                <td><strong>${result.withExt.num_ext}</strong></td>
-            </tr>`;
+            <div><i class="bi bi-boxes"></i> Extender'ів: <strong>${result.withExt.num_ext}</strong></div>`;
         
         if (extenderPositions.length > 0) {
             const positionsStr = extenderPositions.map(pos => `<strong>${pos.toFixed(0)}м</strong>`).join(", ");
             resultHtml += `
-            <tr>
-                <td><i class="bi bi-geo-alt"></i> Позиції extender'ів:</td>
-                <td>${positionsStr}</td>
-            </tr>`;
+                <div><i class="bi bi-geo-alt"></i> Позиції extender'ів: ${positionsStr}</div>`;
         }
         
         resultHtml += `
-            <tr>
-                <td><i class="bi bi-distribute-horizontal"></i> Сегменти:</td>
-                <td>${result.withExt.segment_lengths.map(sl => `<strong>${sl.toFixed(1)}м</strong>`).join(", ")}</td>
-            </tr>
-            <tr>
-                <td><i class="bi bi-lightning-charge-fill"></i> Загальна потужність:</td>
-                <td><strong>${result.withExt.total_power.toFixed(2)} Вт</strong></td>
-            </tr>
-            <tr>
-                <td><i class="bi bi-diagram-2"></i> Стандарт:</td>
-                <td><strong>${result.withExt.standard.name}</strong></td>
-            </tr>
-            <tr>
-                <td><i class="bi bi-arrow-down-up"></i> Сумарне падіння напруги:</td>
-                <td><strong>${result.withExt.total_vdrop.toFixed(2)} В</strong></td>
-            </tr>
-            <tr>
-                <td><i class="bi bi-battery-half"></i> Напруга на PD:</td>
-                <td><strong>${result.withExt.voltage_at_pd.toFixed(2)} В</strong></td>
-            </tr>
-            <tr>
-                <td><i class="bi bi-speedometer"></i> Швидкість:</td>
-                <td><strong>${result.withExt.speed}</strong></td>
-            </tr>`;
+            <div><i class="bi bi-distribute-horizontal"></i> Сегменти: ${result.withExt.segment_lengths.map(sl => `<strong>${sl.toFixed(1)}м</strong>`).join(", ")}</div>
+            <div><i class="bi bi-lightning-charge-fill"></i> Загальна потужність: <strong>${result.withExt.total_power.toFixed(2)} Вт</strong></div>
+            <div><i class="bi bi-diagram-2"></i> Стандарт: <strong>${result.withExt.standard.name}</strong></div>
+            <div><i class="bi bi-arrow-down-up"></i> Сумарне падіння напруги: <strong>${result.withExt.total_vdrop.toFixed(2)} В</strong></div>
+            <div><i class="bi bi-battery-half"></i> Напруга на PD: <strong>${result.withExt.voltage_at_pd.toFixed(2)} В</strong></div>
+            <div><i class="bi bi-speedometer"></i> Швидкість: <strong>${result.withExt.speed}</strong></div>`;
         
         if (result.longSegmentsWarning) {
             resultHtml += `
-            <tr class="warning-row">
-                <td colspan="2">
-                    <i class="bi bi-exclamation-triangle-fill"></i> Увага! Виявлено сегменти довші за 100м. Високий ризик втрати пакетних даних.
-                </td>
-            </tr>`;
+                <div style="color:#E6704B;"><i class="bi bi-exclamation-triangle-fill" style="color:#E6704B;"></i> Увага! Виявлено сегменти довші за 100м. Високий ризик втрати пакетних даних.</div>`;
         }
         
-        resultHtml += `</table>
-        
-        <div class="section-header"><i class="bi bi-diagram-3"></i> <strong>Топологія:</strong></div>
-        <pre style="background:#F5FBF6;border-radius:10px;padding:8px 10px;font-size:0.9em;margin-top:4px;border:1px solid #C8E6C9;">PSE (${result.withExt.standard.name} ${result.withExt.total_power.toFixed(2)}Вт)`;
+        resultHtml += `
+            <div style="margin-top:10px;"><i class="bi bi-diagram-3"></i> <strong>Топологія:</strong></div>
+            <pre style="background:#F5FBF6;border-radius:10px;padding:8px 10px;font-size:0.9em;margin-top:4px;border:1px solid #C8E6C9;">PSE (${result.withExt.standard.name} ${result.withExt.total_power.toFixed(2)}Вт)`;
         
         let currentPosition = 0;
         for (let idx = 0; idx < result.withExt.segment_powers.length; idx++) {
@@ -405,13 +340,7 @@ function displayResults(result, pdPower, totalDistance, extenderPositions) {
         resultHtml += `</pre>`;
     } else {
         resultHtml += `
-        <table class="result-table">
-            <tr class="warning-row">
-                <td colspan="2">
-                    <i class="bi bi-x-octagon-fill"></i> ${result.extendersInfo || "Недоступно (перевищені обмеження або недостатня напруга)"}
-                </td>
-            </tr>
-        </table>`;
+            <div style="color:#E6704B;"><i class="bi bi-x-octagon-fill" style="color:#E6704B;"></i> ${result.extendersInfo || "Недоступно (перевищені обмеження або недостатня напруга)"}</div>`;
     }
     
     resultDiv.innerHTML = resultHtml;
