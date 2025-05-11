@@ -147,7 +147,8 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-function generateDiagramTopView(distanceM, fovDegrees, pxPerM) {
+// Виправлення: додамо параметр megapixels у функцію generateDiagramTopView
+function generateDiagramTopView(distanceM, fovDegrees, pxPerM, megapixels) {
     // SVG розміри
     const svgWidth = 340;
     const svgHeight = 200; // Збільшена висота для шкали
@@ -171,10 +172,10 @@ function generateDiagramTopView(distanceM, fovDegrees, pxPerM) {
 
     // DORI зони (радіуси в метрах)
     const doriZones = [
-        { name: "🆔 Ідентифікація", color: "#ffa500", fill: "rgba(255,165,0,0.18)", px: DORI_THRESHOLDS["🆔 Ідентифікація (чітко іден. особу)"] },
-        { name: "👤 Розпізнавання", color: "#ffff00", fill: "rgba(255,255,0,0.15)", px: DORI_THRESHOLDS["👤 Розпізнавання (впізнати знайому особу)"] },
-        { name: "👀 Огляд", color: "#90ee90", fill: "rgba(144,238,144,0.15)", px: DORI_THRESHOLDS["👀 Огляд (деталі особи/одяг)"] },
-        { name: "🔍 Детекція", color: "#aed8e6", fill: "rgba(173,216,230,0.15)", px: DORI_THRESHOLDS["🔍 Детекція (виявити рух/наявність людини)"] }
+        { name: "🆔 Ідентифікація", color: "#ff6600", fill: "rgba(81, 255, 0, 0.25)", px: DORI_THRESHOLDS["🆔 Ідентифікація (чітко іден. особу)"] },
+        { name: "👤 Розпізнавання", color: "#cc3399", fill: "rgba(48, 13, 206, 0.25)", px: DORI_THRESHOLDS["👤 Розпізнавання (впізнати знайому особу)"] },
+        { name: "👀 Огляд", color: "#33cc33", fill: "rgba(51,204,51,0.25)", px: DORI_THRESHOLDS["👀 Огляд (деталі особи/одяг)"] },
+        { name: "🔍 Детекція", color: "#3399ff", fill: "rgba(51,153,255,0.25)", px: DORI_THRESHOLDS["🔍 Детекція (виявити рух/наявність людини)"] }
     ];
 
     // Функція для малювання сектора
@@ -196,14 +197,25 @@ function generateDiagramTopView(distanceM, fovDegrees, pxPerM) {
 
     // Малюємо зони DORI (від більшої до меншої)
     let doriSectors = '';
+    
+    // Виправлено: використання ширини в пікселях для поточного вибраного мегапікселя
+    const width_px = megapixels ? RESOLUTION_MAP[megapixels] : RESOLUTION_MAP[2.0]; // за замовчуванням 2.0 MP
+    
     for (let i = doriZones.length - 1; i >= 0; i--) {
         const zone = doriZones[i];
-        // Відстань, на якій ця зона закінчується (м)
-        const maxRange = (RESOLUTION_MAP[sortedMpValues[0]] / (2 * Math.tan(fovRad))) * (1 / zone.px);
-        const zoneDist = pxPerM > 0 ? Math.min(maxDistance, maxRange) : 0;
-        const r = Math.min(zoneDist, maxDistance) * scale;
-        if (r > 5) {
-            doriSectors += `<path d="${sectorPath(cameraX, cameraY, r, fovRad)}" fill="${zone.fill}" stroke="${zone.color}" stroke-width="1"/>`;
+        
+        try {
+            // Обчислюємо максимальну відстань для зони і перевіряємо наявність помилок
+            const maxRange = (width_px / zone.px) / (2 * Math.tan(fovRad));
+            
+            const zoneDist = maxRange;
+            const r = zoneDist * scale;
+            
+            doriSectors += `<path d="${sectorPath(cameraX, cameraY, r, fovRad)}" 
+                          fill="${zone.fill}" stroke="${zone.color}" 
+                          stroke-width="1.5" stroke-opacity="0.9"/>`;
+        } catch (e) {
+            console.error(`Помилка при побудові зони ${zone.name}:`, e);
         }
     }
 
@@ -240,6 +252,10 @@ function generateDiagramTopView(distanceM, fovDegrees, pxPerM) {
         }
     }
 
+    // Розрахунок ширини зони огляду на відстані об'єкта
+    const widthAtObjectDistance = 2 * distanceM * Math.tan(fovRad);
+    const halfWidth = widthAtObjectDistance / 2 * scale;
+
     return `
 <svg width="${svgWidth}" height="${svgHeight}" style="background:#f5f9ff; border-radius:8px;">
     <!-- DORI зони -->
@@ -249,19 +265,28 @@ function generateDiagramTopView(distanceM, fovDegrees, pxPerM) {
     <line x1="${cameraX}" y1="${cameraY}" x2="${fovX}" y2="${fovY2}" stroke="#3b82f6" stroke-width="1" stroke-dasharray="3,2"/>
     <!-- Відрізок до об'єкта -->
     <line x1="${cameraX}" y1="${cameraY}" x2="${objectX}" y2="${objectY}" stroke="#888" stroke-width="1.5" stroke-dasharray="4,3"/>
+    
+    <!-- Вертикальна лінія ширини зони огляду -->
+    <line x1="${objectX}" y1="${cameraY - halfWidth}" x2="${objectX}" y2="${cameraY + halfWidth}" 
+          stroke="#666" stroke-width="1" stroke-dasharray="5,3"/>
+    <text x="${objectX}" y="${objectY}" 
+          font-size="10" text-anchor="start" fill="#666" transform="rotate(90, ${objectX + 7}, ${cameraY - halfWidth + 10})">
+          Ширина зони огляду ${widthAtObjectDistance.toFixed(2)} м
+    </text>
+    
     <!-- Камера -->
     <rect x="${cameraX-8}" y="${cameraY-10}" width="16" height="20" rx="3" fill="#3b82f6" />
     <circle cx="${cameraX+4}" cy="${cameraY}" r="3" fill="#fff"/>
     <!-- Об'єкт -->
     <rect x="${objectX-objectW/2}" y="${objectY-objectH/2}" width="${objectW}" height="${objectH}" rx="2" fill="#ff6b6b" stroke="#c00" stroke-width="1"/>
-    <text x="${objectX}" y="${objectY+objectH/2+13}" font-size="11" text-anchor="middle" fill="#444">${distanceM} м</text>
+    <text x="${(objectX-cameraX)/2+13}" y="${objectY+objectH/2}" font-size="11" text-anchor="middle" fill="#444">${distanceM} м</text>
     <text x="${objectX}" y="${objectY-objectH/2-6}" font-size="11" text-anchor="middle" fill="#444">Об'єкт</text>
     <!-- Шкала в метрах -->
     ${scaleMarks}
     <!-- Текст FOV -->
-    <text x="${cameraX+fovLineLen*0.75}" y="${fovY1-10}" font-size="10" fill="#3b82f6">FOV ${fovDegrees}°</text>
+    <text x="${cameraX-5}" y="${cameraY-18}" font-size="14" fill="#3b82f6">FOV ${fovDegrees}°</text>
     <!-- Підпис зони об'єкта -->
-    <text x="${objectX}" y="${objectY+objectH/2+28}" font-size="11" text-anchor="middle" fill="#2196f3">${objectZone}</text>
+    <text x="${objectX}" y="${objectY+objectH/2+13}" font-size="11" text-anchor="middle" fill="#2196f3">${objectZone}</text>
 </svg>
     `;
 }
@@ -282,7 +307,8 @@ function generateResultHTML(megapixels, fovDegrees, distanceM, widthM, pxPerM,
     }
     
     // Генеруємо схему зон
-    const diagram = generateDiagramTopView(distanceM, fovDegrees, pxPerM);
+    // Виправлення: передамо megapixels як четвертий аргумент
+    const diagram = generateDiagramTopView(distanceM, fovDegrees, pxPerM, megapixels);
     
     let html = `
     <div class="result-cctvheader"><i class="bi bi-bar-chart-fill result-cctvicon"></i> <strong>Результати аналізу піксельної щільності:</strong></div>
