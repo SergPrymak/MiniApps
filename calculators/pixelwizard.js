@@ -6,17 +6,17 @@ const RESOLUTION_MAP = {
 
 // Порогові значення для DORI
 const DORI_THRESHOLDS = {
-    "🆔 Ідентифікація (чітко іден. особу)": 250, 
-    "👤 Розпізнавання (впізнати знайому особу)": 125,
-    "👀 Огляд (деталі особи/одяг)": 62, 
-    "🔍 Детекція (виявити рух/наявність людини)": 25
+    "🆔 Ідентифікація": 250, 
+    "👤 Розпізнавання": 125,
+    "👀 Огляд": 62, 
+    "🔍 Детекція": 25
 };
 
 // Порогові значення для розпізнавання обличчя
 const FACE_RECOGNITION_THRESHOLDS = {
-    "👤 Базове виявлення обличчя (мінімум для виявлення)": 50,
-    "👥 Впізнавання (пошук в БД)": 100,
-    "🔍 Високоточне розпізнавання (погане освітлення, рух)": 145
+    "👤 Базове виявлення обличчя": 50,
+    "👥 Впізнавання": 100,
+    "🔍 Високоточне розпізнавання": 145
 };
 
 // Інші спеціальні можливості
@@ -55,6 +55,10 @@ document.addEventListener('DOMContentLoaded', function() {
     const distanceInput = document.getElementById('distance');
     const fovValue = document.getElementById('fovValue');
     const distanceValue = document.getElementById('distanceValue');
+    
+    // Додаємо доступ до контейнера та поля для кастомної роздільної здатності
+    const customResolutionContainer = document.getElementById('customResolutionContainer');
+    const customResolutionInput = document.getElementById('customResolution');
     
     // Функції для нелінійного перетворення відстані
     function percentToDistance(percent) {
@@ -120,8 +124,23 @@ document.addEventListener('DOMContentLoaded', function() {
         const option = document.createElement('option');
         option.value = mp;
         option.textContent = `${mp} MP (${RESOLUTION_MAP[mp]} px)`;
-        option.selected = mp === 2.0;
+        option.selected = mp === 4.0;
         selectElement.appendChild(option);
+    });
+    
+    // Додаємо опцію для ручного введення роздільної здатності
+    const customOption = document.createElement('option');
+    customOption.value = 'custom';
+    customOption.textContent = 'Ввести вручну';
+    selectElement.appendChild(customOption);
+    
+    // Додаємо обробник події для відображення/приховування поля ручного введення
+    selectElement.addEventListener('change', function() {
+        if (this.value === 'custom') {
+            customResolutionContainer.style.display = 'flex';
+        } else {
+            customResolutionContainer.style.display = 'none';
+        }
     });
     
     // Додаємо обробник події для форми
@@ -129,17 +148,38 @@ document.addEventListener('DOMContentLoaded', function() {
         e.preventDefault();
         
         // Отримати та валідувати вхідні дані
-        const megapixels = parseFloat(document.getElementById('megapixels').value);
+        const megapixelsValue = document.getElementById('megapixels').value;
         const fovDegrees = parseFloat(document.getElementById('fov').value);
         const distanceM = parseFloat(document.getElementById('distance').value);
         
-        if (megapixels <= 0 || fovDegrees <= 0 || distanceM <= 0) {
+        // Перевіряємо, чи вибрано кастомну роздільну здатність
+        let width_px;
+        let megapixels;
+        
+        if (megapixelsValue === 'custom') {
+            width_px = parseInt(customResolutionInput.value);
+            megapixels = 'custom';
+            
+            if (isNaN(width_px) || width_px <= 0) {
+                alert("Роздільна здатність має бути більше 0");
+                return;
+            }
+        } else {
+            megapixels = parseFloat(megapixelsValue);
+            width_px = RESOLUTION_MAP[megapixels];
+            
+            if (isNaN(megapixels) || megapixels <= 0) {
+                alert("Роздільна здатність має бути більше 0");
+                return;
+            }
+        }
+        
+        if (fovDegrees <= 0 || distanceM <= 0) {
             alert("Усі параметри мають бути більше 0");
             return;
         }
         
         // Основні розрахунки
-        const width_px = RESOLUTION_MAP[megapixels];
         const widthM = 2 * distanceM * Math.tan((fovDegrees / 2) * (Math.PI / 180));
         const pxPerM = width_px / widthM;
         
@@ -171,7 +211,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Формування результату
         resultContent.innerHTML = generateResultHTML(
             megapixels, fovDegrees, distanceM, widthM, pxPerM,
-            doriLevel, doriThreshold, faceRecognition, specialFeatures
+            doriLevel, doriThreshold, faceRecognition, specialFeatures, width_px
         );
         
         resultBox.style.display = 'block';
@@ -180,14 +220,13 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // Виправлення: додамо параметр megapixels у функцію generateDiagramTopView
-function generateDiagramTopView(distanceM, fovDegrees, pxPerM, megapixels) {
-    // SVG розміри
-    const svgWidth = 340;
-    const svgHeight = 200; // Збільшена висота для шкали
+function generateDiagramTopView(distanceM, fovDegrees, pxPerM, megapixels, width_px) {
+    // SVG розміри - змінюємо для адаптивності
+    const svgWidth = 340; // Базова ширина для розрахунків
+    const svgHeight = 250; // Базова висота для розрахунків
     const padding = 20;
     const cameraX = padding;
-    // Виправлено: краще центрування по вертикалі
-    const cameraY = svgHeight / 2 - 10; // Змінено з -20 на -10 для кращого центрування
+    const cameraY = (svgHeight / 2);
 
     // Масштаб: максимальна відстань (об'єкт або 1.2*distanceM для запасу)
     const maxDistance = Math.max(distanceM * 1.1, 1.2 * distanceM);
@@ -205,10 +244,10 @@ function generateDiagramTopView(distanceM, fovDegrees, pxPerM, megapixels) {
 
     // DORI зони (радіуси в метрах)
     const doriZones = [
-        { name: "🆔 Ідентифікація", color: "#ff6600", fill: "rgba(236, 122, 122, 0.95)", px: DORI_THRESHOLDS["🆔 Ідентифікація (чітко іден. особу)"] },
-        { name: "👤 Розпізнавання", color: "#cc3399", fill: "rgba(233, 229, 8, 0.85)", px: DORI_THRESHOLDS["👤 Розпізнавання (впізнати знайому особу)"] },
-        { name: "👀 Огляд", color: "#33cc33", fill: "rgba(15, 184, 15, 0.61)", px: DORI_THRESHOLDS["👀 Огляд (деталі особи/одяг)"] },
-        { name: "🔍 Детекція", color: "#3399ff", fill: "rgba(126, 196, 147, 0.5)", px: DORI_THRESHOLDS["🔍 Детекція (виявити рух/наявність людини)"] }
+        { name: "🆔 Ідентифікація", color: "#ff6600", fill: "rgba(236, 122, 122, 0.95)", px: DORI_THRESHOLDS["🆔 Ідентифікація"] },
+        { name: "👤 Розпізнавання", color: "#cc3399", fill: "rgba(233, 229, 8, 0.85)", px: DORI_THRESHOLDS["👤 Розпізнавання"] },
+        { name: "👀 Огляд", color: "#33cc33", fill: "rgba(15, 184, 15, 0.61)", px: DORI_THRESHOLDS["👀 Огляд"] },
+        { name: "🔍 Детекція", color: "#3399ff", fill: "rgba(126, 196, 147, 0.5)", px: DORI_THRESHOLDS["🔍 Детекція"] }
     ];
 
     // Функція для малювання сектора
@@ -231,15 +270,15 @@ function generateDiagramTopView(distanceM, fovDegrees, pxPerM, megapixels) {
     // Малюємо зони DORI (від більшої до меншої)
     let doriSectors = '';
     
-    // Виправлено: використання ширини в пікселях для поточного вибраного мегапікселя
-    const width_px = megapixels ? RESOLUTION_MAP[megapixels] : RESOLUTION_MAP[2.0]; // за замовчуванням 2.0 MP
+    // Отримуємо ширину в пікселях
+    const actual_width_px = megapixels === 'custom' ? width_px : RESOLUTION_MAP[megapixels];
     
     for (let i = doriZones.length - 1; i >= 0; i--) {
         const zone = doriZones[i];
         
         try {
             // Обчислюємо максимальну відстань для зони і перевіряємо наявність помилок
-            const maxRange = (width_px / zone.px) / (2 * Math.tan(fovRad));
+            const maxRange = (actual_width_px / zone.px) / (2 * Math.tan(fovRad));
             
             const zoneDist = maxRange;
             const r = zoneDist * scale;
@@ -269,7 +308,7 @@ function generateDiagramTopView(distanceM, fovDegrees, pxPerM, megapixels) {
     // Генеруємо шкалу в метрах
     let scaleMarks = '';
     // Виправлено: змінено відстань шкали від центру для кращого центрування
-    const scaleY = cameraY + 70; // Змінено з +60 на +50
+    const scaleY = cameraY + 90; // Змінено з +60 на +50
     const scaleStart = cameraX;
     const scaleEnd = cameraX + maxDistance * scale;
     const majorStep = Math.ceil(maxDistance / 5); // Крок для великих поділок (кратний 5)
@@ -291,7 +330,7 @@ function generateDiagramTopView(distanceM, fovDegrees, pxPerM, megapixels) {
     const halfWidth = widthAtObjectDistance / 2 * scale;
 
     return `
-<svg width="${svgWidth}" height="${svgHeight}" style="background:#f5f9ff; border-radius:8px;">
+<svg width="100%" height="auto" viewBox="0 0 ${svgWidth} ${svgHeight}" preserveAspectRatio="xMidYMid meet" style="background:#f5f9ff; border-radius:8px; max-width:100%;">
     <!-- DORI зони -->
     ${doriSectors}
     <!-- Кут огляду -->
@@ -309,7 +348,7 @@ function generateDiagramTopView(distanceM, fovDegrees, pxPerM, megapixels) {
     </text>
     
     <!-- Камера -->
-    <rect x="${cameraX-8}" y="${cameraY-10}" width="16" height="20" rx="3" fill="#3b82f6" />
+    <rect x="${cameraX-16}" y="${cameraY-5}" width="20" height="10" rx="3" fill="#3b82f6" />
     <circle cx="${cameraX+4}" cy="${cameraY}" r="3" fill="#fff"/>
     <!-- Об'єкт -->
     <rect x="${objectX-objectW/2}" y="${objectY-objectH/2}" width="${objectW}" height="${objectH}" rx="2" fill="#ff6b6b" stroke="#c00" stroke-width="1"/>
@@ -318,15 +357,15 @@ function generateDiagramTopView(distanceM, fovDegrees, pxPerM, megapixels) {
     <!-- Шкала в метрах -->
     ${scaleMarks}
     <!-- Текст FOV -->
-    <text x="${cameraX-5}" y="${cameraY-18}" font-size="14" fill="#ff000">FOV ${fovDegrees}°</text>
+    <text x="${cameraX-16}" y="${cameraY-12}" font-size="14" fill="#00267f">FOV ${fovDegrees}°</text>
     <!-- Підпис зони об'єкта -->
-    <text x="${objectX-15}" y="${objectY+objectH/2+13}" font-size="11" text-anchor="middle" fill="#2196f3">${objectZone}</text>
+    <text x="${objectX-15}" y="${objectY+objectH/2+13}" font-size="11" text-anchor="middle" fill="#00267f">${objectZone}</text>
 </svg>
     `;
 }
 
 function generateResultHTML(megapixels, fovDegrees, distanceM, widthM, pxPerM, 
-                          doriLevel, doriThreshold, faceRecognition, specialFeatures) {
+                          doriLevel, doriThreshold, faceRecognition, specialFeatures, width_px) {
     // Перевірка на null значення
     doriLevel = doriLevel || "⚠️ Не підтримується";
     faceRecognition = faceRecognition || "⚠️ Не підтримується";
@@ -341,23 +380,31 @@ function generateResultHTML(megapixels, fovDegrees, distanceM, widthM, pxPerM,
     }
     
     // Генеруємо схему зон
-    // Виправлення: передамо megapixels як четвертий аргумент
-    const diagram = generateDiagramTopView(distanceM, fovDegrees, pxPerM, megapixels);
+    // Передаємо width_px як п'ятий аргумент для користувацької роздільної здатності
+    const diagram = generateDiagramTopView(distanceM, fovDegrees, pxPerM, megapixels, width_px);
+    
+    // Формуємо відображення роздільної здатності
+    let resolutionDisplay;
+    if (megapixels === 'custom') {
+        resolutionDisplay = `Власна (${width_px} px)`;
+    } else {
+        resolutionDisplay = `${megapixels} MP (${RESOLUTION_MAP[megapixels]} px)`;
+    }
     
     let html = `
     <div class="result-cctvheader"><i class="bi bi-bar-chart-fill result-cctvicon"></i> <strong>Результати аналізу піксельної щільності:</strong></div>
     <table class="result-cctvtable zebra-table">
         <tr>
             <td class="label"><i class="bi bi-camera"></i> Роздільна здатність:</td>
-            <td class="label">${megapixels} MP (${RESOLUTION_MAP[megapixels]} px)</td>
+            <td class="value">${resolutionDisplay}</td>
         </tr>
         <tr>
-            <td class="label"><i class="bi bi-arrows-angle"></i> Кут огляду (FOV):</td>
-            <td class="label">${fovDegrees}°</td>
+            <td class="label"><i class="bi bi-aspect-ratio"></i> Кут огляду (FOV):</td>
+            <td class="value">${fovDegrees}°</td>
         </tr>
         <tr>
             <td class="label"><i class="bi bi-rulers"></i> Відстань до об'єкта:</td>
-            <td class="label">${distanceM} м</td>
+            <td class="value">${distanceM} м</td>
         </tr>
         <tr>
             <td class="label"><i class="bi bi-box"></i>Ширина зони огляду:</td>
@@ -372,7 +419,7 @@ function generateResultHTML(megapixels, fovDegrees, distanceM, widthM, pxPerM,
             <td class="value"><strong>${doriLevel} (${doriThreshold}+ px/м)</strong></td>
         </tr>
         <tr>
-            <td class="label"><i class="bi bi-person-bounding-box"></i> Розпізнавання обличчя:</td>
+            <td class="label"><i class="bi bi-person-bounding-box"></i> Розпізнавання обличчя ШІ:</td>
             <td class="value">
                 <strong>
                     ${faceRecognition}
@@ -389,7 +436,7 @@ function generateResultHTML(megapixels, fovDegrees, distanceM, widthM, pxPerM,
         </tr>
     </table>
     
-    <div style="margin-top:15px;">
+    <div style="margin-top:15px; width:100%;">
         <div style="margin-bottom:10px;"><i class="bi bi-camera-video"></i> <strong>Схема зони покриття (вигляд зверху):</strong></div>
         ${diagram}
     </div>
