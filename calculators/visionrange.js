@@ -1,31 +1,43 @@
-// Constants for sensor sizes (width in mm)
+// Constants for sensor sizes (diagonal in mm)
 const SENSOR_SIZES = {
-    "1/4": 3.6, 
-    "1/3.6": 4.0, 
-    "1/3.2": 4.5, 
-    "1/3": 4.8,
-    "1/2.9": 5.0, 
-    "1/2.8": 5.35, 
-    "1/2.7": 5.37, 
-    "1/2.5": 5.76,
-    "1/2": 6.4, 
-    "1/1.8": 7.18, 
-    "1/1.7": 7.6, 
+    "1/4": 4.5, 
+    "1/3.6": 5, 
+    "1/3.2": 5.6, 
+    "1/3": 6,
+    "1/2.9": 6.25, 
+    "1/2.8": 6.46, 
+    "1/2.7": 6.7, 
+    "1/2.5": 7.2,
+    "1/2": 8, 
+    "1/2.3": 7.8, 
+    "1/1.8": 8.9, 
+    "1/1.7": 9.4, 
     "1/1.2": 10.2,
-    "2/3": 8.8
 };
 
-// const SENSOR_SIZES = {
-//     "1/4": 3.2,
-//     "1/3": 4.8,
-//     "1/2.8": 5.5,
-//     "1/2.7": 5.7,
-//     "1/2": 6.4,
-//     "1/1.8": 7.2,
-//     "2/3": 8.8,
-//     "1/1.2": 10.8,
-//     "1/1": 12.8
-// };
+// Пропорції матриць для різних роздільних здатностей
+const ASPECT_RATIOS = {
+    "1.3": "4:3",
+    "3": "4:3",
+    "5": "4:3",
+    "12": "4:3",
+    "default": "16:9"
+};
+
+// Функція для розрахунку ширини та висоти матриці на основі діагоналі та пропорцій
+function calculateSensorDimensions(diagonal, aspectRatio) {
+    let width, height;
+    
+    if (aspectRatio === "4:3") {
+        width = diagonal * 0.8;  // 4/5
+        height = diagonal * 0.6; // 3/5
+    } else { // 16:9
+        width = diagonal * 0.8716; // 16/√(337)
+        height = diagonal * 0.4903; // 9/√(337)
+    }
+    
+    return { width, height };
+}
 
 // Resolution approximations (megapixels to width in pixels)
 const RESOLUTION_MAP = {
@@ -70,6 +82,60 @@ document.addEventListener('DOMContentLoaded', function() {
         form.addEventListener('submit', calculateVisionRange);
     }
     
+    // Ініціалізація повзунка фокусної відстані
+    const focalLengthSlider = document.getElementById('focalLengthSlider');
+    const focalLengthInput = document.getElementById('focalLength');
+    
+    // Функції для нелінійного перетворення фокусної відстані
+    function percentToFocalLength(percent) {
+        // Перетворення відсотків повзунка (0-100) в міліметри (2.7-335)
+        if (percent <= 20) {
+            // 0-20% -> 2.7-6 мм (ширококутні)
+            return 2.7 + (percent / 20) * 3.3;
+        } else if (percent <= 40) {
+            // 20-40% -> 6-12 мм (середні)
+            return 6 + ((percent - 20) / 20) * 6;
+        } else if (percent <= 70) {
+            // 40-70% -> 12-50 мм (телеоб'єктиви)
+            return 12 + ((percent - 40) / 30) * 38;
+        } else {
+            // 70-100% -> 50-335 мм (супертелеоб'єктиви)
+            return 50 + ((percent - 70) / 30) * 285;
+        }
+    }
+    
+    function focalLengthToPercent(focalLength) {
+        // Перетворення міліметрів (2.7-335) у відсотки повзунка (0-100)
+        if (focalLength <= 6) {
+            // 2.7-6 мм -> 0-20%
+            return ((focalLength - 2.7) / 3.3) * 20;
+        } else if (focalLength <= 12) {
+            // 6-12 мм -> 20-40%
+            return 20 + ((focalLength - 6) / 6) * 20;
+        } else if (focalLength <= 50) {
+            // 12-50 мм -> 40-70%
+            return 40 + ((focalLength - 12) / 38) * 30;
+        } else {
+            // 50-335 мм -> 70-100%
+            return 70 + ((focalLength - 50) / 285) * 30;
+        }
+    }
+    
+    // Синхронізація повзунка фокусної відстані з текстовим полем
+    focalLengthSlider.addEventListener('input', function() {
+        const percent = parseFloat(this.value);
+        const focalLength = percentToFocalLength(percent);
+        focalLengthInput.value = focalLength.toFixed(1);
+    });
+    
+    focalLengthInput.addEventListener('input', function() {
+        const focalLength = parseFloat(this.value);
+        if (!isNaN(focalLength) && focalLength >= 0.1 && focalLength <= 100) {
+            const percent = focalLengthToPercent(focalLength);
+            focalLengthSlider.value = percent;
+        }
+    });
+    
     // Initialize Telegram WebApp if available
     window.tg = window.Telegram && window.Telegram.WebApp ? window.Telegram.WebApp : { 
         expand: function(){}, 
@@ -98,8 +164,15 @@ function calculateVisionRange(e) {
             throw new Error("Фокусна відстань має бути більше 0");
         }
         
-        // Set sensor width and height values
-        const sensorWidthMm = SENSOR_SIZES[sensorType];
+        // Визначаємо пропорції матриці на основі роздільної здатності
+        const aspectRatio = ASPECT_RATIOS[megapixels.toString()] || ASPECT_RATIOS["default"];
+        
+        // Отримуємо діагональ сенсора
+        const sensorDiagonal = SENSOR_SIZES[sensorType];
+        
+        // Розраховуємо ширину та висоту сенсора
+        const { width: sensorWidthMm } = calculateSensorDimensions(sensorDiagonal, aspectRatio);
+        
         const heightM = heightInput ? parseFloat(heightInput) : 0;
         const targetHeightM = 1.6; // Approximate face height
         const adjustedHeight = Math.max(heightM - targetHeightM, 0);
