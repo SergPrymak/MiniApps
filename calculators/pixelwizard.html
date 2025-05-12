@@ -6,111 +6,9 @@
     <title>PixelWizard - Визначення можливості розпізнання цілі</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.2/font/bootstrap-icons.css">
     <link rel="stylesheet" href="miniapps-common.css">
-    <style>
-        /* Додаткові специфічні стилі для pixelwizard */
-        body {
-            line-height: 1.4;
-        }
-        .result-box {
-            background: #e8f4fa;
-            padding: 12px;
-        }
-        .result-box p {
-            margin: 3px 0;
-        }
-        .result-section p {
-            margin: 2px 0;
-        }
-        .result-title {
-            font-weight: 600;
-            color: #2196f3;
-            margin-bottom: 5px;
-        }
-        .result-distance {
-            color: #2196f3;
-            font-weight: 600;
-        }
-        .result-width {
-            color: #666;
-            font-size: 14px;
-        }
-        /* Деякі дрібні коригування відступів */
-        .form-input {
-            margin-bottom: 12px;
-        }
-        .calc-button {
-            margin-bottom: 12px;
-        }
-        .tips-section ul {
-            margin: 5px 0;
-        }
-        /* Оновлені стилі для повзунків і полів вводу */
-        .slider-container {
-            margin-bottom: 15px;
-        }
-        .slider-input {
-            width: 100%;
-            margin: 8px 0;
-        }
-        
-        .input-group {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-top: 5px;
-        }
-        .input-group .form-input {
-            width: 70px;
-            margin-bottom: 0;
-            text-align: center;
-        }
-        .input-label {
-            font-size: 14px;
-            color: #666;
-        }
-        
-        /* Стилі для таблиці результатів, щоб відповідали hdd-calc.js */
-        .result-cctvheader {
-            margin-bottom: 10px;
-        }
-        .result-cctvicon {
-            margin-right: 5px;
-            color: #2196f3;
-        }
-        .result-cctvtable {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        .result-cctvtable td {
-            padding: 3px 3px; /* Зменшено відступи з 6px до 3px */
-        }
-        .zebra-table tr:nth-child(even) {
-            background-color: rgba(0, 0, 0, 0.02);
-        }
-        .result-cctvtable .label {
-            width: 40%;
-            color: #555;
-        }
-        .result-cctvtable .value {
-            font-weight: 500;
-        }
-        .camera-list {
-            margin: 0;
-            padding-left: 20px;
-            line-height: 1.1; /* Зменшено line-height для списків */
-        }
-        .camera-list li {
-            margin: 1px 0; /* Менші відступи між елементами списку */
-        }
-        #distance {
-            width: 90px; /* або будь-яке бажане значення */
-        }
-        #customResolution {
-            width: 90px; /* або будь-яке бажане значення */
-        }
-    </style>
+    <!-- Стилі перенесено у miniapps-common.css -->
 </head>
-<body>
+<body class="pixelwizard">
     <a href="../index.html" class="back-button">← Повернутися до меню</a>
     <div class="header">
         <i class="bi bi-grid-3x3 header-icon"></i>
@@ -121,36 +19,36 @@
     <div class="main-content">
         <form id="pixelWizardForm" autocomplete="off">
             <label class="form-label"><i class="info-icon bi bi-camera"></i>Роздільна здатність (MP):</label>
-            <select class="form-input" id="megapixels" required>
+            <select class="form-input pixelwizard" id="megapixels" required>
                 <!-- Динамічно заповниться зі скрипта -->
             </select>
             
-            <div class="input-group" id="customResolutionContainer" style="display:none; margin-top: -10px;">
+            <div class="input-group pixelwizard" id="customResolutionContainer" style="display:none; margin-top: -10px;">
                 <label class="form-label"><i class="info-icon bi bi-arrows-fullscreen"></i>Горизонтальна розд. здатність (px):</label>
-                <input type="number" class="form-input " id="customResolution" min="320" max="8192" step="1" value="2688" required>
+                <input type="number" class="form-input pixelwizard" id="customResolution" min="320" max="8192" step="1" value="2688" required>
             </div>
 
             <label class="form-label"><i class="info-icon bi-aspect-ratio"></i>Кут огляду (FOV°):</label>
-            <div class="slider-container">
-                <input type="range" class="slider-input" id="fovSlider" min="1" max="180" step="1" value="90">
-                <div class="input-group">
-                    <span class="input-label">Значення:</span>
-                    <input type="number" class="form-input" id="fov" min="1" max="360" step="1" value="90" required>
-                    <span class="input-label">градусів</span>
+            <div class="slider-container pixelwizard">
+                <input type="range" class="slider-input pixelwizard" id="fovSlider" min="1" max="180" step="1" value="90">
+                <div class="input-group pixelwizard">
+                    <span class="input-label pixelwizard">Значення:</span>
+                    <input type="number" class="form-input pixelwizard" id="fov" min="1" max="360" step="1" value="90" required>
+                    <span class="input-label pixelwizard">градусів</span>
                 </div>
             </div>
             
             <label class="form-label"><i class="info-icon bi bi-rulers"></i>Відстань до об'єкта (м):</label>
-            <div class="slider-container">
-                <input type="range" class="slider-input" id="distanceSlider" min="0" max="100" step="1" value="25">
-                <div class="input-group">
-                    <span class="input-label">Значення:</span>
-                    <input type="number" class="form-input " id="distance" min="1" max="2000" step="0.1" value="15" required>
-                    <span class="input-label">метрів</span>
+            <div class="slider-container pixelwizard">
+                <input type="range" class="slider-input pixelwizard" id="distanceSlider" min="0" max="100" step="1" value="25">
+                <div class="input-group pixelwizard">
+                    <span class="input-label pixelwizard">Значення:</span>
+                    <input type="number" class="form-input pixelwizard" id="distance" min="1" max="2000" step="0.1" value="15" required>
+                    <span class="input-label pixelwizard">метрів</span>
                 </div>
             </div>
             
-            <button type="submit" class="calc-button"><i class="bi bi-calculator"></i> Розрахувати</button>
+            <button type="submit" class="calc-button pixelwizard"><i class="bi bi-calculator"></i> Розрахувати</button>
         </form>
         
         <div id="resultBox" class="result-box" style="display:none;">
@@ -160,7 +58,7 @@
         <div class="tips-section">
             <p><i class="bi bi-info-circle"></i> <strong>Що таке DORI?</strong></p>
             <p>DORI - це стандартизована система для оцінки ефективності відеоспостереження:</p>
-            <ul>
+            <ul class="pixelwizard">
                 <li><strong>D</strong>etection (Детекція) - 25+ px/м - можливість виявити, що в кадрі є людина</li>
                 <li><strong>O</strong>bservation (Огляд) - 62+ px/м - розрізнення деталей одягу та особливостей</li>
                 <li><strong>R</strong>ecognition (Розпізнавання) - 125+ px/м - впізнавання знайомої людини</li>
@@ -168,21 +66,21 @@
             </ul>
             
             <p><i class="bi bi-robot"></i> <strong>Можливості ШІ для розпізнавання обличчя:</strong></p>
-            <ul>
+            <ul class="pixelwizard">
                 <li><strong>Базове виявлення обличчя</strong> - мінімум 50 px/м</li>
                 <li><strong>Впізнавання (пошук в БД)</strong> - від 100 px/м</li>
                 <li><strong>Високоточне розпізнавання</strong> - від 145 px/м (працює при поганому освітленні, в русі)</li>
             </ul>
             
             <p><i class="bi bi-person-badge"></i> <strong>Спеціальні можливості:</strong></p>
-            <ul>
+            <ul class="pixelwizard">
                 <li><strong>Розпізнавання купюр</strong> - потрібно щонайменше 300 px/м</li>
                 <li><strong>Читання номерів авто</strong> - потрібно щонайменше 150 px/м</li>
                 <li><strong>Часткове читання номерів</strong> - від 90 px/м</li>
             </ul>
             
             <p><i class="bi bi-lightbulb"></i> <strong>Поради:</strong></p>
-            <ul>
+            <ul class="pixelwizard">
                 <li>Чим більший кут огляду, тим менша піксельна щільність на потрібній відстані</li>
                 <li>Для точного розпізнавання облич та номерів авто обирайте камери з вищою роздільною здатністю</li>
                 <li>Зменшення відстані вдвічі збільшує піксельну щільність вдвічі</li>
