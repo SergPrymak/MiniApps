@@ -52,6 +52,7 @@
             width: 100%;
             margin: 8px 0;
         }
+        
         .input-group {
             display: flex;
             align-items: center;
@@ -67,6 +68,7 @@
             font-size: 14px;
             color: #666;
         }
+        
         /* Стилі для таблиці результатів, щоб відповідали hdd-calc.js */
         .result-cctvheader {
             margin-bottom: 10px;
@@ -103,6 +105,9 @@
         #distance {
             width: 90px; /* або будь-яке бажане значення */
         }
+        #customResolution {
+            width: 90px; /* або будь-яке бажане значення */
+        }
     </style>
 </head>
 <body>
@@ -110,7 +115,7 @@
     <div class="header">
         <i class="bi bi-grid-3x3 header-icon"></i>
         <h1>PixelWizard</h1>
-        <p>Визначення можливості розпізнання цілі</p>
+        <p>Визначення можливості розпізнання цілі за кутом огляду</p>
     </div>
 
     <div class="main-content">
@@ -120,7 +125,12 @@
                 <!-- Динамічно заповниться зі скрипта -->
             </select>
             
-            <label class="form-label"><i class="info-icon bi bi-arrows-angle"></i>Кут огляду (FOV°):</label>
+            <div class="input-group" id="customResolutionContainer" style="display:none; margin-top: -10px;">
+                <label class="form-label"><i class="info-icon bi bi-arrows-fullscreen"></i>Горизонтальна розд. здатність (px):</label>
+                <input type="number" class="form-input " id="customResolution" min="320" max="8192" step="1" value="2688" required>
+            </div>
+
+            <label class="form-label"><i class="info-icon bi-aspect-ratio"></i>Кут огляду (FOV°):</label>
             <div class="slider-container">
                 <input type="range" class="slider-input" id="fovSlider" min="1" max="180" step="1" value="90">
                 <div class="input-group">
@@ -135,7 +145,7 @@
                 <input type="range" class="slider-input" id="distanceSlider" min="0" max="100" step="1" value="25">
                 <div class="input-group">
                     <span class="input-label">Значення:</span>
-                    <input type="number" class="form-input " id="distance" min="1" max="2000" step="0.1" value="30" required>
+                    <input type="number" class="form-input " id="distance" min="1" max="2000" step="0.1" value="15" required>
                     <span class="input-label">метрів</span>
                 </div>
             </div>
