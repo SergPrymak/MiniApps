@@ -51,10 +51,39 @@ document.addEventListener('DOMContentLoaded', function() {
     // Елементи повзунків та текстових полів
     const fovSlider = document.getElementById('fovSlider');
     const fovInput = document.getElementById('fov');
-    const fovValue = document.getElementById('fovValue');
     const distanceSlider = document.getElementById('distanceSlider');
     const distanceInput = document.getElementById('distance');
+    const fovValue = document.getElementById('fovValue');
     const distanceValue = document.getElementById('distanceValue');
+    
+    // Функції для нелінійного перетворення відстані
+    function percentToDistance(percent) {
+        // Перетворення відсотків повзунка (0-100) в метри (1-2000)
+        if (percent <= 25) {
+            // 0-25% -> 1-30 метрів (лінійно)
+            return 1 + (percent / 25) * 29;
+        } else if (percent <= 50) {
+            // 25-50% -> 30-100 метрів (лінійно)
+            return 30 + ((percent - 25) / 25) * 70;
+        } else {
+            // 50-100% -> 100-2000 метрів (лінійно)
+            return 100 + ((percent - 50) / 50) * 1900;
+        }
+    }
+    
+    function distanceToPercent(distance) {
+        // Перетворення метрів (1-2000) у відсотки повзунка (0-100)
+        if (distance <= 30) {
+            // 1-30 метрів -> 0-25%
+            return ((distance - 1) / 29) * 25;
+        } else if (distance <= 100) {
+            // 30-100 метрів -> 25-50%
+            return 25 + ((distance - 30) / 70) * 25;
+        } else {
+            // 100-2000 метрів -> 50-100%
+            return 50 + ((distance - 100) / 1900) * 50;
+        }
+    }
     
     // Синхронізація повзунка FOV із текстовим полем
     fovSlider.addEventListener('input', function() {
@@ -68,15 +97,18 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
     
-    // Синхронізація повзунка відстані із текстовим полем
+    // Синхронізація повзунка відстані із текстовим полем (нелінійна шкала)
     distanceSlider.addEventListener('input', function() {
-        distanceInput.value = this.value;
+        const percent = parseFloat(this.value);
+        const distance = percentToDistance(percent);
+        distanceInput.value = distance.toFixed(1);
     });
     
     distanceInput.addEventListener('input', function() {
-        const value = parseFloat(this.value);
-        if (!isNaN(value) && value >= 0.1) {
-            distanceSlider.value = Math.min(value, 100); // Обмежуємо повзунок до 100
+        const distance = parseFloat(this.value);
+        if (!isNaN(distance) && distance >= 1 && distance <= 2000) {
+            const percent = distanceToPercent(distance);
+            distanceSlider.value = percent;
         }
     });
     
@@ -154,7 +186,8 @@ function generateDiagramTopView(distanceM, fovDegrees, pxPerM, megapixels) {
     const svgHeight = 200; // Збільшена висота для шкали
     const padding = 20;
     const cameraX = padding;
-    const cameraY = svgHeight / 2 - 20; // Змістити вгору для місця під шкалу
+    // Виправлено: краще центрування по вертикалі
+    const cameraY = svgHeight / 2 - 10; // Змінено з -20 на -10 для кращого центрування
 
     // Масштаб: максимальна відстань (об'єкт або 1.2*distanceM для запасу)
     const maxDistance = Math.max(distanceM * 1.1, 1.2 * distanceM);
@@ -172,10 +205,10 @@ function generateDiagramTopView(distanceM, fovDegrees, pxPerM, megapixels) {
 
     // DORI зони (радіуси в метрах)
     const doriZones = [
-        { name: "🆔 Ідентифікація", color: "#ff6600", fill: "rgba(81, 255, 0, 0.25)", px: DORI_THRESHOLDS["🆔 Ідентифікація (чітко іден. особу)"] },
-        { name: "👤 Розпізнавання", color: "#cc3399", fill: "rgba(48, 13, 206, 0.25)", px: DORI_THRESHOLDS["👤 Розпізнавання (впізнати знайому особу)"] },
-        { name: "👀 Огляд", color: "#33cc33", fill: "rgba(51,204,51,0.25)", px: DORI_THRESHOLDS["👀 Огляд (деталі особи/одяг)"] },
-        { name: "🔍 Детекція", color: "#3399ff", fill: "rgba(51,153,255,0.25)", px: DORI_THRESHOLDS["🔍 Детекція (виявити рух/наявність людини)"] }
+        { name: "🆔 Ідентифікація", color: "#ff6600", fill: "rgba(236, 122, 122, 0.95)", px: DORI_THRESHOLDS["🆔 Ідентифікація (чітко іден. особу)"] },
+        { name: "👤 Розпізнавання", color: "#cc3399", fill: "rgba(233, 229, 8, 0.85)", px: DORI_THRESHOLDS["👤 Розпізнавання (впізнати знайому особу)"] },
+        { name: "👀 Огляд", color: "#33cc33", fill: "rgba(15, 184, 15, 0.61)", px: DORI_THRESHOLDS["👀 Огляд (деталі особи/одяг)"] },
+        { name: "🔍 Детекція", color: "#3399ff", fill: "rgba(126, 196, 147, 0.5)", px: DORI_THRESHOLDS["🔍 Детекція (виявити рух/наявність людини)"] }
     ];
 
     // Функція для малювання сектора
@@ -235,7 +268,8 @@ function generateDiagramTopView(distanceM, fovDegrees, pxPerM, megapixels) {
 
     // Генеруємо шкалу в метрах
     let scaleMarks = '';
-    const scaleY = cameraY + 60;
+    // Виправлено: змінено відстань шкали від центру для кращого центрування
+    const scaleY = cameraY + 70; // Змінено з +60 на +50
     const scaleStart = cameraX;
     const scaleEnd = cameraX + maxDistance * scale;
     const majorStep = Math.ceil(maxDistance / 5); // Крок для великих поділок (кратний 5)
@@ -269,9 +303,9 @@ function generateDiagramTopView(distanceM, fovDegrees, pxPerM, megapixels) {
     <!-- Вертикальна лінія ширини зони огляду -->
     <line x1="${objectX}" y1="${cameraY - halfWidth}" x2="${objectX}" y2="${cameraY + halfWidth}" 
           stroke="#666" stroke-width="1" stroke-dasharray="5,3"/>
-    <text x="${objectX}" y="${objectY}" 
-          font-size="10" text-anchor="start" fill="#666" transform="rotate(90, ${objectX + 7}, ${cameraY - halfWidth + 10})">
-          Ширина зони огляду ${widthAtObjectDistance.toFixed(2)} м
+    <text x="${objectX-45}" y="${objectY-20}" 
+          font-size="10" text-anchor="start" fill="#666" transform="rotate(90, ${objectX + 7}, ${objectY})">
+          Ширина FOV ${widthAtObjectDistance.toFixed(2)} м
     </text>
     
     <!-- Камера -->
@@ -279,14 +313,14 @@ function generateDiagramTopView(distanceM, fovDegrees, pxPerM, megapixels) {
     <circle cx="${cameraX+4}" cy="${cameraY}" r="3" fill="#fff"/>
     <!-- Об'єкт -->
     <rect x="${objectX-objectW/2}" y="${objectY-objectH/2}" width="${objectW}" height="${objectH}" rx="2" fill="#ff6b6b" stroke="#c00" stroke-width="1"/>
-    <text x="${(objectX-cameraX)/2+13}" y="${objectY+objectH/2}" font-size="11" text-anchor="middle" fill="#444">${distanceM} м</text>
+    <text x="${((objectX-cameraX)/2)+53}" y="${objectY+objectH/2}" font-size="11" text-anchor="middle" fill="#444">Відстань ${distanceM} м</text>
     <text x="${objectX}" y="${objectY-objectH/2-6}" font-size="11" text-anchor="middle" fill="#444">Об'єкт</text>
     <!-- Шкала в метрах -->
     ${scaleMarks}
     <!-- Текст FOV -->
-    <text x="${cameraX-5}" y="${cameraY-18}" font-size="14" fill="#3b82f6">FOV ${fovDegrees}°</text>
+    <text x="${cameraX-5}" y="${cameraY-18}" font-size="14" fill="#ff000">FOV ${fovDegrees}°</text>
     <!-- Підпис зони об'єкта -->
-    <text x="${objectX}" y="${objectY+objectH/2+13}" font-size="11" text-anchor="middle" fill="#2196f3">${objectZone}</text>
+    <text x="${objectX-15}" y="${objectY+objectH/2+13}" font-size="11" text-anchor="middle" fill="#2196f3">${objectZone}</text>
 </svg>
     `;
 }
