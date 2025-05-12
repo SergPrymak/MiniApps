@@ -169,33 +169,78 @@ function displayResults(data) {
     const resultBox = document.getElementById('resultBox');
     
     let html = `
-        <div><i class="bi bi-binoculars-fill"></i> <strong>Результати прогнозу дальності:</strong></div>
+        <div class="result-cctvheader"><i class="bi bi-binoculars-fill result-cctvicon"></i> <strong>Результати прогнозу дальності:</strong></div>
         
-        <div style="margin-top:10px;"><i class="bi bi-sliders"></i> <strong>Вхідні параметри:</strong></div>
-        <div>- Роздільна здатність: ~${data.megapixels} MP → ${data.widthPx} px</div>
-        <div>- Фокусна відстань: ${data.focalLength} мм</div>
-        <div>- Теоретичний кут огляду: ~${data.fovDegrees.toFixed(1)}°</div>
-        <div>- Сенсор: ${data.sensorType}</div>
-    `;
+        <table class="result-cctvtable zebra-table">
+            <tr>
+                <td class="label"><i class="bi bi-camera"></i> Роздільна здатність:</td>
+                <td class="value">~${data.megapixels} MP → ${data.widthPx} px</td>
+            </tr>
+            <tr>
+                <td class="label"><i class="bi bi-arrows-angle"></i> Фокусна відстань:</td>
+                <td class="value">${data.focalLength} мм</td>
+            </tr>
+            <tr>
+                <td class="label"><i class="bi bi-aspect-ratio"></i> Теоретичний кут огляду:</td>
+                <td class="value">~${data.fovDegrees.toFixed(1)}°</td>
+            </tr>
+            <tr>
+                <td class="label"><i class="bi bi-cpu"></i> Сенсор:</td>
+                <td class="value">${data.sensorType}</td>
+            </tr>`;
     
     if (data.heightM > 0) {
-        html += `<div>- Висота встановлення камери: ${data.heightM.toFixed(2)} м</div>`;
+        html += `
+            <tr>
+                <td class="label"><i class="bi bi-arrows-vertical"></i> Висота встановлення:</td>
+                <td class="value">${data.heightM.toFixed(2)} м</td>
+            </tr>`;
     }
     
-    html += `<div class="result-section"><i class="bi bi-layers-half"></i> <strong>DORI-зони (стандарт для оператора):</strong></div>`;
+    html += `
+        </table>
+        
+        <div class="result-cctvheader" style="margin-top:15px;"><i class="bi bi-layers-half result-cctvicon"></i> <strong>DORI-зони (стандарт для оператора):</strong></div>
+        <table class="result-cctvtable zebra-table">`;
+    
     data.doriResults.forEach(item => {
-        html += `<div>- ${item.label}: <strong>${item.distance.toFixed(1)} м</strong> (Ширина: ${item.width.toFixed(1)} м)</div>`;
+        html += `
+            <tr>
+                <td class="label">${item.label}:</td>
+                <td class="value"><strong>${item.distance.toFixed(1)} м</strong> <span class="result-width">(Ширина: ${item.width.toFixed(1)} м)</span></td>
+            </tr>`;
     });
     
-    html += `<div class="result-section"><i class="bi bi-person-bounding-box"></i> <strong>Розпізнавання обличчя (функції ШІ):</strong></div>`;
+    html += `
+        </table>
+        
+        <div class="result-cctvheader" style="margin-top:15px;"><i class="bi bi-person-bounding-box result-cctvicon"></i> <strong>Розпізнавання обличчя (функції ШІ):</strong></div>
+        <table class="result-cctvtable zebra-table">`;
+    
     data.faceResults.forEach(item => {
-        html += `<div>- ${item.label}: <strong>${item.distance.toFixed(1)} м</strong></div>`;
+        html += `
+            <tr>
+                <td class="label">${item.label}:</td>
+                <td class="value"><strong>${item.distance.toFixed(1)} м</strong></td>
+            </tr>`;
     });
     
-    html += `<div class="result-section"><i class="bi bi-stars"></i> <strong>Спеціальні можливості:</strong></div>`;
+    html += `
+        </table>
+        
+        <div class="result-cctvheader" style="margin-top:15px;"><i class="bi bi-stars result-cctvicon"></i> <strong>Спеціальні можливості:</strong></div>
+        <table class="result-cctvtable zebra-table">`;
+    
     data.otherResults.forEach(item => {
-        html += `<div>- ${item.label}: <strong>${item.distance.toFixed(1)} м</strong></div>`;
+        html += `
+            <tr>
+                <td class="label">${item.label}:</td>
+                <td class="value"><strong>${item.distance.toFixed(1)} м</strong></td>
+            </tr>`;
     });
+    
+    html += `
+        </table>`;
     
     resultContent.innerHTML = html;
     resultBox.style.display = 'block';
