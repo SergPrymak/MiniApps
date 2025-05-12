@@ -4,9 +4,9 @@ const MAX_EXTENDERS = 3;
 // Constants from your config
 const POE_STANDARDS = [
     { name: "802.3af (Type 1)", pse_power: 15.4, pd_power: 12.95, voltage: 48, min_pd_voltage: 37, pairs: 2, mode_b: true, max_current: 0.35 },
-    { name: "802.3at (Type 2)", pse_power: 30, pd_power: 25.5, voltage: 53, min_pd_voltage: 42, pairs: 2, mode_b: true, max_current: 0.6 },
-    { name: "802.3bt (Type 3)", pse_power: 60, pd_power: 51, voltage: 53, min_pd_voltage: 42, pairs: 4, mode_b: false, max_current: 0.6 },
-    { name: "802.3bt++ (Type 4)", pse_power: 100, pd_power: 71, voltage: 53, min_pd_voltage: 42, pairs: 4, mode_b: false, max_current: 0.6 }
+    { name: "802.3at (Type 2)", pse_power: 30, pd_power: 25.5, voltage: 52, min_pd_voltage: 42, pairs: 2, mode_b: true, max_current: 0.6 },
+    { name: "802.3bt (Type 3)", pse_power: 60, pd_power: 51, voltage: 57, min_pd_voltage: 42, pairs: 4, mode_b: false, max_current: 0.6 },
+    { name: "802.3bt++ (Type 4)", pse_power: 100, pd_power: 71, voltage: 57, min_pd_voltage: 42, pairs: 4, mode_b: false, max_current: 0.6 }
 ];
 const EXTENDER_POWER = 2; // Power consumed by each extender
 const MAX_SEGMENT = 100; // Maximum segment length for autocalculation
