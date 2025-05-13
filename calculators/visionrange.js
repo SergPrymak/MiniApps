@@ -246,7 +246,7 @@ function displayResults(data) {
         
         <table class="result-cctvtable zebra-table">
             <tr>
-                <td class="label"><i class="bi bi-camera"></i> Роздільна здатність:</td>
+                <td class="label"><i class="bi bi-camera" style="width: 150px"></i> Роздільна здатність:</td>
                 <td class="value">~${data.megapixels} MP → ${data.widthPx} px</td>
             </tr>
             <tr>
